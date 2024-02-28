@@ -1,33 +1,42 @@
-import Content from "./components/Content";
-import Header from "./components/Header";
-import Total from "./components/Total";
+import { useState } from "react";
+import Display from "./components/Display";
+import Button from "./components/Button";
+import History from "./components/History";
 
 function App() {
-    const course = {
-        name: "Half Stack application development",
-        parts: [
-            {
-                name: "Fundamentals of React",
-                exercises: 10,
-            },
-            {
-                name: "Using props to pass data",
-                exercises: 7,
-            },
-            {
-                name: "State of a component",
-                exercises: 14,
-            },
-        ],
+    const [left, setLeft] = useState(0);
+    const [right, setRight] = useState(0);
+
+    const [allClicks, setAllClicks] = useState([]);
+
+    const [total, setTotal] = useState(0);
+
+    const handleLeftClick = () => {
+        setAllClicks(allClicks.concat("L"));
+
+        const updatedLeft = left + 1;
+
+        setLeft(updatedLeft);
+        setTotal(updatedLeft + right);
+    };
+
+    const handleRightClick = () => {
+        setAllClicks(allClicks.concat("R"));
+
+        const updatedRight = right + 1;
+
+        setRight(updatedRight);
+        setTotal(updatedRight + left);
     };
 
     return (
         <>
-            <div>
-                <Header course={course.name} />
-                <Content parts={course.parts} />
-                <Total parts={course.parts} />
-            </div>
+            {left}
+            <Button onClick={handleLeftClick} text={"left"} />
+            <Button onClick={handleRightClick} text={"right"} />
+            {right}
+            <History allClicks={allClicks} />
+            <p>total: {total}</p>
         </>
     );
 }
