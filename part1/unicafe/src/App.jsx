@@ -58,13 +58,18 @@ function App() {
             <Button handleClick={handleGood} text={"good"} />
             <Button handleClick={handleNeutral} text={"neutral"} />
             <Button handleClick={handleBad} text={"bad"} />
-            <Statistics
-                good={good}
-                neutral={neutral}
-                all={total}
-                average={allAverage}
-                positive={goodPercentage}
-            />
+
+            {(total && (
+                <Statistics
+                    good={good}
+                    neutral={neutral}
+                    bad={bad}
+                    all={total}
+                    average={allAverage}
+                    positive={goodPercentage}
+                />
+            )) ||
+                "No feedback given"}
         </>
     );
 }
