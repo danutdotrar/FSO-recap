@@ -1,19 +1,12 @@
 import React from "react";
 import Part from "./Part";
 
-const part1 = "Fundamentals of React";
-const exercises1 = 10;
-const part2 = "Using props to pass data";
-const exercises2 = 7;
-const part3 = "State of a component";
-const exercises3 = 14;
-
-const Content = () => {
+const Content = ({ parts }) => {
     return (
         <div>
-            <Part part={part1} exercise={exercises1} />
-            <Part part={part2} exercise={exercises2} />
-            <Part part={part3} exercise={exercises3} />
+            {parts.map((part, index) => (
+                <Part key={index} part={part.name} exercise={part.exercises} />
+            ))}
         </div>
     );
 };
