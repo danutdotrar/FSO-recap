@@ -34,13 +34,33 @@ function App() {
         setSelected(random);
     };
 
+    // Display the anecdote with the largest numbers of vote
+    const mostVoted = Math.max(...points);
+    // aflam maximul array-ului
+    console.log("most voted ", mostVoted);
+
+    // aflam indexul celui mai mare nr din array
+    const mostVotedIndex = points.indexOf(mostVoted);
+    console.log("index ", mostVotedIndex);
+
     return (
         <>
+            <h1>Anecdote of the day</h1>
             <div>{anecdotes[selected]}</div>
             <div>has {points[selected]}</div>
 
             <button onClick={voteCurrent}>vote</button>
             <button onClick={selectRandom}>next anecdote</button>
+
+            <div>
+                <h1>Anecdote with most votes</h1>
+                <div>
+                    {anecdotes[mostVotedIndex]}
+                    <p>
+                        <b>has {mostVoted} points</b>
+                    </p>
+                </div>
+            </div>
         </>
     );
 }
