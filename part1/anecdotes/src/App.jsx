@@ -13,6 +13,19 @@ function App() {
     ];
 
     const [selected, setSelected] = useState(0);
+    const [points, setPoints] = useState(new Array(anecdotes.length).fill(0));
+
+    // [0, 0, 0, 0, 0, 0, 0, 0]
+
+    const voteCurrent = () => {
+        // create copy from points state
+        const pointsCopy = [...points];
+        // increment only the point for selected
+        pointsCopy[selected]++;
+
+        // set the state to pointsCopy
+        setPoints(pointsCopy);
+    };
 
     // select a random note
     const selectRandom = () => {
@@ -24,6 +37,9 @@ function App() {
     return (
         <>
             <div>{anecdotes[selected]}</div>
+            <div>has {points[selected]}</div>
+
+            <button onClick={voteCurrent}>vote</button>
             <button onClick={selectRandom}>next anecdote</button>
         </>
     );
