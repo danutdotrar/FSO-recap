@@ -2,11 +2,15 @@ import React from "react";
 import Header from "./Header";
 import Content from "./Content";
 
-const Course = ({ course }) => {
+const Course = ({ courses }) => {
     return (
         <div>
-            <Header course={course} />
-            <Content course={course} />
+            {courses.map((course) => (
+                <div key={course.id}>
+                    <Header course={course} />
+                    <Content course={course} />
+                </div>
+            ))}
         </div>
     );
 };
