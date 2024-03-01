@@ -11,8 +11,18 @@ const App = () => {
             name: newName,
         };
 
-        setPersons(persons.concat(newNameObj));
+        // verificam daca newName exista deja in person
+        const personExists = persons.some(
+            (person) => person.name === newNameObj.name
+        );
 
+        if (personExists) {
+            alert(`${newName} already exists in phonebook`);
+        }
+
+        if (personExists === false) {
+            setPersons(persons.concat(newNameObj));
+        }
         setNewName("");
     };
 
@@ -38,6 +48,7 @@ const App = () => {
 
                 <button onSubmit={handleSubmit}>Save</button>
             </form>
+
             <div>
                 <h3>Numbers</h3>
                 {persons.map((person) => (
