@@ -2,10 +2,17 @@ import { useState } from "react";
 
 const App = () => {
     const [persons, setPersons] = useState([
-        { name: "Arto Hellas", number: "420 6969" },
+        { name: "Arto Hellas", number: "024 9696", id: 1 },
+        { name: "Dan John", number: "123 1111", id: 2 },
+        { name: "Mark Xavier", number: "321 4444", id: 3 },
     ]);
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
+    const [filterName, setFilterName] = useState("");
+
+    const filteredPersonsByName = persons.filter((person) =>
+        person.name.toLowerCase().includes(filterName.toLowerCase())
+    );
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -39,10 +46,19 @@ const App = () => {
         setNewNumber(e.target.value);
     };
 
+    const handleFilterChange = (e) => {
+        setFilterName(e.target.value);
+    };
+
     return (
         <>
-            <h2>Persons</h2>
+            <h2>Phonebook</h2>
+            <div>
+                filter shown with{" "}
+                <input value={filterName} onChange={handleFilterChange} />
+            </div>
 
+            <h2>Add new</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-container">
                     <label htmlFor="name">Name: </label>
@@ -69,9 +85,9 @@ const App = () => {
             </form>
 
             <div>
-                <h3>Numbers</h3>
-                {persons.map((person) => (
-                    <li>
+                <h2>Numbers</h2>
+                {filteredPersonsByName.map((person) => (
+                    <li key={person.id}>
                         {person.name} - {person.number}
                     </li>
                 ))}
