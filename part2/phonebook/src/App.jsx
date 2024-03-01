@@ -1,4 +1,7 @@
 import { useState } from "react";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Persons from "./components/Persons";
 
 const App = () => {
     const [persons, setPersons] = useState([
@@ -20,6 +23,7 @@ const App = () => {
         const newPersonObj = {
             name: newName,
             number: newNumber,
+            id: persons.length + 1,
         };
 
         // verificam daca newName exista deja in person
@@ -53,44 +57,20 @@ const App = () => {
     return (
         <>
             <h2>Phonebook</h2>
-            <div>
-                filter shown with{" "}
-                <input value={filterName} onChange={handleFilterChange} />
-            </div>
+            <Filter value={filterName} handleChange={handleFilterChange} />
 
             <h2>Add new</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-container">
-                    <label htmlFor="name">Name: </label>
-                    <input
-                        type="text"
-                        value={newName}
-                        onChange={handleNameChange}
-                        name="name"
-                        placeholder="Enter name..."
-                    />
-                </div>
-                <div className="form-container">
-                    <label htmlFor="number">Number: </label>
-                    <input
-                        type="text"
-                        value={newNumber}
-                        onChange={handleNumberChange}
-                        name="number"
-                        placeholder="Enter number..."
-                    />
-                </div>
-
-                <button onSubmit={handleSubmit}>Save</button>
-            </form>
+            <PersonForm
+                handleSubmit={handleSubmit}
+                handleNameChange={handleNameChange}
+                handleNumberChange={handleNumberChange}
+                nameValue={newName}
+                numberValue={newNumber}
+            />
 
             <div>
                 <h2>Numbers</h2>
-                {filteredPersonsByName.map((person) => (
-                    <li key={person.id}>
-                        {person.name} - {person.number}
-                    </li>
-                ))}
+                <Persons persons={filteredPersonsByName} />
             </div>
         </>
     );
