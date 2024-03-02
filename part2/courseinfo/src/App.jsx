@@ -28,11 +28,16 @@ const App = () => {
             id: notes.length + 1,
         };
 
-        // Concat noteObject to notes state
-        setNotes(notes.concat(noteObject));
+        // create post method for notes
+        axios
+            .post("http://localhost:3001/notes", noteObject)
+            .then((response) => {
+                // Concat noteObject to notes state
+                setNotes(notes.concat(response.data));
 
-        // reset newNote value
-        setNewNote("");
+                // reset newNote value
+                setNewNote("");
+            });
     };
 
     const handleInputChange = (e) => {
