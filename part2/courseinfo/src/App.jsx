@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Note from "./components/Note";
-import axios from "axios";
+import noteService from "./services/notes";
 
 const App = () => {
     const [notes, setNotes] = useState([]);
@@ -9,16 +9,15 @@ const App = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await axios.get("http://localhost:3001/notes");
-            const data = response.data;
+            const response = await noteService.getAll();
 
-            setNotes(data);
+            setNotes(response.data);
         };
 
         fetchData();
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Create new noteObject
@@ -28,41 +27,27 @@ const App = () => {
             id: (notes.length + 1).toString(),
         };
 
-        // create post method for notes
-        axios
-            .post("http://localhost:3001/notes", noteObject)
-            .then((response) => {
-                // Concat noteObject to notes state
-                setNotes(notes.concat(response.data));
+        const response = await noteService.create(noteObject);
 
-                // reset newNote value
-                setNewNote("");
-            });
+        // Concat noteObject to notes state
+        setNotes(notes.concat(response.data));
+
+        // reset newNote value
+        setNewNote("");
     };
 
     const handleInputChange = (e) => {
         setNewNote(e.target.value);
     };
 
-    const toggleImportance = (id) => {
-        // HTTP PUT inlocuieste intreaga nota
-        // HTTP PATCH inlocuieste proprietatile notei
-
-        // avem nevoie de URL-ul unic al notei
-        const url = `http://localhost:3001/notes/${id}`;
-
-        // gasim nota in state cu metoda find pentru ca avem nevoie de nota initiala pentru a modifica cu ce dorim
+    const toggleImportance = async (id) => {
         const note = notes.find((note) => note.id === id);
 
-        // modificam nota cum avem nevoie
         const changedNote = { ...note, important: !note.important };
 
-        // folosim axios.put sa facem un request pt a inlocui intreaga nota cu changedNote
-        axios.put(url, changedNote).then((response) => {
-            setNotes(
-                notes.map((note) => (note.id !== id ? note : response.data))
-            );
-        });
+        const response = await noteService.update(id, changedNote);
+
+        setNotes(notes.map((note) => (note.id !== id ? note : response.data)));
     };
 
     const notesToShow = showAll
