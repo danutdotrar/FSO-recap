@@ -1,6 +1,6 @@
 import React from "react";
 
-const Note = ({ note, toggleImportance }) => {
+const Note = ({ note, toggleImportance, deleteNote }) => {
     const label = note.important ? "make not important" : "make important";
 
     return (
@@ -8,6 +8,8 @@ const Note = ({ note, toggleImportance }) => {
             <li>
                 {note.content}{" "}
                 <button onClick={toggleImportance}>{label}</button>
+                <span> --- </span>
+                <button onClick={deleteNote}>delete</button>
             </li>
         </div>
     );

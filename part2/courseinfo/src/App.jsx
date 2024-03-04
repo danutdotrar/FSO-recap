@@ -9,9 +9,9 @@ const App = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await noteService.getAll();
+            const responseData = await noteService.getAll();
 
-            setNotes(response.data);
+            setNotes(responseData);
         };
 
         fetchData();
@@ -27,10 +27,10 @@ const App = () => {
             id: (notes.length + 1).toString(),
         };
 
-        const response = await noteService.create(noteObject);
+        const responseData = await noteService.create(noteObject);
 
         // Concat noteObject to notes state
-        setNotes(notes.concat(response.data));
+        setNotes(notes.concat(responseData));
 
         // reset newNote value
         setNewNote("");
@@ -44,10 +44,23 @@ const App = () => {
         const note = notes.find((note) => note.id === id);
 
         const changedNote = { ...note, important: !note.important };
+        try {
+            const responseData = await noteService.update(id, changedNote);
 
-        const response = await noteService.update(id, changedNote);
+            setNotes(
+                notes.map((note) => (note.id !== id ? note : responseData))
+            );
+        } catch (eror) {
+            alert(`the note '${note.content}' was already deleted from server`);
+            setNotes(notes.filter((n) => n.id !== id));
+        }
+    };
 
-        setNotes(notes.map((note) => (note.id !== id ? note : response.data)));
+    const deleteNote = async (id) => {
+        // use remove request from services
+        await noteService.remove(id);
+
+        setNotes(notes.filter((note) => note.id !== id));
     };
 
     const notesToShow = showAll
@@ -69,6 +82,7 @@ const App = () => {
                         key={note.id}
                         note={note}
                         toggleImportance={() => toggleImportance(note.id)}
+                        deleteNote={() => deleteNote(note.id)}
                     />
                 ))}
             </ul>

@@ -3,25 +3,29 @@ import axios from "axios";
 const baseURL = "http://localhost:3001/notes";
 
 // GET req
-const getAll = () => {
-    return axios.get(baseURL);
+const getAll = async () => {
+    const request = await axios.get(baseURL);
+    return request.data;
 };
 
 // POST req
-const create = (obj) => {
-    return axios.post(baseURL, obj);
+const create = async (obj) => {
+    const request = await axios.post(baseURL, obj);
+    return request.data;
 };
 
 // PUT req
-const update = (id, newObject) => {
-    return axios.put(`${baseURL}/${id}`, newObject);
+const update = async (id, newObject) => {
+    const request = await axios.put(`${baseURL}/${id}`, newObject);
+    return request.data;
 };
 
 // DELETE req
-const remove = (id) => {
-    return axios.delete(`${baseURL}/${id}`);
+const remove = async (id) => {
+    const request = await axios.delete(`${baseURL}/${id}`);
+
+    return request.data;
 };
 
 // export the services
-
 export default { getAll, create, update, remove };
