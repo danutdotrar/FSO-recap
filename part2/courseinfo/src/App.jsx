@@ -51,7 +51,7 @@ const App = () => {
         // avem nevoie de URL-ul unic al notei
         const url = `http://localhost:3001/notes/${id}`;
 
-        // gasim nota in state cu find
+        // gasim nota in state cu metoda find pentru ca avem nevoie de nota initiala pentru a modifica cu ce dorim
         const note = notes.find((note) => note.id === id);
 
         // modificam nota cum avem nevoie
@@ -59,7 +59,6 @@ const App = () => {
 
         // folosim axios.put sa facem un request pt a inlocui intreaga nota cu changedNote
         axios.put(url, changedNote).then((response) => {
-            console.log(response);
             setNotes(
                 notes.map((note) => (note.id !== id ? note : response.data))
             );
