@@ -25,7 +25,7 @@ const App = () => {
         const noteObject = {
             content: newNote,
             important: Math.random() < 0.5,
-            id: notes.length + 1,
+            id: (notes.length + 1).toString(),
         };
 
         // create post method for notes
@@ -44,6 +44,28 @@ const App = () => {
         setNewNote(e.target.value);
     };
 
+    const toggleImportance = (id) => {
+        // HTTP PUT inlocuieste intreaga nota
+        // HTTP PATCH inlocuieste proprietatile notei
+
+        // avem nevoie de URL-ul unic al notei
+        const url = `http://localhost:3001/notes/${id}`;
+
+        // gasim nota in state cu find
+        const note = notes.find((note) => note.id === id);
+
+        // modificam nota cum avem nevoie
+        const changedNote = { ...note, important: !note.important };
+
+        // folosim axios.put sa facem un request pt a inlocui intreaga nota cu changedNote
+        axios.put(url, changedNote).then((response) => {
+            console.log(response);
+            setNotes(
+                notes.map((note) => (note.id !== id ? note : response.data))
+            );
+        });
+    };
+
     const notesToShow = showAll
         ? notes
         : notes.filter((note) => note.important === true);
@@ -59,7 +81,11 @@ const App = () => {
 
             <ul>
                 {notesToShow.map((note) => (
-                    <Note key={note.id} note={note} />
+                    <Note
+                        key={note.id}
+                        note={note}
+                        toggleImportance={() => toggleImportance(note.id)}
+                    />
                 ))}
             </ul>
 
