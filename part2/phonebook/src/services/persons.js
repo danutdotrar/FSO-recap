@@ -26,7 +26,7 @@ const create = async (newObject) => {
 };
 
 // PUT
-// update person info
+// update person info using the unique url of person
 const update = async (id, newObject) => {
     try {
         const response = axios.put(`${baseURL}/${id}`, newObject);

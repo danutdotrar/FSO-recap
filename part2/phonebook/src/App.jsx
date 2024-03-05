@@ -48,7 +48,6 @@ const App = () => {
             );
 
             if (shouldUpdate) {
-                console.log(personExists);
                 // find the person
                 const personToUpdate = persons.find(
                     (person) => person.name === newPersonObj.name
@@ -56,6 +55,7 @@ const App = () => {
 
                 // update backend
                 const updatedObj = { ...personToUpdate, number: newNumber };
+
                 const response = await personService.update(
                     personToUpdate.id,
                     updatedObj
@@ -74,7 +74,7 @@ const App = () => {
             try {
                 // adaugam in backend cu personService.create()
                 const response = await personService.create(newPersonObj);
-                // adaugam in app state obiectul cu persoana noua
+                // adaugam in frontend in app state obiectul cu persoana noua
                 setPersons(persons.concat(response.data));
             } catch (error) {
                 console.log("Error creating person: ", error);
