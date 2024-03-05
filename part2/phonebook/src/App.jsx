@@ -4,6 +4,8 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
+import personService from "./services/persons";
+
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState("");
@@ -14,7 +16,7 @@ const App = () => {
         // async function to connect to api
         const fetchData = async () => {
             // get response data
-            const response = await axios.get("http://localhost:3001/persons");
+            const response = await personService.getAll();
             // set persons state to response data
             setPersons(response.data);
         };
@@ -26,7 +28,7 @@ const App = () => {
         person.name.toLowerCase().includes(filterName.toLowerCase())
     );
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         const newPersonObj = {
@@ -45,7 +47,14 @@ const App = () => {
         }
 
         if (personExists === false) {
-            setPersons(persons.concat(newPersonObj));
+            try {
+                // adaugam in backend cu personService.create()
+                const response = await personService.create(newPersonObj);
+                // adaugam in state obiectul cu persoana noua
+                setPersons(persons.concat(response.data));
+            } catch (error) {
+                console.log("Error creating person: ", error);
+            }
         }
         setNewName("");
         setNewNumber("");
