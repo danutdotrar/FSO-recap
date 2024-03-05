@@ -5,12 +5,14 @@ import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 
 import personService from "./services/persons";
+import PersonAdded from "./components/PersonAdded";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState("");
     const [newNumber, setNewNumber] = useState("");
     const [filterName, setFilterName] = useState("");
+    const [successAdd, setSuccessAdd] = useState(false);
 
     useEffect(() => {
         // async function to connect to api
@@ -76,6 +78,11 @@ const App = () => {
                 const response = await personService.create(newPersonObj);
                 // adaugam in frontend in app state obiectul cu persoana noua
                 setPersons(persons.concat(response.data));
+
+                setSuccessAdd(true);
+                setTimeout(() => {
+                    setSuccessAdd(false);
+                }, 3000);
             } catch (error) {
                 console.log("Error creating person: ", error);
             }
@@ -124,6 +131,7 @@ const App = () => {
     return (
         <>
             <h2>Phonebook</h2>
+            <PersonAdded success={successAdd} />
             <Filter value={filterName} handleChange={handleFilterChange} />
 
             <h2>Add new</h2>
