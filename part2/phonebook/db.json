@@ -21,19 +21,9 @@
       "id": "4"
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "gogu",
-      "number": "123"
-    },
-    {
-      "id": 6,
-      "name": "John",
-      "number": "1222"
-    },
-    {
-      "id": 7,
-      "name": "danut",
-      "number": "444"
+      "number": "999"
     }
   ]
 }

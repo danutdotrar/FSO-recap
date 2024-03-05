@@ -34,7 +34,7 @@ const App = () => {
         const newPersonObj = {
             name: newName,
             number: newNumber,
-            id: persons.length + 1,
+            id: (persons.length + 1).toString(),
         };
 
         // verificam daca newName exista deja in person
@@ -43,19 +43,45 @@ const App = () => {
         );
 
         if (personExists) {
-            alert(`${newName} already exists in phonebook`);
+            const shouldUpdate = window.confirm(
+                `${newName} already added in phonebook, replace old number with the new one?`
+            );
+
+            if (shouldUpdate) {
+                console.log(personExists);
+                // find the person
+                const personToUpdate = persons.find(
+                    (person) => person.name === newPersonObj.name
+                );
+
+                // update backend
+                const updatedObj = { ...personToUpdate, number: newNumber };
+                const response = await personService.update(
+                    personToUpdate.id,
+                    updatedObj
+                );
+
+                // update frontend with map
+                setPersons(
+                    persons.map((person) =>
+                        person.id !== personToUpdate.id ? person : response.data
+                    )
+                );
+            }
         }
 
         if (personExists === false) {
             try {
                 // adaugam in backend cu personService.create()
                 const response = await personService.create(newPersonObj);
-                // adaugam in state obiectul cu persoana noua
+                // adaugam in app state obiectul cu persoana noua
                 setPersons(persons.concat(response.data));
             } catch (error) {
                 console.log("Error creating person: ", error);
             }
         }
+
+        // reset state input fields
         setNewName("");
         setNewNumber("");
     };
@@ -70,6 +96,29 @@ const App = () => {
 
     const handleFilterChange = (e) => {
         setFilterName(e.target.value);
+    };
+
+    const removeContact = async (id) => {
+        // delete from backend and frontend
+
+        try {
+            // find the person in state
+            const findPersonById = persons.find((person) => person.id === id);
+
+            const shouldDelete = window.confirm(
+                `Delete ${findPersonById.name}?`
+            );
+
+            if (shouldDelete) {
+                // delete request in backend for person
+                const response = await personService.remove(findPersonById.id);
+
+                // update the frontend
+                setPersons(persons.filter((person) => person.id !== id));
+            }
+        } catch (error) {
+            console.log("Error deleting: ", error);
+        }
     };
 
     return (
@@ -88,7 +137,10 @@ const App = () => {
 
             <div>
                 <h2>Numbers</h2>
-                <Persons persons={filteredPersonsByName} />
+                <Persons
+                    persons={filteredPersonsByName}
+                    removeContact={removeContact}
+                />
             </div>
         </>
     );
