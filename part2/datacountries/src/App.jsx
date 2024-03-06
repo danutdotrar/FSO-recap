@@ -29,17 +29,19 @@ function App() {
         setCountryName(inputValue);
     };
 
-    // filter countries, if > 10 return 'too many'
-    // if <= 10, render the names
-    // trebuie sa ne conectam la api/all
-    // sa rendam 'too many' daca sunt mai mult de 10 tari care includ input in nume.common
-    // daca sunt mai putine, rendam numele tarilor
-    // filtram countries cu countryName
-    // pastram tarile care includ countryName
-
     const countriesFiltered = countries.filter((country) =>
         country.name.common.toLowerCase().includes(countryName)
     );
+
+    const showCountry = (countryName) => {
+        // find the country in the state
+        const findCountry = countries.filter(
+            (country) => country.name.common === countryName
+        );
+
+        // set the app state to that country
+        setCountries(findCountry);
+    };
 
     let content;
 
@@ -53,7 +55,12 @@ function App() {
 
     if (countriesFiltered.length <= 10 && countriesFiltered.length > 1) {
         content = countriesFiltered.map((country) => (
-            <li key={country.name.common}>{country.name.common}</li>
+            <li key={country.name.common}>
+                {country.name.common}{" "}
+                <button onClick={() => showCountry(country.name.common)}>
+                    show
+                </button>
+            </li>
         ));
     }
 
