@@ -4,7 +4,7 @@ import noteService from "./services/notes";
 import Notification from "./components/Notification";
 
 const App = () => {
-    const [notes, setNotes] = useState([]);
+    const [notes, setNotes] = useState(null);
     const [newNote, setNewNote] = useState("");
     const [showAll, setShowAll] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
@@ -73,6 +73,9 @@ const App = () => {
     const notesToShow = showAll
         ? notes
         : notes.filter((note) => note.important === true);
+
+    // do not render anything if notes are null
+    if (!notes) return null;
 
     return (
         <div>
