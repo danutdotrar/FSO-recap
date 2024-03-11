@@ -1,5 +1,10 @@
-const http = require("http");
+// require express
+const express = require("express");
 
+// create express application stored in app variable
+const app = express();
+
+// define sample API
 let notes = [
     {
         id: 1,
@@ -18,9 +23,14 @@ let notes = [
     },
 ];
 
-const app = http.createServer((request, response) => {
-    response.writeHead(200, { "Content-Type": "text/plain" });
-    response.end(JSON.stringify(notes));
+// GET '/'
+app.get("/", (request, response) => {
+    response.send("<h1>Hello world</h1>");
+});
+
+// GET '/api/notes'
+app.get("/api/notes", (request, response) => {
+    response.send(JSON.stringify(notes));
 });
 
 const PORT = 3001;
