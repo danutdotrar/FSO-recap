@@ -43,12 +43,17 @@ const App = () => {
     };
 
     const toggleImportance = async (id) => {
+        // find the note with the id of the clicked note
         const note = notes.find((note) => note.id === id);
 
+        // make a copy of that note and change what we want to change
         const changedNote = { ...note, important: !note.important };
+
         try {
+            // update backend with axios method
             const responseData = await noteService.update(id, changedNote);
 
+            // update App state
             setNotes(
                 notes.map((note) => (note.id !== id ? note : responseData))
             );
