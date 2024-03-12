@@ -24,12 +24,9 @@ let notes = [
 ];
 
 // GET '/'
+// request contine toate informatiile despre request-ul HTTP
+// response defineste cum este folosit request-ul
 app.get("/", (request, response) => {
-    response.send("<h1>Hello world</h1>");
-});
-
-// GET '/api/notes'
-app.get("/api/notes", (request, response) => {
     response.send(JSON.stringify(notes));
 });
 
