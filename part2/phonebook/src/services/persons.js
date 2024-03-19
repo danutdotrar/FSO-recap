@@ -2,7 +2,7 @@
 import axios from "axios";
 
 // API URL
-const baseURL = "http://localhost:3001/persons";
+const baseURL = "http://localhost:3001/api/persons";
 
 // GET
 const getAll = async () => {

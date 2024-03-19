@@ -1,11 +1,12 @@
 // require express
 const express = require("express");
-
+const cors = require("cors");
 // create express application stored in app variable
 const app = express();
 
 // use json parser
 app.use(express.json());
+app.use(cors());
 
 // define sample API
 let notes = [
@@ -70,11 +71,36 @@ app.delete("/api/notes/:id", (request, response) => {
 // app.post request at base url '/api/notes'
 app.post("/api/notes", (request, response) => {
     // get the body (note data) from the request
-    const note = request.body;
+    const body = request.body;
 
-    console.log(note);
+    // if content doesn't exist
+    if (!body.content) {
+        // set response status to 400 - bad request
+        return response.status(400).json({ error: "content missing" });
+    }
+
+    // define new note
+    const note = {
+        content: body.content,
+        important: Boolean(body.important) || false,
+        id: generateId(),
+    };
+
+    // add new note to api
+    notes = notes.concat(note);
+
+    // send the note response
     response.json(note);
 });
+
+const generateId = () => {
+    // add the unique id to the note
+    const maxId =
+        notes.length > 0 ? Math.max(...notes.map((note) => note.id)) : 0;
+
+    // add 1 to the maxId
+    return maxId + 1;
+};
 
 const PORT = 3001;
 app.listen(PORT);
