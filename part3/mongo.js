@@ -1,24 +1,25 @@
 // import mongoose
 const mongoose = require("mongoose");
 
+// access password
+const password = process.argv[2];
+
 // pass check
-if (password.argv.length < 3) {
+if (process.argv.length < 3) {
     console.log("give password as argument");
     process.exit(1);
 }
 
-// access password
-const password = password.argv[2];
-
 // define url
-const url = `mongodb+srv://morarasudanut:${password}@cluster0.qh6ymsj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const url = `mongodb+srv://morarasudanut:${password}@cluster0.qh6ymsj.mongodb.net/noteAppRecap?retryWrites=true&w=majority&appName=Cluster0`;
 
-mongoose.setQuery("strictQuery", false);
+mongoose.set("strictQuery", false);
 
 // connect to the url
 mongoose.connect(url);
 
 // define new mongoose Schema to use as mongoose model
+// the schema tells us how the content will be structured
 const noteSchema = new mongoose.Schema({
     content: String,
     important: Boolean,
