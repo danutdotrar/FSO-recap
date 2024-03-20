@@ -26,18 +26,25 @@ const noteSchema = new mongoose.Schema({
 });
 
 // use note schema as model
+// models are constructor functions to create new JS object based on the schema
 const Note = mongoose.model("Note", noteSchema);
 
-// define new note based on Note model
+// define new note (new object) based on Note model
 const note = new Note({
-    content: "First new Schema, then model, then our new obj",
+    content: "Result stores the data saved on mongodb",
     important: true,
 });
 
 // save note on database
-note.save().then((result) => {
-    console.log("note saved");
+// note.save().then(result => {
+//     console.log('note saved!')
+//     mongoose.connection.close()
+//  })
 
-    // close the connection
+// find all the notes on the database
+Note.find({}).then((result) => {
+    result.forEach((note) => console.log(note));
+
+    // close the mongoose connection
     mongoose.connection.close();
 });
