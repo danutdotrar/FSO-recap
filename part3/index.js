@@ -36,6 +36,17 @@ const noteSchema = new mongoose.Schema({
     important: Boolean,
 });
 
+// modify the object returned by the schema
+// set the id to the _id returned initially
+// delete _id and __v
+noteSchema.set("toJSON", {
+    transform: (document, returnedObject) => {
+        returnedObject.id = returnedObject._id.toString();
+        delete returnedObject._id;
+        delete returnedObject.__v;
+    },
+});
+
 // use note schema as model
 // models are constructor functions to create new JS object based on the schema
 const Note = mongoose.model("Note", noteSchema);
@@ -66,6 +77,9 @@ let notes = [
 // GET '/api/notes"
 app.get("/api/notes", (request, response) => {
     // Find all the notes in the mongoose database
+    Note.find({}).then((notes) => {
+        response.json(notes);
+    });
 });
 
 // GET single resource by id '/api/notes/:id'
