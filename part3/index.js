@@ -5,6 +5,7 @@ require("dotenv").config();
 const Note = require("./models/note");
 
 // require express
+
 const express = require("express");
 const cors = require("cors");
 
@@ -46,36 +47,6 @@ app.get("/api/notes", (request, response) => {
     });
 });
 
-// GET single resource by id '/api/notes/:id'
-app.get("/api/notes/:id", (request, response) => {
-    // get the id from request params
-    const id = Number(request.params.id);
-
-    // find the note with the id equals with the id from params -- in the notes
-    const note = notes.find((note) => note.id === id);
-
-    // if the note exists, send note with response.json(note)
-    if (note) {
-        // send the response.json( finded note )
-        response.json(note);
-    } else {
-        // if not exist, set status 404 not found and end() it (without data)
-        response.status(404).end();
-    }
-});
-
-// DELETE resource based on unique id
-// '/api/notes/:id'
-app.delete("/api/notes/:id", (request, response) => {
-    // take the id from the request.params
-    const id = Number(request.params.id);
-    // remove with filter the note with id === id from params
-    notes = notes.filter((note) => note.id !== id);
-
-    // set status 204 (no content) and return no data with the response
-    response.status(204).end();
-});
-
 // POST new note
 // '/api/notes'
 // app.post request at base url '/api/notes'
@@ -90,27 +61,40 @@ app.post("/api/notes", (request, response) => {
     }
 
     // define new note
-    const note = {
+    const note = new Note({
         content: body.content,
         important: Boolean(body.important) || false,
-        id: generateId(),
-    };
+    });
 
     // add new note to api
-    notes = notes.concat(note);
-
-    // send the note response
-    response.json(note);
+    note.save().then((savedNote) => {
+        // send the note response
+        response.json(savedNote);
+    });
 });
 
-const generateId = () => {
-    // add the unique id to the note
-    const maxId =
-        notes.length > 0 ? Math.max(...notes.map((note) => note.id)) : 0;
+// GET single resource by id '/api/notes/:id'
+app.get("/api/notes/:id", (request, response) => {
+    // get the id from request params
+    const id = request.params.id;
 
-    // add 1 to the maxId
-    return maxId + 1;
-};
+    Note.findById(id).then((note) => {
+        response.json(note);
+    });
+});
+
+// DELETE resource based on unique id
+// '/api/notes/:id'
+app.delete("/api/notes/:id", (request, response) => {
+    // take the id from the request.params
+    const id = request.params.id;
+
+    // remove with filter the note with id === id from params
+    notes = notes.filter((note) => note.id !== id);
+
+    // set status 204 (no content) and return no data with the response
+    response.status(204).end();
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT);

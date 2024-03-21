@@ -37,5 +37,5 @@ noteSchema.set("toJSON", {
 // // define the model constructor
 // const Note = mongoose.model("Note", noteSchema);
 
-// export the model Note
+// export the model Note wsith the noteSchema refference
 module.exports = mongoose.model("Note", noteSchema);
