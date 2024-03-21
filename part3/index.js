@@ -78,9 +78,18 @@ app.get("/api/notes/:id", (request, response) => {
     // get the id from request params
     const id = request.params.id;
 
-    Note.findById(id).then((note) => {
-        response.json(note);
-    });
+    Note.findById(id)
+        .then((note) => {
+            if (note) {
+                response.json(note);
+            } else {
+                return response.status(404).end();
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            response.status(400).send({ error: "malformatted id" });
+        });
 });
 
 // DELETE resource based on unique id
