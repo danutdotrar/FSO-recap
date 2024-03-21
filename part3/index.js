@@ -1,55 +1,19 @@
+// import the dotenv config
+require("dotenv").config();
+
+// import the Note model from the models/note.js
+const Note = require("./models/note");
+
 // require express
 const express = require("express");
 const cors = require("cors");
+
 // create express application stored in app variable
 const app = express();
 
 // use json parser
 app.use(express.json());
 app.use(cors());
-
-// MONGO DB
-// import mongoose
-const mongoose = require("mongoose");
-
-// access password
-const password = process.argv[2];
-
-// pass check
-if (process.argv.length < 3) {
-    console.log("give password as argument");
-    process.exit(1);
-}
-
-// define url
-const url = `mongodb+srv://morarasudanut:${password}@cluster0.qh6ymsj.mongodb.net/noteAppRecap?retryWrites=true&w=majority&appName=Cluster0`;
-
-mongoose.set("strictQuery", false);
-
-// connect to the url
-mongoose.connect(url);
-
-// define new mongoose Schema to use as mongoose model
-// the schema tells us how the content will be structured
-const noteSchema = new mongoose.Schema({
-    content: String,
-    important: Boolean,
-});
-
-// modify the object returned by the schema
-// set the id to the _id returned initially
-// delete _id and __v
-noteSchema.set("toJSON", {
-    transform: (document, returnedObject) => {
-        returnedObject.id = returnedObject._id.toString();
-        delete returnedObject._id;
-        delete returnedObject.__v;
-    },
-});
-
-// use note schema as model
-// models are constructor functions to create new JS object based on the schema
-const Note = mongoose.model("Note", noteSchema);
 
 // define sample API
 let notes = [
@@ -148,6 +112,6 @@ const generateId = () => {
     return maxId + 1;
 };
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
