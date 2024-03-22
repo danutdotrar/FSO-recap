@@ -115,6 +115,7 @@ app.put("/api/notes/:id", (request, response) => {
     };
 
     // find by id and update the note with data from request body
+    // by default, findByIdAndUpdate primeste doc original fara modificari, de aceea adaugam parametrul {new: true}, pentru a folosi doc modificat 'note'
     Note.findByIdAndUpdate(id, note, { new: true })
         .then((updatedNote) => {
             response.json(updatedNote);
