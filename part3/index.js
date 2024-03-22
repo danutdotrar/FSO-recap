@@ -5,7 +5,6 @@ require("dotenv").config();
 const Note = require("./models/note");
 
 // require express
-
 const express = require("express");
 const cors = require("cors");
 
@@ -15,6 +14,16 @@ const app = express();
 // use json parser
 app.use(express.json());
 app.use(cors());
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message);
+
+    if (error.name === "CastError") {
+        return response.status(400).send({ error: "malformatted id" });
+    }
+
+    next(error);
+};
 
 // define sample API
 let notes = [
@@ -74,7 +83,7 @@ app.post("/api/notes", (request, response) => {
 });
 
 // GET single resource by id '/api/notes/:id'
-app.get("/api/notes/:id", (request, response) => {
+app.get("/api/notes/:id", (request, response, next) => {
     // get the id from request params
     const id = request.params.id;
 
@@ -87,9 +96,30 @@ app.get("/api/notes/:id", (request, response) => {
             }
         })
         .catch((error) => {
-            console.log(error);
-            response.status(400).send({ error: "malformatted id" });
+            next(error);
         });
+});
+
+// UPDATE resource based on unique id
+// @@ route '/api/notes/:id'
+app.put("/api/notes/:id", (request, response) => {
+    const id = request.params.id;
+
+    // we need the request body
+    const body = request.body;
+
+    // create new obj based on body keys and values
+    const note = {
+        content: body.content,
+        important: body.important,
+    };
+
+    // find by id and update the note with data from request body
+    Note.findByIdAndUpdate(id, note, { new: true })
+        .then((updatedNote) => {
+            response.json(updatedNote);
+        })
+        .catch((error) => next(error));
 });
 
 // DELETE resource based on unique id
@@ -99,11 +129,17 @@ app.delete("/api/notes/:id", (request, response) => {
     const id = request.params.id;
 
     // remove with filter the note with id === id from params
-    notes = notes.filter((note) => note.id !== id);
-
-    // set status 204 (no content) and return no data with the response
-    response.status(204).end();
+    // notes = notes.filter((note) => note.id !== id);
+    Note.findByIdAndDelete(id)
+        .then((result) => {
+            // set status 204 (no content) and return no data with the response
+            response.status(204).end();
+        })
+        .catch((error) => next(error));
 });
+
+// all routes should be registered before this
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT);
