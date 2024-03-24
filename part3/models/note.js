@@ -19,7 +19,7 @@ mongoose
 // define the schema
 // the schema will tell the mongo db how the saved objects are structured
 const noteSchema = new mongoose.Schema({
-    content: String,
+    content: { type: String, minLength: 5, required: true },
     important: Boolean,
 });
 

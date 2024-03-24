@@ -22,27 +22,31 @@ const errorHandler = (error, request, response, next) => {
         return response.status(400).send({ error: "malformatted id" });
     }
 
+    if (error.name === "ValidationError") {
+        return response.status(400).send({ error: error.message });
+    }
+
     next(error);
 };
 
 // define sample API
-let notes = [
-    {
-        id: 1,
-        content: "HTML is easy",
-        important: true,
-    },
-    {
-        id: 2,
-        content: "Browser can execute only JavaScript",
-        important: false,
-    },
-    {
-        id: 3,
-        content: "GET and POST are the most important methods of HTTP protocol",
-        important: true,
-    },
-];
+// let notes = [
+//     {
+//         id: 1,
+//         content: "HTML is easy",
+//         important: true,
+//     },
+//     {
+//         id: 2,
+//         content: "Browser can execute only JavaScript",
+//         important: false,
+//     },
+//     {
+//         id: 3,
+//         content: "GET and POST are the most important methods of HTTP protocol",
+//         important: true,
+//     },
+// ];
 
 // GET '/'
 // request contine toate informatiile despre request-ul HTTP
@@ -59,7 +63,7 @@ app.get("/api/notes", (request, response) => {
 // POST new note
 // '/api/notes'
 // app.post request at base url '/api/notes'
-app.post("/api/notes", (request, response) => {
+app.post("/api/notes", (request, response, next) => {
     // get the body (note data) from the request
     const body = request.body;
 
@@ -76,10 +80,12 @@ app.post("/api/notes", (request, response) => {
     });
 
     // add new note to api
-    note.save().then((savedNote) => {
-        // send the note response
-        response.json(savedNote);
-    });
+    note.save()
+        .then((savedNote) => {
+            // send the note response
+            response.json(savedNote);
+        })
+        .catch((error) => next(error));
 });
 
 // GET single resource by id '/api/notes/:id'
@@ -106,17 +112,21 @@ app.put("/api/notes/:id", (request, response) => {
     const id = request.params.id;
 
     // we need the request body
-    const body = request.body;
+    const { content, important } = request.body;
 
     // create new obj based on body keys and values
-    const note = {
-        content: body.content,
-        important: body.important,
-    };
+    // const note = {
+    //     content: body.content,
+    //     important: body.important,
+    // };
 
     // find by id and update the note with data from request body
     // by default, findByIdAndUpdate primeste doc original fara modificari, de aceea adaugam parametrul {new: true}, pentru a folosi doc modificat 'note'
-    Note.findByIdAndUpdate(id, note, { new: true })
+    Note.findByIdAndUpdate(
+        id,
+        { content, important },
+        { new: true, runValidators: true, context: "query" }
+    )
         .then((updatedNote) => {
             response.json(updatedNote);
         })
