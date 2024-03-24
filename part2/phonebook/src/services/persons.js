@@ -17,12 +17,12 @@ const getAll = async () => {
 // POST
 // trebuie sa adaugam numbers in backend
 const create = async (newObject) => {
-    try {
-        const response = await axios.post(baseURL, newObject);
-        return response;
-    } catch (error) {
-        console.log("Error axios.post: ", error);
-    }
+    // try {
+    const response = await axios.post(baseURL, newObject);
+    return response;
+    // } catch (error) {
+    // console.log("Error axios.post: ", error);
+    // }
 };
 
 // PUT

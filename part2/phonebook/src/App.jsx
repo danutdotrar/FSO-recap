@@ -6,6 +6,7 @@ import Persons from "./components/Persons";
 
 import personService from "./services/persons";
 import PersonAdded from "./components/PersonAdded";
+import PersonError from "./components/PersonError";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -13,6 +14,8 @@ const App = () => {
     const [newNumber, setNewNumber] = useState("");
     const [filterName, setFilterName] = useState("");
     const [successAdd, setSuccessAdd] = useState(false);
+    const [errorAdd, setErrorAdd] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         // async function to connect to api
@@ -76,15 +79,24 @@ const App = () => {
             try {
                 // adaugam in backend cu personService.create()
                 const response = await personService.create(newPersonObj);
+
                 // adaugam in frontend in app state obiectul cu persoana noua
-                setPersons(persons.concat(response.data));
+                setPersons(persons.concat(response));
 
                 setSuccessAdd(true);
                 setTimeout(() => {
                     setSuccessAdd(false);
                 }, 3000);
             } catch (error) {
-                console.log("Error creating person: ", error);
+                console.log(error.response.data.error);
+                const errorMsg = error.response.data.error;
+
+                setErrorAdd(true);
+                setErrorMessage(errorMsg);
+
+                setTimeout(() => {
+                    setErrorAdd(false);
+                }, 5000);
             }
         }
 
@@ -131,6 +143,7 @@ const App = () => {
     return (
         <>
             <h2>Phonebook</h2>
+            <PersonError errorAdd={errorAdd} errorMessage={errorMessage} />
             <PersonAdded success={successAdd} />
             <Filter value={filterName} handleChange={handleFilterChange} />
 
