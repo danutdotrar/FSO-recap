@@ -1,3 +1,10 @@
+// import config for env variables and logger for logging clg or cl error
+const config = require("./utils/config");
+const logger = require("./utils/logger");
+
+// import app - the actual Express application
+const app = require("./app");
+
 // import the dotenv config
 require("dotenv").config();
 
@@ -5,15 +12,15 @@ require("dotenv").config();
 const Note = require("./models/note");
 
 // require express
-const express = require("express");
-const cors = require("cors");
+// const express = require("express");
+// const cors = require("cors");
 
 // create express application stored in app variable
-const app = express();
+// const app = express();
 
 // use json parser
-app.use(express.json());
-app.use(cors());
+// app.use(express.json());
+// app.use(cors());
 
 const errorHandler = (error, request, response, next) => {
     console.error(error.message);
@@ -29,36 +36,17 @@ const errorHandler = (error, request, response, next) => {
     next(error);
 };
 
-// define sample API
-// let notes = [
-//     {
-//         id: 1,
-//         content: "HTML is easy",
-//         important: true,
-//     },
-//     {
-//         id: 2,
-//         content: "Browser can execute only JavaScript",
-//         important: false,
-//     },
-//     {
-//         id: 3,
-//         content: "GET and POST are the most important methods of HTTP protocol",
-//         important: true,
-//     },
-// ];
-
 // GET '/'
 // request contine toate informatiile despre request-ul HTTP
 // response defineste cum raspundem request-ul
 
 // GET '/api/notes"
-app.get("/api/notes", (request, response) => {
-    // Find all the notes in the mongoose database
-    Note.find({}).then((notes) => {
-        response.json(notes);
-    });
-});
+// app.get("/api/notes", (request, response) => {
+//     // Find all the notes in the mongoose database
+//     Note.find({}).then((notes) => {
+//         response.json(notes);
+//     });
+// });
 
 // POST new note
 // '/api/notes'
@@ -89,22 +77,22 @@ app.post("/api/notes", (request, response, next) => {
 });
 
 // GET single resource by id '/api/notes/:id'
-app.get("/api/notes/:id", (request, response, next) => {
-    // get the id from request params
-    const id = request.params.id;
+// app.get("/api/notes/:id", (request, response, next) => {
+//     // get the id from request params
+//     const id = request.params.id;
 
-    Note.findById(id)
-        .then((note) => {
-            if (note) {
-                response.json(note);
-            } else {
-                return response.status(404).end();
-            }
-        })
-        .catch((error) => {
-            next(error);
-        });
-});
+//     Note.findById(id)
+//         .then((note) => {
+//             if (note) {
+//                 response.json(note);
+//             } else {
+//                 return response.status(404).end();
+//             }
+//         })
+//         .catch((error) => {
+//             next(error);
+//         });
+// });
 
 // UPDATE resource based on unique id
 // @@ route '/api/notes/:id'
@@ -152,6 +140,6 @@ app.delete("/api/notes/:id", (request, response) => {
 // all routes should be registered before this
 app.use(errorHandler);
 
-const PORT = process.env.PORT;
-app.listen(PORT);
-console.log(`Server running on port ${PORT}`);
+app.listen(config.PORT);
+// console.log(`Server running on port ${PORT}`);
+logger.info(`Server running on port ${config.PORT}`);
