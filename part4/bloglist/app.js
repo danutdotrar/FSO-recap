@@ -28,6 +28,7 @@ const blogRoutes = require("./controllers/blogs");
 app.use("/api/blogs", blogRoutes);
 
 app.use(middleware.requestLogger);
+
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
