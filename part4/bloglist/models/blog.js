@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 // define the Schema
 // the schema will tell MongoDB how the saved objects are structured
 const blogSchema = new mongoose.Schema({
-    title: String,
+    title: { type: String, required: true, minLength: 5 },
     author: String,
     url: String,
     likes: Number,

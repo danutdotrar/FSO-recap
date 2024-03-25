@@ -17,10 +17,31 @@ blogRoutes.get("/", (request, response) => {
     });
 });
 
+// @@ GET request for single resource
+// @@ Path '/api/blogs/:id'
+// @@ Set the response to the found resource (matching id from URL)
+blogRoutes.get("/:id", (request, response, next) => {
+    // get the id from url
+    const id = request.params.id;
+
+    // find by id the doc with model method findById(id)
+    Blog.findById(id)
+        .then((result) => {
+            if (result) {
+                response.json(result);
+            } else {
+                return response.status(404).send({ error: "malformatted id" });
+            }
+        })
+        .catch((error) => {
+            next(error);
+        });
+});
+
 // @@ POST request
 // @@ Path '/api/blogs'
 // @@ Set the response to the new created document with the help of Blog Model
-blogRoutes.post("/", (request, response) => {
+blogRoutes.post("/", (request, response, next) => {
     // get the request body
     const body = request.body;
 
@@ -41,7 +62,7 @@ blogRoutes.post("/", (request, response) => {
         .then((result) => {
             response.json(result);
         })
-        .catch((error) => logger.error(error));
+        .catch((error) => next(error));
 });
 
 module.exports = blogRoutes;

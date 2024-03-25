@@ -1,14 +1,16 @@
+const config = require("./utils/config");
+const logger = require("./utils/logger");
+const middleware = require("./utils/middleware");
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
-
-const config = require("./utils/config");
-const logger = require("./utils/logger");
 
 const mongoose = require("mongoose");
 
 // use stuff
 app.use(cors());
+// use json parser to access data from request.body
 app.use(express.json());
 
 logger.info("Connecting to MongoDB...");
@@ -24,5 +26,9 @@ mongoose
 // use base path with blogRoutes
 const blogRoutes = require("./controllers/blogs");
 app.use("/api/blogs", blogRoutes);
+
+app.use(middleware.requestLogger);
+app.use(middleware.unknownEndpoint);
+app.use(middleware.errorHandler);
 
 module.exports = app;
