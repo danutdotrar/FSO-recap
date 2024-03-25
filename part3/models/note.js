@@ -1,20 +1,22 @@
+// define the mongoose schema and model
+
 // import mongoose
 const mongoose = require("mongoose");
 
 mongoose.set("strictQuery", false);
 
 // define the url
-const url = process.env.MONGODB_URI;
+// const url = process.env.MONGODB_URI;
 
-console.log("connecting to ", url);
+// console.log("connecting to ", url);
 
 // connect to the url
-mongoose
-    .connect(url)
-    .then((result) => console.log("connected to the url"))
-    .catch((error) => {
-        console.log("error connecting to MongoDB ", error);
-    });
+// mongoose
+//     .connect(url)
+//     .then((result) => console.log("connected to the url"))
+//     .catch((error) => {
+//         console.log("error connecting to MongoDB ", error);
+//     });
 
 // define the schema
 // the schema will tell the mongo db how the saved objects are structured
