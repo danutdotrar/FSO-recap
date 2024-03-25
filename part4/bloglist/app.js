@@ -1,9 +1,11 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const mongoose = require("mongoose");
+
 const config = require("./utils/config");
 const logger = require("./utils/logger");
+
+const mongoose = require("mongoose");
 
 // use stuff
 app.use(cors());
@@ -18,5 +20,9 @@ mongoose
         logger.info("Connected to MongoDB");
     })
     .catch((error) => logger.info(error));
+
+// use base path with blogRoutes
+const blogRoutes = require("./controllers/blogs");
+app.use("/api/blogs", blogRoutes);
 
 module.exports = app;
