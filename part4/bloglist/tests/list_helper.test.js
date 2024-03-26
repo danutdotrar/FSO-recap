@@ -59,3 +59,47 @@ describe("total likes of ", () => {
         assert.strictEqual(result, 22);
     });
 });
+
+describe("list of blogs with ", () => {
+    test("empty blog", () => {
+        const blogs = [];
+
+        const result = listHelper.favoriteBlog(blogs);
+
+        assert.strictEqual(result, 0);
+    });
+
+    test("just one blog", () => {
+        const blogs = [
+            {
+                title: "Canonical string reduction",
+                author: "Edsger W. Dijkstra",
+                likes: 12,
+            },
+        ];
+
+        const result = listHelper.favoriteBlog(blogs);
+
+        // compare objects with deepStrictEqual
+        assert.deepStrictEqual(result, blogs[0]);
+    });
+
+    test("a few blogs", () => {
+        const blogs = [
+            {
+                title: "Canonical string reduction",
+                author: "Edsger W. Dijkstra",
+                likes: 12,
+            },
+            {
+                title: "No reverse without split and join",
+                author: "Him Who",
+                likes: 30,
+            },
+        ];
+
+        const result = listHelper.favoriteBlog(blogs);
+
+        assert.deepStrictEqual(result, blogs[1]);
+    });
+});
