@@ -34,4 +34,24 @@ const favoriteBlog = (blogs) => {
     return blogs.length === 0 ? 0 : blogWithMostLikes[0];
 };
 
-module.exports = { dummy, totalLikes, favoriteBlog };
+// return the author with the largest amount of blogs
+// return as {author: name, blogs: number}
+const mostBlogs = (blogs) => {
+    // blogs is an array of objects
+
+    // find the maximum number of blogs
+    const maxNrOfBlogs = Math.max(...blogs.map((blog) => blog.blogs));
+    // use filter to keep only the blog with the blog.blogs === max nr of blogs
+    const filteredBlog = blogs.filter((blog) => blog.blogs === maxNrOfBlogs);
+
+    // create new obj with the values from that obj
+    const newBlogObj = {
+        author: filteredBlog[0]?.author,
+        blogs: filteredBlog[0]?.blogs,
+    };
+
+    // return 0 if blogs length === 0, else return new obj
+    return blogs.length === 0 ? 0 : newBlogObj;
+};
+
+module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs };
