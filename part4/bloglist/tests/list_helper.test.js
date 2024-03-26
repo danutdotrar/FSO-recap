@@ -104,7 +104,7 @@ describe("list of blogs with ", () => {
     });
 });
 
-describe("most blogs with", () => {
+describe("the blog with most blogs number from", () => {
     test("empty list", () => {
         const blogs = [];
 
@@ -157,6 +157,64 @@ describe("most blogs with", () => {
         };
 
         const result = listHelper.mostBlogs(blogs);
+
+        assert.deepStrictEqual(result, blogForComparison);
+    });
+});
+
+describe("the blog with most likes from", () => {
+    test("empty list", () => {
+        const blogs = [];
+
+        const result = listHelper.mostLikes(blogs);
+
+        assert.strictEqual(result, 0);
+    });
+
+    test("just one blog", () => {
+        const blogs = [
+            {
+                title: "Canonical string reduction",
+                author: "Edsger W. Dijkstra",
+                likes: 12,
+            },
+        ];
+
+        const blogForComparison = {
+            author: "Edsger W. Dijkstra",
+            likes: 12,
+        };
+
+        const result = listHelper.mostLikes(blogs);
+
+        assert.deepStrictEqual(result, blogForComparison);
+    });
+
+    test("a few blogs", () => {
+        const blogs = [
+            {
+                title: "Canonical string reduction",
+                author: "Edsger W. Dijkstra",
+                likes: 12,
+            },
+            {
+                title: "Another test",
+                author: "Another Author",
+                likes: 13,
+            },
+            {
+                title: "Many strings such wow",
+                author: "Meh H. Eheh",
+                likes: 99,
+            },
+        ];
+
+        const blogForComparison = {
+            author: "Meh H. Eheh",
+            likes: 99,
+        };
+
+        const result = listHelper.mostLikes(blogs);
 
         assert.deepStrictEqual(result, blogForComparison);
     });
