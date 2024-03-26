@@ -1,4 +1,5 @@
 // Handle Routes
+// The event handlers of routes are referred as 'controllers'
 const blogRoutes = require("express").Router();
 
 // import Blog model

@@ -1,4 +1,4 @@
-// Schema and Model for MongoDB
+// define Schema and Model for MongoDB
 const mongoose = require("mongoose");
 
 // define the Schema

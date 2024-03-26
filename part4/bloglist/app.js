@@ -1,9 +1,12 @@
+// initialize express server, connect to mongodb and app.use stuff
+
 const config = require("./utils/config");
 const logger = require("./utils/logger");
 const middleware = require("./utils/middleware");
 
 const express = require("express");
 const app = express();
+
 const cors = require("cors");
 
 const mongoose = require("mongoose");
@@ -25,6 +28,7 @@ mongoose
 
 // use base path with blogRoutes
 const blogRoutes = require("./controllers/blogs");
+
 app.use("/api/blogs", blogRoutes);
 
 app.use(middleware.requestLogger);
