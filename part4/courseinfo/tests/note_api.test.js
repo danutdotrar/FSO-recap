@@ -124,6 +124,9 @@ test("a note can be deleted", async () => {
     const contents = notesAtEnd.map((note) => note.content);
 
     assert.strictEqual(!contents.includes(noteToDelete.content));
+
+    // check length, if notes at end strictly equals notes at start - 1
+    assert.strictEqual(notesAtEnd.length, notesAtStart.length - 1);
 });
 
 after(async () => {
