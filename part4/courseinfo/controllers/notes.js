@@ -14,26 +14,24 @@ const Note = require("../models/note");
 // @@ GET request
 // @@ Path '/api/notes'
 // @@ Set the response to the result from the database
-notesRouter.get("/", (request, response, next) => {
-    Note.find({}).then((result) => {
-        response.json(result);
-    });
+notesRouter.get("/", async (request, response, next) => {
+    const notes = await Note.find({});
+    response.json(notes);
 });
 
 // @@ GET request for single resource
 // @@ Path '/api/notes/:id'
 // @@ Set the response to the matching resource
-notesRouter.get("/:id", (request, response, next) => {
+notesRouter.get("/:id", async (request, response, next) => {
     // get the id from the url
     const id = request.params.id;
 
-    // use findById method from the Note modle
     Note.findById(id)
         .then((result) => {
             if (result) {
                 response.json(result);
             } else {
-                return response.status(404);
+                return response.status(404).end();
             }
         })
         .catch((error) => next(error));
@@ -42,14 +40,14 @@ notesRouter.get("/:id", (request, response, next) => {
 // @@ POST request
 // @@ Path '/api/notes'
 // @@ Set the response to the result
-notesRouter.post("/", (request, response, next) => {
+notesRouter.post("/", async (request, response, next) => {
     // get the body request
     const body = request.body;
 
     // if content doesnt exists
-    if (!body.content) {
-        return response.status(400).json({ error: "content missing" });
-    }
+    // if (!body.content) {
+    //     return response.status(400).json({ error: "content missing" });
+    // }
 
     // create new document with the model constructor Note
     const note = new Note({
@@ -57,12 +55,13 @@ notesRouter.post("/", (request, response, next) => {
         important: Boolean(body.important) || false,
     });
 
-    // save the note to the database
-    note.save()
-        .then((result) => {
-            response.json(result);
-        })
-        .catch((error) => next(error));
+    try {
+        // save the note to the database
+        const savedNote = await note.save();
+        response.status(201).json(savedNote);
+    } catch (error) {
+        next(error);
+    }
 });
 
 // @@ UPDATE request

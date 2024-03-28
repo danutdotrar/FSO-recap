@@ -8,10 +8,7 @@ const requestLogger = (request, response, next) => {
     next();
 };
 
-const unknownEndpoint = (error, request, response, next) => {
-    response.status(404).send({ error: "unknown endpoint" });
-};
-
+// express va cauta in mod secvential prin middleware si va apela primul middleware care are 4 parametri (eeror, request, response, next)
 const errorHandler = (error, request, response, next) => {
     // log the error message with console.error
     console.error(error.message);
@@ -25,6 +22,11 @@ const errorHandler = (error, request, response, next) => {
     }
 
     next(error);
+};
+
+// functia unknownEndpoint cand niciunul dintre middleware-uri nu este gasit/executat
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: "unknown endpoint" });
 };
 
 module.exports = { errorHandler, unknownEndpoint, requestLogger };
