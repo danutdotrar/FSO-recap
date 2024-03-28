@@ -1,3 +1,4 @@
+// Create express app, connect to mongoDB, app.use router or middlewares
 // create Express app in a separate 'app.js' file
 const config = require("./utils/config");
 const middleware = require("./utils/middleware");

@@ -51,7 +51,7 @@ notesRouter.post("/", async (request, response, next) => {
     //     return response.status(400).json({ error: "content missing" });
     // }
 
-    // create new document with the model constructor Note
+    // create new document with the model constructor Note to save on the db
     const note = new Note({
         content: body.content,
         important: Boolean(body.important) || false,
