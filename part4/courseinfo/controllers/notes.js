@@ -26,15 +26,17 @@ notesRouter.get("/:id", async (request, response, next) => {
     // get the id from the url
     const id = request.params.id;
 
-    Note.findById(id)
-        .then((result) => {
-            if (result) {
-                response.json(result);
-            } else {
-                return response.status(404).end();
-            }
-        })
-        .catch((error) => next(error));
+    try {
+        const singleNote = await Note.findById(id);
+
+        if (singleNote) {
+            response.json(singleNote);
+        } else {
+            response.status(404).end();
+        }
+    } catch (error) {
+        next(error);
+    }
 });
 
 // @@ POST request
@@ -67,7 +69,7 @@ notesRouter.post("/", async (request, response, next) => {
 // @@ UPDATE request
 // @@ Path '/api/notes/:id'
 // @@ Set the response to the result from model method
-notesRouter.put("/:id", (request, response, next) => {
+notesRouter.put("/:id", async (request, response, next) => {
     // get the id of the resource we want to update
     const id = request.params.id;
 
@@ -80,33 +82,35 @@ notesRouter.put("/:id", (request, response, next) => {
         important: body.important,
     };
 
-    // find and update
-    Note.findByIdAndUpdate(id, note, {
-        new: true,
-        runValidators: trusted,
-        context: "query",
-    })
-        .then((result) => {
-            response.json(result);
-        })
-        .catch((error) => {
-            next(error);
+    try {
+        // find and update
+        const result = await Note.findByIdAndUpdate(id, note, {
+            new: true,
+            runValidators: trusted,
+            context: "query",
         });
+
+        response.json(result);
+    } catch (error) {
+        next(error);
+    }
 });
 
 // @@ DELETE request
 // @@ Path '/api/notes/:id'
 // @@ Set the response to 204 no content and use end() method to tell that no more data is sent
-notesRouter.delete("/:id", (request, response, next) => {
+notesRouter.delete("/:id", async (request, response, next) => {
     // get the id from the url params
     const id = request.params.id;
 
-    // use Note model method for delete
-    Note.findByIdAndDelete(id)
-        .then((result) => {
-            response.status(204).end();
-        })
-        .catch((error) => next(error));
+    try {
+        // use Note model method for delete
+        await Note.findByIdAndDelete(id);
+
+        response.status(204).end();
+    } catch (error) {
+        next(error);
+    }
 });
 
 module.exports = notesRouter;

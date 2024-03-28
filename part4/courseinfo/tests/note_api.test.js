@@ -108,7 +108,6 @@ test("a specific note can be viewed", async () => {
 test("a note can be deleted", async () => {
     // get the notes
     const notesAtStart = await helper.notesInDb();
-    console.log("Notes at start ", notesAtStart);
 
     const noteToDelete = notesAtStart[0];
 
@@ -118,12 +117,11 @@ test("a note can be deleted", async () => {
 
     // check notes at end
     const notesAtEnd = await helper.notesInDb();
-    console.log("Notes at END ", notesAtEnd);
 
     // check if notes at end doesnt contain the note to delete
     const contents = notesAtEnd.map((note) => note.content);
 
-    assert.strictEqual(!contents.includes(noteToDelete.content));
+    assert(!contents.includes(noteToDelete.content));
 
     // check length, if notes at end strictly equals notes at start - 1
     assert.strictEqual(notesAtEnd.length, notesAtStart.length - 1);
