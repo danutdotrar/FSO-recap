@@ -6,6 +6,9 @@ const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 // import Express
 const express = require("express");
+
+// import express async errors, handles the try catch under the hood
+require("express-async-errors");
 // create Express app and store it in app var
 const app = express();
 

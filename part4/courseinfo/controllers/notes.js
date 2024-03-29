@@ -26,16 +26,12 @@ notesRouter.get("/:id", async (request, response, next) => {
     // get the id from the url
     const id = request.params.id;
 
-    try {
-        const singleNote = await Note.findById(id);
+    const singleNote = await Note.findById(id);
 
-        if (singleNote) {
-            response.json(singleNote);
-        } else {
-            response.status(404).end();
-        }
-    } catch (error) {
-        next(error);
+    if (singleNote) {
+        response.json(singleNote);
+    } else {
+        response.status(404).end();
     }
 });
 
@@ -57,13 +53,9 @@ notesRouter.post("/", async (request, response, next) => {
         important: Boolean(body.important) || false,
     });
 
-    try {
-        // save the note to the database
-        const savedNote = await note.save();
-        response.status(201).json(savedNote);
-    } catch (error) {
-        next(error);
-    }
+    // save the note to the database
+    const savedNote = await note.save();
+    response.status(201).json(savedNote);
 });
 
 // @@ UPDATE request
@@ -82,18 +74,14 @@ notesRouter.put("/:id", async (request, response, next) => {
         important: body.important,
     };
 
-    try {
-        // find and update
-        const result = await Note.findByIdAndUpdate(id, note, {
-            new: true,
-            runValidators: trusted,
-            context: "query",
-        });
+    // find and update
+    const result = await Note.findByIdAndUpdate(id, note, {
+        new: true,
+        runValidators: trusted,
+        context: "query",
+    });
 
-        response.json(result);
-    } catch (error) {
-        next(error);
-    }
+    response.json(result);
 });
 
 // @@ DELETE request
@@ -103,14 +91,10 @@ notesRouter.delete("/:id", async (request, response, next) => {
     // get the id from the url params
     const id = request.params.id;
 
-    try {
-        // use Note model method for delete
-        await Note.findByIdAndDelete(id);
+    // use Note model method for delete
+    await Note.findByIdAndDelete(id);
 
-        response.status(204).end();
-    } catch (error) {
-        next(error);
-    }
+    response.status(204).end();
 });
 
 module.exports = notesRouter;

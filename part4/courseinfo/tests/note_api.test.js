@@ -3,6 +3,7 @@ const Note = require("../models/note");
 
 const assert = require("node:assert");
 const mongoose = require("mongoose");
+// use supertest package to test the API
 const supertest = require("supertest");
 
 const helper = require("./test_helper");
@@ -17,12 +18,20 @@ const api = supertest(app);
 // run these before every test starts
 beforeEach(async () => {
     await Note.deleteMany({});
+    console.log("cleared");
 
-    let noteObject = new Note(helper.initialNotes[0]);
-    await noteObject.save();
+    // create an array with new notes made with Note model
+    const noteObjects = helper.initialNotes.map((note) => new Note(note));
 
-    noteObject = new Note(helper.initialNotes[1]);
-    await noteObject.save();
+    // create a Promise array for each note in noteObjects
+    // an array of Promises for saving each note in the database
+    const promiseArray = noteObjects.map((note) => note.save());
+
+    // wait for all async operations to finish executing
+    // await for all the Promises in the Promise array
+    await Promise.all(promiseArray);
+
+    console.log("done");
 });
 
 test("notes are returned as json", async () => {
@@ -33,6 +42,7 @@ test("notes are returned as json", async () => {
 });
 
 test("there are two notes", async () => {
+    console.log("entered test");
     const response = await api.get("/api/notes");
 
     assert.strictEqual(response.body.length, helper.initialNotes.length);
