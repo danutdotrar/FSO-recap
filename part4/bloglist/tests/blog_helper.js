@@ -19,6 +19,7 @@ const initialBlogs = [
 
 // find the blogs docs in the database
 const blogsInDb = async () => {
+    // use find method of the model
     const blogs = await Blog.find({});
     // return an array of notes toJSON
     return blogs.map((blog) => blog.toJSON());
