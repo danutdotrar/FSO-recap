@@ -54,13 +54,18 @@ test("blogs are returned in correct format and length", async () => {
 
 test("the unique identifier is named 'id'", async () => {
     // get a resource from db
-    const blogs = blogHelper.blogsInDb();
+    const blogs = await blogHelper.blogsInDb();
 
     // take first blog
     const firstBlog = blogs[0];
 
     // get request to resource unique id
-    await api.get(`/api/blogs/${firstBlog.id}`).expect(200);
+    const result = await api
+        .get(`/api/blogs/${firstBlog.id}`)
+        .expect(200)
+        .expect("Content-Type", /application\/json/);
+
+    assert(result.body.hasOwnProperty("id"));
 });
 
 // inchidem mongodb
