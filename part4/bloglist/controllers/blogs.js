@@ -10,37 +10,38 @@ const Blog = require("../models/blog");
 // @@ GET request
 // @@ Path '/api/blogs'
 // @@ Set response to the found blogs from Model
-blogRoutes.get("/", (request, response) => {
-    Blog.find({}).then((result) => {
-        response.json(result);
-    });
+blogRoutes.get("/", async (request, response) => {
+    const result = await Blog.find({});
+
+    // save the result with the response.json
+    response.json(result);
 });
 
 // @@ GET request for single resource
 // @@ Path '/api/blogs/:id'
 // @@ Set the response to the found resource (matching id from URL)
-blogRoutes.get("/:id", (request, response, next) => {
+blogRoutes.get("/:id", async (request, response, next) => {
     // get the id from url
     const id = request.params.id;
 
     // find by id the doc with model method findById(id)
-    Blog.findById(id)
-        .then((result) => {
-            if (result) {
-                response.json(result);
-            } else {
-                return response.status(404).send({ error: "malformatted id" });
-            }
-        })
-        .catch((error) => {
-            next(error);
-        });
+    try {
+        const result = Blog.findById(id);
+
+        if (result) {
+            response.json(result);
+        } else {
+            return response.status(404).send({ error: "malformatted id" });
+        }
+    } catch (error) {
+        next(error);
+    }
 });
 
 // @@ POST request
 // @@ Path '/api/blogs'
 // @@ Set the response to the new created document with the help of Blog Model
-blogRoutes.post("/", (request, response, next) => {
+blogRoutes.post("/", async (request, response, next) => {
     // get the request body
     const body = request.body;
 
@@ -57,17 +58,18 @@ blogRoutes.post("/", (request, response, next) => {
     });
 
     // save the blog
-    blog.save()
-        .then((result) => {
-            response.json(result);
-        })
-        .catch((error) => next(error));
+    try {
+        const savedBlog = await blog.save();
+        response.json(savedBlog);
+    } catch (error) {
+        next(error);
+    }
 });
 
 // @@ PUT request
 // @@ Path '/api/blogs/:id'
 // @@ Set the response to the newly created obj based on the request body
-blogRoutes.put("/:id", (request, response, next) => {
+blogRoutes.put("/:id", async (request, response, next) => {
     // get the id from the url request params
     const id = request.params.id;
 
@@ -83,26 +85,33 @@ blogRoutes.put("/:id", (request, response, next) => {
     };
 
     // use findByIdAndUpdate method from the model Blog
-    Blog.findByIdAndUpdate(id, blog, { new: true, runValidators: true })
-        .then((result) => {
-            response.json(result);
-        })
-        .catch((error) => next(error));
+    try {
+        const result = await Blog.findByIdAndUpdate(id, blog, {
+            new: true,
+            runValidators: true,
+        });
+
+        response.json(result);
+    } catch (error) {
+        next(error);
+    }
 });
 
 // @@ DELETE request for single resource
 // @@ Path '/api/blogs/:id'
 // @@ Set the response to 204 no content and end() method, which tells that no more data is sent
-blogRoutes.delete("/:id", (request, response, next) => {
+blogRoutes.delete("/:id", async (request, response, next) => {
     // get the id from the request params id
     const id = request.params.id;
 
-    // use findByIdAndDelete method from Blog model
-    Blog.findByIdAndDelete(id)
-        .then((result) => {
-            response.status(204).end();
-        })
-        .catch((error) => next(error));
+    try {
+        // use findByIdAndDelete method from Blog model
+        await Blog.findByIdAndDelete(id);
+
+        response.status(204).end();
+    } catch (error) {
+        next(error);
+    }
 });
 
 module.exports = blogRoutes;
