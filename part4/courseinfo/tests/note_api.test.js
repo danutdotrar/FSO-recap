@@ -16,19 +16,27 @@ const app = require("../app");
 const api = supertest(app);
 
 // run these before every test starts
+// initialize database
+// wait for all the async operations to finish execution
 beforeEach(async () => {
     await Note.deleteMany({});
     console.log("cleared");
 
-    // create an array with new notes made with Note model
+    // iteram peste initial notes si salvam fiecare nota cu model constructorul Note
+    // noteObjects va contine un array de Mongoose objects create cu model constructor Note
+    // vom avea un array de documente noi pe care trebuie sa-l salvam
     const noteObjects = helper.initialNotes.map((note) => new Note(note));
 
-    // create a Promise array for each note in noteObjects
-    // an array of Promises for saving each note in the database
+    // iteram noteObjects si salvam fiecare nota cu metoda save(), asta va rezulta un array de Promises
+    // acesta lucru va rezulta intr-un array de promises
     const promiseArray = noteObjects.map((note) => note.save());
 
     // wait for all async operations to finish executing
     // await for all the Promises in the Promise array
+    // va trebui sa asteptam toate promise-urile din promiseArray sa se execute
+    // folosim Promise.all()
+    // Promise.all poate fi folosit sa transforme un array de Promises intr-un singur Promise, odata ce fiecare promise din array este fullfiled/rezolvat
+    // Promise.all rezolva Promises in paralel
     await Promise.all(promiseArray);
 
     console.log("done");
