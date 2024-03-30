@@ -52,6 +52,17 @@ test("blogs are returned in correct format and length", async () => {
     );
 });
 
+test("the unique identifier is named 'id'", async () => {
+    // get a resource from db
+    const blogs = blogHelper.blogsInDb();
+
+    // take first blog
+    const firstBlog = blogs[0];
+
+    // get request to resource unique id
+    await api.get(`/api/blogs/${firstBlog.id}`).expect(200);
+});
+
 // inchidem mongodb
 after(async () => {
     await mongoose.connection.close();

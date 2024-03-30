@@ -26,7 +26,7 @@ blogRoutes.get("/:id", async (request, response, next) => {
 
     // find by id the doc with model method findById(id)
     try {
-        const result = Blog.findById(id);
+        const result = await Blog.findById(id);
 
         if (result) {
             response.json(result);
