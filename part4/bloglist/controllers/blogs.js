@@ -66,7 +66,7 @@ blogRoutes.post("/", async (request, response, next) => {
     }
 });
 
-// @@ PUT request
+// @@ PUT request for single resource
 // @@ Path '/api/blogs/:id'
 // @@ Set the response to the newly created obj based on the request body
 blogRoutes.put("/:id", async (request, response, next) => {
