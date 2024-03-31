@@ -55,13 +55,13 @@ test("the unique identifier is named 'id'", async () => {
     // take first blog
     const firstBlog = blogs[0];
 
+    assert(result.body.hasOwnProperty("id"));
+
     // get request to resource unique id
     const result = await api
         .get(`/api/blogs/${firstBlog.id}`)
         .expect(200)
         .expect("Content-Type", /application\/json/);
-
-    assert(result.body.hasOwnProperty("id"));
 });
 
 test("new blog is created and blog is saved correctly", async () => {
@@ -83,11 +83,17 @@ test("new blog is created and blog is saved correctly", async () => {
     // get the blogs
     const blogsAtEnd = await helper.blogsInDb();
 
+    const titleOnlyArr = blogsAtEnd.map((blog) => blog.title);
+
     // verificam daca lungimea blogs-urilor din baza de date este aceeasi ca initialBlogs length + 1
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
 
     // verificam daca contentul este acelasi
     // verificam daca titlul ultimului obj (cel creat) este acelasi cu titlul blogToPost
+    assert.strictEqual(
+        result.body.title,
+        titleOnlyArr[titleOnlyArr.length - 1]
+    );
 });
 
 // inchidem mongodb
