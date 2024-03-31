@@ -1,6 +1,5 @@
 // write a test for HTTP request GET using the supertest llibrary
 
-//
 const { test, after, beforeEach } = require("node:test");
 const assert = require("node:assert");
 
