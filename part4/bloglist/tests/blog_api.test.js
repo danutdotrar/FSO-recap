@@ -15,28 +15,34 @@ const api = supertest(app);
 const Blog = require("../models/blog");
 const mongoose = require("mongoose");
 
-// initializam baza de date
-// inainte de toate testele
-beforeEach(async () => {
-    console.log("saving blogs...");
-    // reset database
-    await Blog.deleteMany({});
+// // initializam baza de date
+// // inainte de toate testele
+// beforeEach(async () => {
+//     console.log("saving blogs...");
+//     // reset database
+//     await Blog.deleteMany({});
 
-    // trebuie sa salvam initialBlogs in MongoDB
-    // ca sa salvam un obiect in MongoDB, trebuie sa folosim model constructorul Blog pentru a crea un document care mai apoi poate fi salvat prin metoda .save()
-    // cream un array de documente/obiecte, fiecare creat cu model constructorul Blog
-    const blogsObjects = helper.initialBlogs.map((blog) => new Blog(blog));
+//     // trebuie sa salvam initialBlogs in MongoDB
+//     // ca sa salvam un obiect in MongoDB, trebuie sa folosim model constructorul Blog pentru a crea un document care mai apoi poate fi salvat prin metoda .save()
+//     // cream un array de documente/obiecte, fiecare creat cu model constructorul Blog
+//     const blogsObjects = helper.initialBlogs.map((blog) => new Blog(blog));
 
-    // iteram peste fiecare document din blogsObject si il salvam
-    // fiecare blog salvat va rezulta intr-un Promise
-    const promiseArray = blogsObjects.map((blog) => blog.save());
+//     // iteram peste fiecare document din blogsObject si il salvam
+//     // fiecare blog salvat va rezulta intr-un Promise
+//     const promiseArray = blogsObjects.map((blog) => blog.save());
 
-    // avem un array de Promises, asadar putem folosi Promise.all() pentru a crea un singur Promise DOAR dupa ce toate Promises din  promiseArray sunt fullfiled
-    await Promise.all(promiseArray);
-    console.log("Blogs are saved!");
-});
+//     // avem un array de Promises, asadar putem folosi Promise.all() pentru a crea un singur Promise DOAR dupa ce toate Promises din  promiseArray sunt fullfiled
+//     await Promise.all(promiseArray);
+//     console.log("Blogs are saved!");
+// });
 
 describe("when there is some blogs saved", () => {
+    beforeEach(async () => {
+        // reset the db and populate with initial blogs
+        await Blog.deleteMany({});
+        await Blog.insertMany(helper.initialBlogs);
+    });
+
     // check if blogs are returned in the correct format and length
     test("blogs are returned in correct format and length", async () => {
         // check the status code and the format type
@@ -59,13 +65,13 @@ describe("when there is some blogs saved", () => {
         // take first blog
         const firstBlog = blogs[0];
 
-        assert(result.body.hasOwnProperty("id"));
-
         // get request to resource unique id
         const result = await api
             .get(`/api/blogs/${firstBlog.id}`)
             .expect(200)
             .expect("Content-Type", /application\/json/);
+
+        assert(result.body.hasOwnProperty("id"));
     });
 
     test("new blog is created and blog is saved correctly", async () => {
@@ -117,7 +123,7 @@ describe("when there is some blogs saved", () => {
         assert.strictEqual(result.body.likes, 0);
     });
 
-    test.only("status 400 if 'title' or 'url' missing from request data", async () => {
+    test("status 400 if 'title' or 'url' missing from request data", async () => {
         // define the needed blog to post with empty title or url
         const blogToPost = {
             title: "",
@@ -132,6 +138,35 @@ describe("when there is some blogs saved", () => {
             .post("/api/blogs")
             .send(blogToPost)
             .expect(400);
+    });
+
+    test("deleting a blog has status 204", async () => {
+        // get first blog's id
+        const blogs = await helper.blogsInDb();
+        const firstBlog = blogs[0];
+
+        await api.delete(`/api/blogs/${firstBlog.id}`).expect(204);
+    });
+
+    test("updating increases 'likes' by 1", async () => {
+        // get the blogs arr
+        const blogs = await helper.blogsInDb();
+
+        // get the first blog in blogs arr to use its id
+        const firstBlog = blogs[0];
+
+        // define obj for updating
+        const updatingLikesObj = {
+            likes: firstBlog.likes + 1,
+        };
+
+        // make HTTP PUT request
+        const result = await api
+            .put(`/api/blogs/${firstBlog.id}`)
+            .send(updatingLikesObj)
+            .expect(200);
+
+        assert.strictEqual(result.body.likes, firstBlog.likes + 1);
     });
 });
 

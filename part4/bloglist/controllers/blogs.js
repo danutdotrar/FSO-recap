@@ -78,9 +78,9 @@ blogRoutes.put("/:id", async (request, response, next) => {
 
     // define new obj with the data from the body
     const blog = {
-        title: body.title,
-        author: body.author,
-        url: body.url,
+        // title: body.title,
+        // author: body.author,
+        // url: body.url,
         likes: body.likes,
     };
 
