@@ -96,6 +96,23 @@ test("new blog is created and blog is saved correctly", async () => {
     );
 });
 
+test.only("if 'likes' is missing, the default value will be 0", async () => {
+    const blogToPost = {
+        title: "if 'likes' missing, likes=0",
+        author: "likes test",
+        url: "some testing",
+    };
+
+    // make post request for the blog with 'likes' property missing
+    const result = await api
+        .post("/api/blogs/")
+        .send(blogToPost)
+        .expect(200)
+        .expect("Content-Type", /application\/json/);
+
+    assert.strictEqual(result.body.likes, 0);
+});
+
 // inchidem mongodb
 after(async () => {
     await mongoose.connection.close();
