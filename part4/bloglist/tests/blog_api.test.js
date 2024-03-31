@@ -36,95 +36,103 @@ beforeEach(async () => {
     console.log("Blogs are saved!");
 });
 
-// check if blogs are returned in the correct format and length
-test("blogs are returned in correct format and length", async () => {
-    // check the status code and the format type
-    const returnedBlogs = await api
-        .get("/api/blogs")
-        .expect(200)
-        .expect("Content-Type", /application\/json/);
+describe("when there is some blogs saved", () => {
+    // check if blogs are returned in the correct format and length
+    test("blogs are returned in correct format and length", async () => {
+        // check the status code and the format type
+        const returnedBlogs = await api
+            .get("/api/blogs")
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
 
-    // check if the length of returnedBlogs is the same as the length of initial blogs
-    assert.strictEqual(returnedBlogs.body.length, helper.initialBlogs.length);
-});
+        // check if the length of returnedBlogs is the same as the length of initial blogs
+        assert.strictEqual(
+            returnedBlogs.body.length,
+            helper.initialBlogs.length
+        );
+    });
 
-test("the unique identifier is named 'id'", async () => {
-    // get a resource from db
-    const blogs = await helper.blogsInDb();
+    test("the unique identifier is named 'id'", async () => {
+        // get a resource from db
+        const blogs = await helper.blogsInDb();
 
-    // take first blog
-    const firstBlog = blogs[0];
+        // take first blog
+        const firstBlog = blogs[0];
 
-    assert(result.body.hasOwnProperty("id"));
+        assert(result.body.hasOwnProperty("id"));
 
-    // get request to resource unique id
-    const result = await api
-        .get(`/api/blogs/${firstBlog.id}`)
-        .expect(200)
-        .expect("Content-Type", /application\/json/);
-});
+        // get request to resource unique id
+        const result = await api
+            .get(`/api/blogs/${firstBlog.id}`)
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
+    });
 
-test("new blog is created and blog is saved correctly", async () => {
-    // post request cu api.post()
-    const blogToPost = {
-        title: "test from blog_api.test",
-        author: "testing creation of blog",
-        url: "some testing",
-        likes: 12,
-    };
+    test("new blog is created and blog is saved correctly", async () => {
+        // post request cu api.post()
+        const blogToPost = {
+            title: "test from blog_api.test",
+            author: "testing creation of blog",
+            url: "some testing",
+            likes: 12,
+        };
 
-    // expect code 200 si content type app json
-    const result = await api
-        .post("/api/blogs")
-        .send(blogToPost)
-        .expect(200)
-        .expect("Content-Type", /application\/json/);
+        // expect code 200 si content type app json
+        const result = await api
+            .post("/api/blogs")
+            .send(blogToPost)
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
 
-    // get the blogs
-    const blogsAtEnd = await helper.blogsInDb();
+        // get the blogs
+        const blogsAtEnd = await helper.blogsInDb();
 
-    const titleOnlyArr = blogsAtEnd.map((blog) => blog.title);
+        const titleOnlyArr = blogsAtEnd.map((blog) => blog.title);
 
-    // verificam daca lungimea blogs-urilor din baza de date este aceeasi ca initialBlogs length + 1
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
+        // verificam daca lungimea blogs-urilor din baza de date este aceeasi ca initialBlogs length + 1
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1);
 
-    // verificam daca contentul este acelasi
-    // verificam daca titlul ultimului obj (cel creat) este acelasi cu titlul blogToPost
-    assert.strictEqual(
-        result.body.title,
-        titleOnlyArr[titleOnlyArr.length - 1]
-    );
-});
+        // verificam daca contentul este acelasi
+        // verificam daca titlul ultimului obj (cel creat) este acelasi cu titlul blogToPost
+        assert.strictEqual(
+            result.body.title,
+            titleOnlyArr[titleOnlyArr.length - 1]
+        );
+    });
 
-test("if 'likes' is missing, the default value will be 0", async () => {
-    const blogToPost = {
-        title: "if 'likes' missing, likes=0",
-        author: "likes test",
-        url: "some testing",
-    };
+    test("if 'likes' is missing, the default value will be 0", async () => {
+        const blogToPost = {
+            title: "if 'likes' missing, likes=0",
+            author: "likes test",
+            url: "some testing",
+        };
 
-    // make post request for the blog with 'likes' property missing
-    const result = await api
-        .post("/api/blogs/")
-        .send(blogToPost)
-        .expect(200)
-        .expect("Content-Type", /application\/json/);
+        // make post request for the blog with 'likes' property missing
+        const result = await api
+            .post("/api/blogs/")
+            .send(blogToPost)
+            .expect(200)
+            .expect("Content-Type", /application\/json/);
 
-    assert.strictEqual(result.body.likes, 0);
-});
+        assert.strictEqual(result.body.likes, 0);
+    });
 
-test.only("status 400 if 'title' or 'url' missing from request data", async () => {
-    // define the needed blog to post with empty title or url
-    const blogToPost = {
-        title: "",
-        author: "status 400 broski",
-        url: "",
-        likes: 1,
-    };
+    test.only("status 400 if 'title' or 'url' missing from request data", async () => {
+        // define the needed blog to post with empty title or url
+        const blogToPost = {
+            title: "",
+            author: "status 400 broski",
+            url: "",
+            likes: 1,
+        };
 
-    // make HTTP post request with api
-    // expect status code 400
-    const result = await api.post("/api/blogs").send(blogToPost).expect(400);
+        // make HTTP post request with api
+        // expect status code 400
+        const result = await api
+            .post("/api/blogs")
+            .send(blogToPost)
+            .expect(400);
+    });
 });
 
 // inchidem mongodb
