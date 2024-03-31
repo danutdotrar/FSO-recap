@@ -45,8 +45,8 @@ blogRoutes.post("/", async (request, response, next) => {
     // get the request body
     const body = request.body;
 
-    if (!body.title) {
-        return response.status(400).json({ error: "title missing" });
+    if (!body.title || !body.url) {
+        return response.status(400).json({ error: "title or url missing" });
     }
 
     // create new document based on Blog model

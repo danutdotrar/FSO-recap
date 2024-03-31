@@ -1,6 +1,6 @@
 // write a test for HTTP request GET using the supertest llibrary
 
-const { test, after, beforeEach } = require("node:test");
+const { test, after, beforeEach, describe } = require("node:test");
 const assert = require("node:assert");
 
 // importam app pt a folosi supertest
@@ -96,7 +96,7 @@ test("new blog is created and blog is saved correctly", async () => {
     );
 });
 
-test.only("if 'likes' is missing, the default value will be 0", async () => {
+test("if 'likes' is missing, the default value will be 0", async () => {
     const blogToPost = {
         title: "if 'likes' missing, likes=0",
         author: "likes test",
@@ -111,6 +111,20 @@ test.only("if 'likes' is missing, the default value will be 0", async () => {
         .expect("Content-Type", /application\/json/);
 
     assert.strictEqual(result.body.likes, 0);
+});
+
+test.only("status 400 if 'title' or 'url' missing from request data", async () => {
+    // define the needed blog to post with empty title or url
+    const blogToPost = {
+        title: "",
+        author: "status 400 broski",
+        url: "",
+        likes: 1,
+    };
+
+    // make HTTP post request with api
+    // expect status code 400
+    const result = await api.post("/api/blogs").send(blogToPost).expect(400);
 });
 
 // inchidem mongodb
