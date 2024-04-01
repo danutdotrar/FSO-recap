@@ -23,6 +23,10 @@ mongoose.set("strictQuery", false);
 const noteSchema = new mongoose.Schema({
     content: { type: String, minLength: 5, required: true },
     important: Boolean,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
 });
 
 // format the objects returned by the schema

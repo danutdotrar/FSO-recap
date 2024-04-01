@@ -17,6 +17,7 @@ const app = express();
 const cors = require("cors");
 // import notesRouter
 const notesRouter = require("./controllers/notes");
+const usersRouter = require("./controllers/users");
 
 // connect to mongoose
 mongoose.set("strictQuery", false);
@@ -37,8 +38,11 @@ mongoose
 // use json parser
 app.use(express.json());
 app.use(cors());
+
 // use the notesRouter with the path defined
 app.use("/api/notes", notesRouter);
+app.use("/api/users", usersRouter);
+
 // middlewares
 app.use(middleware.requestLogger);
 
