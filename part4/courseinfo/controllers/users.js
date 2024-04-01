@@ -44,9 +44,8 @@ usersRouter.post("/", async (request, response) => {
     // save the new created doc with save() method
     const result = await user.save();
 
-    console.log("new happy user is ", result);
     // send the result with response.json
-    response.json(result);
+    response.status(201).json(result);
 });
 
 // delete a user
