@@ -8,6 +8,7 @@ const { trusted } = require("mongoose");
 
 // import the Note model
 const Note = require("../models/note");
+const User = require("../models/user");
 
 // -- create the routes --
 
@@ -47,14 +48,24 @@ notesRouter.post("/", async (request, response, next) => {
     //     return response.status(400).json({ error: "content missing" });
     // }
 
+    // get the user id
+    const user = await User.findById(body.userId);
+
     // create new document with the model constructor Note to save on the db
     const note = new Note({
         content: body.content,
         important: Boolean(body.important) || false,
+        user: user.id,
     });
 
     // save the note to the database
     const savedNote = await note.save();
+
+    // update the users notes array with current note id
+    user.notes = user.notes.concat(savedNote._id);
+    // save the user to mongoDB
+    await user.save();
+
     response.status(201).json(savedNote);
 });
 
