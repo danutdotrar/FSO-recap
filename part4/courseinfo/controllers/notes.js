@@ -16,7 +16,10 @@ const User = require("../models/user");
 // @@ Path '/api/notes'
 // @@ Set the response to the result from the database
 notesRouter.get("/", async (request, response, next) => {
-    const notes = await Note.find({});
+    const notes = await Note.find({}).populate("user", {
+        username: 1,
+        name: 1,
+    });
     response.json(notes);
 });
 
@@ -48,7 +51,7 @@ notesRouter.post("/", async (request, response, next) => {
     //     return response.status(400).json({ error: "content missing" });
     // }
 
-    // get the user id
+    // get the current user id (user that made the POST request)
     const user = await User.findById(body.userId);
 
     // create new document with the model constructor Note to save on the db

@@ -21,6 +21,7 @@ mongoose.set("strictQuery", false);
 // define the schema
 // the schema will tell the mongo db how the saved objects are structured
 // the note contains the id of the user that created the note
+// 'ref' makes the reference to the 'User' model
 const noteSchema = new mongoose.Schema({
     content: { type: String, minLength: 5, required: true },
     important: Boolean,
