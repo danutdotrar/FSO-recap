@@ -16,7 +16,10 @@ const bcrypt = require("bcrypt");
 // @@ Path '/api/users'
 // @@ Set the response to the users found in MongoDB
 usersRouter.get("/", async (request, response) => {
-    const result = await User.find({}).populate("notes");
+    const result = await User.find({}).populate("notes", {
+        content: 1,
+        important: 1,
+    });
 
     response.json(result);
 });
