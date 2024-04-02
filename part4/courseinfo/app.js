@@ -18,6 +18,7 @@ const cors = require("cors");
 // import notesRouter
 const notesRouter = require("./controllers/notes");
 const usersRouter = require("./controllers/users");
+const loginRouter = require("./controllers/login");
 
 // connect to mongoose
 mongoose.set("strictQuery", false);
@@ -42,6 +43,7 @@ app.use(cors());
 // use the notesRouter with the path defined
 app.use("/api/notes", notesRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/login", loginRouter);
 
 // middlewares
 app.use(middleware.requestLogger);
