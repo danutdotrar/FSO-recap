@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 
 // define the schema
+// user contains an array of the notes (id of notes) that he created
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     name: String,
