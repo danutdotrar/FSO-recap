@@ -30,6 +30,9 @@ const errorHandler = (error, request, response, next) => {
             .send({ error: "expected `username` to be unique" });
     }
 
+    if (error.name === "JsonWebTokenError") {
+        return response.status(400).json({ error: "token missing or invalid" });
+    }
     next(error);
 };
 

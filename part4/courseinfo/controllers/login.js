@@ -22,7 +22,9 @@ loginRouter.post("/", async (request, response) => {
     // if user is not found return false
     // else, bcrypt compare the password from the request with the passwordHash from the mongoDB
     const passwordCorrect =
-        user === null ? false : bcrypt.compare(password, user.passwordHash);
+        user === null
+            ? false
+            : await bcrypt.compare(password, user.passwordHash);
 
     // if no user and passwordCorrect
     if (!(user && passwordCorrect)) {
@@ -31,7 +33,7 @@ loginRouter.post("/", async (request, response) => {
             .json({ error: "invalid username or password" });
     }
 
-    // create user for jwt token
+    // create user obj for jwt token
     const userForToken = {
         username: user.username,
         id: user._id,

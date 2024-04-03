@@ -4,11 +4,28 @@
 // import express Router
 const notesRouter = require("express").Router();
 
-const { trusted } = require("mongoose");
+// import jwt
+const jwt = require("jsonwebtoken");
 
 // import the Note model
 const Note = require("../models/note");
 const User = require("../models/user");
+
+// get the token
+// keep only the token from the request
+// remove 'Bearer' to keep only the token
+const getTokenFrom = (request) => {
+    // get the authorization header
+    const authorization = request.get("authorization");
+
+    // if authorization exists and starts with 'Bearer'
+    if (authorization && authorization.startsWith("Bearer")) {
+        // replace 'Bearer ' with ''
+        return authorization.replace("Bearer ", "");
+    }
+
+    return null;
+};
 
 // -- create the routes --
 
@@ -46,30 +63,35 @@ notesRouter.post("/", async (request, response, next) => {
     // get the body request
     const body = request.body;
 
-    // if content doesnt exists
-    // if (!body.content) {
-    //     return response.status(400).json({ error: "content missing" });
-    // }
+    // verify the jwt token
+    const decodedToken = jwt.verify(getTokenFrom(request), "secret");
+
+    // if decodedToken doesnt exists
+    if (!decodedToken.id) {
+        return response.status(401).json({ error: "token invalid" });
+    }
 
     // get the current user id (user that made the POST request)
-    const user = await User.findById(body.userId);
+    // get the user doc by id of decodedToken
+    const user = await User.findById(decodedToken.id);
 
     // create new document with the model constructor Note to save on the db
     const note = new Note({
         content: body.content,
         important: Boolean(body.important) || false,
-        user: user.id,
+        user: user._id,
     });
 
     // save the note to the database
     const savedNote = await note.save();
 
     // update the users notes array with current note id
+    // the user needs to be assigned the id of the saved note
     user.notes = user.notes.concat(savedNote._id);
     // save the user to mongoDB
     await user.save();
 
-    response.status(201).json(savedNote);
+    response.json(savedNote);
 });
 
 // @@ UPDATE request
