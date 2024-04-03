@@ -64,7 +64,7 @@ notesRouter.post("/", async (request, response, next) => {
     const body = request.body;
 
     // verify the jwt token
-    const decodedToken = jwt.verify(getTokenFrom(request), "secret");
+    const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
 
     // if decodedToken doesnt exists
     if (!decodedToken.id) {
