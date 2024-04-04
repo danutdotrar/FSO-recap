@@ -3,9 +3,13 @@
 // import stuff
 const mongoose = require("mongoose");
 
-// create schema
+// create new schema
 const userSchema = new mongoose.Schema({
-    username: String,
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
     name: String,
     passwordHash: String,
 });

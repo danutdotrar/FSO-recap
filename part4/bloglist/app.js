@@ -10,6 +10,7 @@ const app = express();
 const cors = require("cors");
 
 const mongoose = require("mongoose");
+require("express-async-errors");
 
 // use stuff
 app.use(cors());

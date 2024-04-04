@@ -32,12 +32,20 @@ userRouter.post("/", async (request, response) => {
     // get the data from the request body
     const { username, name, password } = request.body;
 
-    // trebuie sa salvam acest user in colectia noastra de useri
-    // cream un nou document cu model constructoru-ul User pe care il salvam in baza de data
+    // verificam username si parola sa fie min 3 length
+
+    if (username.length < 3 || password.length < 3) {
+        return response.status(400).json({
+            error: "username and password must be minimum 3 characters",
+        });
+    }
 
     // hashuram parola
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    // trebuie sa salvam acest user in colectia noastra de useri
+    // cream un nou document cu model constructoru-ul User pe care il salvam in baza de data
 
     const user = new User({
         username: username,
