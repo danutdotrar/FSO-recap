@@ -1,4 +1,4 @@
-// create database for users collection
+// create users collection
 
 // import stuff
 const mongoose = require("mongoose");
