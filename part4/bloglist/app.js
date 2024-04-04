@@ -28,8 +28,10 @@ mongoose
 
 // use base path with blogRoutes
 const blogRoutes = require("./controllers/blogs");
+const userRouter = require("./controllers/users");
 
 app.use("/api/blogs", blogRoutes);
+app.use("/api/users", userRouter);
 
 app.use(middleware.requestLogger);
 
