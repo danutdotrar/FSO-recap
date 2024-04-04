@@ -8,6 +8,8 @@ const userRouter = require("express").Router();
 const mongoose = require("mongoose");
 const User = require("../models/user");
 
+const bcrypt = require("bcrypt");
+
 // create http requests to get users/post user from/to mongo database
 // get req for users from the database
 // @@ GET request
@@ -26,5 +28,27 @@ userRouter.get("/", async (request, response) => {
 // @@ POST request
 // @@ Path '/api/users'
 // @@ Set the response the new created object containing data from the request body
+userRouter.post("/", async (request, response) => {
+    // get the data from the request body
+    const { username, name, password } = request.body;
+
+    // trebuie sa salvam acest user in colectia noastra de useri
+    // cream un nou document cu model constructoru-ul User pe care il salvam in baza de data
+
+    // hashuram parola
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+
+    const user = new User({
+        username: username,
+        name: name,
+        passwordHash: passwordHash,
+    });
+
+    // salvam userul in mongoDB cu metoda save()
+    const savedUser = await user.save();
+
+    response.json(savedUser);
+});
 
 module.exports = userRouter;
