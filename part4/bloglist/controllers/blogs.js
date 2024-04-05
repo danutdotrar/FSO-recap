@@ -2,7 +2,7 @@
 // The event handlers of routes are referred as 'controllers'
 const blogRoutes = require("express").Router();
 
-const { JsonWebTokenError } = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 // import Blog model
 const Blog = require("../models/blog");
 
@@ -47,7 +47,7 @@ blogRoutes.get("/:id", async (request, response, next) => {
 
 const getTokenFrom = (request) => {
     // if request has a token
-    if (request.headers.authorization.includes("Bearer")) {
+    if (request.headers.authorization.startsWith("Bearer")) {
         // keep only the token, remove Bearer
         const authorization = request.headers.authorization;
 
@@ -72,9 +72,10 @@ blogRoutes.post("/", async (request, response, next) => {
 
     // search user in collection by the id attached in token
     // get the token from the headers authorization
-    getTokenFrom(request);
+    const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+
     // find the user in collection that has the same id as the id in body request (current user)
-    const user = await User.findById(body.userId);
+    const user = await User.findById(decodedToken.id);
 
     // create new document based on Blog model
     const blog = new Blog({
