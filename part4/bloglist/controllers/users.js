@@ -17,7 +17,12 @@ const bcrypt = require("bcrypt");
 // @@ Set the response to the users found in database
 userRouter.get("/", async (request, response) => {
     // get the users from the database
-    const result = await User.find({});
+    const result = await User.find({}).populate("blogs", {
+        url: 1,
+        title: 1,
+        author: 1,
+        id: 1,
+    });
 
     // send the users with response.json()
     response.json(result);
