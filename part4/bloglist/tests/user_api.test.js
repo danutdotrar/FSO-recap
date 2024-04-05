@@ -36,55 +36,59 @@ beforeEach(async () => {
     await user.save();
 });
 
-test("check if invalid user (length < 3 for username and password) is not added", async () => {
-    // get the users at the start, before HTTP request
-    const usersAtStart = await helper.usersInDb();
+describe("adding user fails if", () => {
+    test("user is invalid (length < 3 for username and password)", async () => {
+        // get the users at the start, before HTTP request
+        const usersAtStart = await helper.usersInDb();
 
-    // check if invalid users are note added
-    // create new invalid user
-    const invalidUser = {
-        username: "a",
-        name: "test",
-        password: "a",
+        // check if invalid users are note added
+        // create new invalid user
+        const invalidUser = {
+            username: "a",
+            name: "test",
+            password: "a",
+
+            // create POST request
+        };
+        // expect correct status code
+        await api
+            .post("/api/users")
+            .send(invalidUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
+
+        // check if the length in the database remained the same after the api http request
+        // get the users at the end, after the HTTP request
+        const usersAtEnd = await helper.usersInDb();
+
+        assert.strictEqual(usersAtStart.length, usersAtEnd.length);
+    });
+
+    test("username is not unique", async () => {
+        // get the users at start before HTTP request
+        const usersAtStart = await helper.usersInDb();
+
+        // create invalid user with name NOT unique
+        const invalidUser = {
+            username: "root",
+            name: "not valid for sure",
+            password: "root",
+        };
 
         // create POST request
-    };
-    // expect correct status code
-    await api
-        .post("/api/users")
-        .send(invalidUser)
-        .expect(400)
-        .expect("Content-Type", /application\/json/);
+        // expect status code and content type
+        await api
+            .post("/api/users")
+            .send(invalidUser)
+            .expect(400)
+            .expect("Content-Type", /application\/json/);
 
-    // check if the length in the database remained the same after the api http request
-    // get the users at the end, after the HTTP request
-    const usersAtEnd = await helper.usersInDb();
+        // check the length of the users to be the same
+        // get the users at the end, after the HTTP request
+        const usersAtEnd = await helper.usersInDb();
 
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length);
-});
-
-test("username must be unique", async () => {
-    // get the users at start before HTTP request
-    const usersAtStart = await helper.usersInDb();
-
-    // create invalid user with name NOT unique
-    const invalidUser = {
-        username: "root",
-        name: "not valid for sure",
-        password: "root",
-    };
-
-    // create POST request
-    // expect status code and content type
-    await api.post("/api/users").send(invalidUser);
-    // .expect(400)
-    // .expect("Content-Type", /application\/json/);
-
-    // check the length of the users to be the same
-    // get the users at the end, after the HTTP request
-    const usersAtEnd = await helper.usersInDb();
-
-    assert.strictEqual(usersAtStart.length, usersAtEnd.length);
+        assert.strictEqual(usersAtStart.length, usersAtEnd.length);
+    });
 });
 
 // close connection after tests are executed
