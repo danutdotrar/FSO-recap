@@ -5,13 +5,19 @@ const blogRoutes = require("express").Router();
 // import Blog model
 const Blog = require("../models/blog");
 
+const User = require("../models/user");
+
 // define paths
 
 // @@ GET request
 // @@ Path '/api/blogs'
 // @@ Set response to the found blogs from Model
 blogRoutes.get("/", async (request, response) => {
-    const result = await Blog.find({});
+    const result = await Blog.find({}).populate("user", {
+        username: 1,
+        name: 1,
+        id: 1,
+    });
 
     // save the result with the response.json
     response.json(result);
@@ -49,17 +55,28 @@ blogRoutes.post("/", async (request, response, next) => {
         return response.status(400).json({ error: "title or url missing" });
     }
 
+    // find the user in collection that has the same id as the id in body request (current user)
+    const user = await User.findById(body.userId);
+
     // create new document based on Blog model
     const blog = new Blog({
         title: body.title,
         author: body.author,
         url: body.url,
         likes: body.likes || 0,
+        user: user.id,
     });
 
     // save the blog
     try {
         const savedBlog = await blog.save();
+
+        // update user blogs array with the id of saved blog
+        user.blogs = user.blogs.concat(savedBlog.id);
+
+        // save the user
+        await user.save();
+
         response.json(savedBlog);
     } catch (error) {
         next(error);
