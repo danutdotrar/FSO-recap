@@ -2,6 +2,7 @@
 // The event handlers of routes are referred as 'controllers'
 const blogRoutes = require("express").Router();
 
+const { JsonWebTokenError } = require("jsonwebtoken");
 // import Blog model
 const Blog = require("../models/blog");
 
@@ -44,6 +45,20 @@ blogRoutes.get("/:id", async (request, response, next) => {
     }
 });
 
+const getTokenFrom = (request) => {
+    // if request has a token
+    if (request.headers.authorization.includes("Bearer")) {
+        // keep only the token, remove Bearer
+        const authorization = request.headers.authorization;
+
+        // the token will be at 1 index in arr (second item)
+        const token = authorization.split(" ")[1];
+        return token;
+    }
+
+    return null;
+};
+
 // @@ POST request
 // @@ Path '/api/blogs'
 // @@ Set the response to the new created document with the help of Blog Model
@@ -55,6 +70,9 @@ blogRoutes.post("/", async (request, response, next) => {
         return response.status(400).json({ error: "title or url missing" });
     }
 
+    // search user in collection by the id attached in token
+    // get the token from the headers authorization
+    getTokenFrom(request);
     // find the user in collection that has the same id as the id in body request (current user)
     const user = await User.findById(body.userId);
 
