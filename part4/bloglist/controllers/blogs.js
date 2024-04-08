@@ -48,10 +48,10 @@ blogRoutes.get("/:id", async (request, response, next) => {
 
 const getTokenFrom = (request) => {
     // if request has a token
-    if (request.headers.authorization.startsWith("Bearer")) {
-        // keep only the token, remove Bearer
-        const authorization = request.headers.authorization;
+    const authorization = request.headers.authorization;
 
+    if (authorization && authorization.startsWith("Bearer")) {
+        // keep only the token, remove Bearer
         // the token will be at 1 index in arr (second item)
         const token = authorization.split(" ")[1];
         return token;
@@ -141,11 +141,30 @@ blogRoutes.delete("/:id", async (request, response, next) => {
     // get the id from the request params id
     const id = request.params.id;
 
+    // the blog must be deleted only by the user who created it
+    // find the user with the decoded token user id
     try {
-        // use findByIdAndDelete method from Blog model
-        await Blog.findByIdAndDelete(id);
+        // decode the token
+        const decodedToken = jwt.verify(
+            getTokenFrom(request),
+            process.env.SECRET
+        );
 
-        response.status(204).end();
+        // find the user in mongoDB by the user id from decoded Token
+        const user = await User.findById(decodedToken.id);
+
+        // compare the user id with the id of the blog
+        // find the blog
+        const blog = await Blog.findById(request.params.id);
+
+        // use findByIdAndDelete method from Blog model
+        if (user.id.toString() === blog.user.toString()) {
+            await Blog.findByIdAndDelete(id);
+
+            response.status(204).end();
+        } else {
+            return response.status(400).send({ error: "invalid TOKEN BRO" });
+        }
     } catch (error) {
         next(error);
     }
