@@ -10,6 +10,7 @@ const app = express();
 const cors = require("cors");
 
 const mongoose = require("mongoose");
+
 require("express-async-errors");
 
 // use stuff
@@ -27,11 +28,12 @@ mongoose
     })
     .catch((error) => logger.info(error));
 
-// use base path with blogRoutes
+// import Routers
 const blogRoutes = require("./controllers/blogs");
 const userRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 
+// use Routers with base url
 app.use("/api/blogs", blogRoutes);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);

@@ -35,7 +35,7 @@ loginRouter.post("/", async (request, response) => {
 
     const userForToken = { username: user.username, id: user.id };
 
-    // the toke will have attached the user obj data
+    // the token will have attached the user obj data
     const token = jwt.sign(userForToken, process.env.SECRET, {
         expiresIn: "1h",
     });
