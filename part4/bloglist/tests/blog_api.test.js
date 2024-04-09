@@ -15,6 +15,8 @@ const api = supertest(app);
 const Blog = require("../models/blog");
 const mongoose = require("mongoose");
 
+const bcrypt = require("bcrypt");
+
 // // initializam baza de date
 // // inainte de toate testele
 // beforeEach(async () => {
@@ -75,17 +77,28 @@ describe("when there is some blogs saved", () => {
     });
 
     test("new blog is created and blog is saved correctly", async () => {
+        // login
+        const response = await api.post("/api/login").send({
+            username: "danut",
+            password: "danut",
+        });
+
+        // get the token obj
+        const responseBody = await response.body;
+
         // post request cu api.post()
         const blogToPost = {
             title: "test from blog_api.test",
             author: "testing creation of blog",
             url: "some testing",
             likes: 12,
+            user: "66153683957683eecb9202ed",
         };
 
         // expect code 200 si content type app json
         const result = await api
-            .post("/api/blogs")
+            .post("/api/blogs/")
+            .set("Authorization", `Bearer ${responseBody.token}`)
             .send(blogToPost)
             .expect(200)
             .expect("Content-Type", /application\/json/);

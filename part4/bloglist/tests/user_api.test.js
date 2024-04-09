@@ -17,6 +17,8 @@ const User = require("../models/user");
 // wrap app in supertest function library - supertest the app
 const api = supertest(app);
 
+const bcrypt = require("bcrypt");
+
 // import helper
 const helper = require("./blog_helper");
 
@@ -26,10 +28,17 @@ beforeEach(async () => {
     await User.deleteMany({});
 
     // create new user and populate the database
+    // hashuram parola
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash("danut", saltRounds);
+
+    // trebuie sa salvam acest user in colectia noastra de useri
+    // cream un nou document cu model constructoru-ul User pe care il salvam in baza de data
+
     const user = new User({
-        username: "root",
-        name: "Supertest",
-        password: "root",
+        username: "danut",
+        name: "danut",
+        passwordHash: passwordHash,
     });
 
     // save the user in database

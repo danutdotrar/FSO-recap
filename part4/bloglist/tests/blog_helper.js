@@ -8,6 +8,7 @@ const initialBlogs = [
         url: "test1",
         likes: 12,
         id: "66018d8a2b3c81aafdcc3a74",
+        user: "6615353bdc748aef06d0068a",
     },
     {
         title: "test2",
@@ -15,6 +16,7 @@ const initialBlogs = [
         url: "test2",
         likes: 123,
         id: "66019801bb32238b612763ad",
+        user: "6615353bdc748aef06d0068a",
     },
 ];
 

@@ -1,6 +1,12 @@
 // Middleware for the errors
 const logger = require("./logger");
 
+// import User model
+const User = require("../models/user");
+
+// import jwt to verify token
+const jwt = require("jsonwebtoken");
+
 // request logger
 const requestLogger = (request, response, next) => {
     logger.info("PATH: ", request.path);
@@ -62,9 +68,29 @@ const tokenExtractor = (request, response, next) => {
     next();
 };
 
+// user extractor middleware
+const userExtractor = async (request, response, next) => {
+    // get the token
+    if (request.token) {
+        const token = request.token;
+
+        // decode token, verify with jwt
+        const decodedToken = jwt.verify(token, process.env.SECRET);
+
+        // use the data from token to search the user in database
+        const user = await User.findById(decodedToken.id);
+
+        // attach the user to the request
+        request.user = user;
+    }
+    // call next to move to the next middleware
+    next();
+};
+
 module.exports = {
     requestLogger,
     unknownEndpoint,
     errorHandler,
     tokenExtractor,
+    userExtractor,
 };

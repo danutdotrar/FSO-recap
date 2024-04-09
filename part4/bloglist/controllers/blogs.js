@@ -9,6 +9,20 @@ const Blog = require("../models/blog");
 
 const User = require("../models/user");
 
+// const getTokenFrom = (request) => {
+//     // if request has a token
+//     const authorization = request.headers.authorization;
+
+//     if (authorization && authorization.startsWith("Bearer")) {
+//         // keep only the token, remove Bearer
+//         // the token will be at 1 index in arr (second item)
+//         const token = authorization.split(" ")[1];
+//         return token;
+//     }
+
+//     return null;
+// };
+
 // define paths
 
 // @@ GET request
@@ -46,20 +60,6 @@ blogRoutes.get("/:id", async (request, response, next) => {
     }
 });
 
-const getTokenFrom = (request) => {
-    // if request has a token
-    const authorization = request.headers.authorization;
-
-    if (authorization && authorization.startsWith("Bearer")) {
-        // keep only the token, remove Bearer
-        // the token will be at 1 index in arr (second item)
-        const token = authorization.split(" ")[1];
-        return token;
-    }
-
-    return null;
-};
-
 // @@ POST request
 // @@ Path '/api/blogs'
 // @@ Set the response to the new created document with the help of Blog Model
@@ -73,10 +73,12 @@ blogRoutes.post("/", async (request, response, next) => {
 
     // search user in collection by the id attached in token
     // get the token from the headers authorization
-    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+    // const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
     // find the user in collection that has the same id as the id in body request (current user)
-    const user = await User.findById(decodedToken.id);
+    // const user = await User.findById(decodedToken.id);
+
+    const user = await User.findById(request.user.id);
 
     // create new document based on Blog model
     const blog = new Blog({
@@ -145,10 +147,10 @@ blogRoutes.delete("/:id", async (request, response, next) => {
     // find the user with the decoded token user id
     try {
         // decode the token
-        const decodedToken = jwt.verify(request.token, process.env.SECRET);
+        // const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
         // find the user in mongoDB by the user id from decoded Token
-        const user = await User.findById(decodedToken.id);
+        const user = await User.findById(request.user.id);
 
         // compare the user id with the id of the blog
         // find the blog
@@ -160,7 +162,9 @@ blogRoutes.delete("/:id", async (request, response, next) => {
 
             response.status(204).end();
         } else {
-            return response.status(400).send({ error: "invalid TOKEN BRO" });
+            return response
+                .status(400)
+                .send({ error: "invalid TOKEN for delete BRO" });
         }
     } catch (error) {
         next(error);
