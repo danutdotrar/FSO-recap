@@ -33,6 +33,9 @@ const blogRoutes = require("./controllers/blogs");
 const userRouter = require("./controllers/users");
 const loginRouter = require("./controllers/login");
 
+// use token extractor middleware before all routes
+app.use(middleware.tokenExtractor);
+
 // use Routers with base url
 app.use("/api/blogs", blogRoutes);
 app.use("/api/users", userRouter);

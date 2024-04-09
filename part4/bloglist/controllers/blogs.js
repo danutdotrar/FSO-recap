@@ -73,7 +73,7 @@ blogRoutes.post("/", async (request, response, next) => {
 
     // search user in collection by the id attached in token
     // get the token from the headers authorization
-    const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
     // find the user in collection that has the same id as the id in body request (current user)
     const user = await User.findById(decodedToken.id);
@@ -145,10 +145,7 @@ blogRoutes.delete("/:id", async (request, response, next) => {
     // find the user with the decoded token user id
     try {
         // decode the token
-        const decodedToken = jwt.verify(
-            getTokenFrom(request),
-            process.env.SECRET
-        );
+        const decodedToken = jwt.verify(request.token, process.env.SECRET);
 
         // find the user in mongoDB by the user id from decoded Token
         const user = await User.findById(decodedToken.id);

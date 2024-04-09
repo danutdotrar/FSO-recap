@@ -55,10 +55,8 @@ const tokenExtractor = (request, response, next) => {
         // split the authorization into 2, the token will be the second index
         const token = authorization.split(" ")[1];
 
-        return token;
+        request.token = token;
     }
-
-    return null;
 
     // call next to move the control to the next middleware
     next();
