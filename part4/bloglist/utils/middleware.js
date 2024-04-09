@@ -46,4 +46,27 @@ const errorHandler = (error, request, response, next) => {
     next(error);
 };
 
-module.exports = { requestLogger, unknownEndpoint, errorHandler };
+const tokenExtractor = (request, response, next) => {
+    // get the authorization from request headers
+    const authorization = request.headers.authorization;
+
+    // check if authorization exists and 'Bearer' is there
+    if (authorization && authorization.startsWith("Bearer ")) {
+        // split the authorization into 2, the token will be the second index
+        const token = authorization.split(" ")[1];
+
+        return token;
+    }
+
+    return null;
+
+    // call next to move the control to the next middleware
+    next();
+};
+
+module.exports = {
+    requestLogger,
+    unknownEndpoint,
+    errorHandler,
+    tokenExtractor,
+};
