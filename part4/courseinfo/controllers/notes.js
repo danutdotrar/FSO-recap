@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 // import the Note model
 const Note = require("../models/note");
 const User = require("../models/user");
+const { trusted } = require("mongoose");
 
 // get the token
 // keep only the token from the request
