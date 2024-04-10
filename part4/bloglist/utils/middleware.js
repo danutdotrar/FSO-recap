@@ -1,4 +1,6 @@
 // Middleware for the errors
+// a middleware is a function that executes between the moment the backend receives a HTTP request and the moment the backend sends a response
+
 const logger = require("./logger");
 
 // import User model
@@ -48,7 +50,7 @@ const errorHandler = (error, request, response, next) => {
         return response.status(401).json({ error: "token expired" });
     }
 
-    // move to next error middleware
+    // move to next middleware
     next(error);
 };
 
