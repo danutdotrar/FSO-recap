@@ -96,6 +96,8 @@ const App = () => {
             const user = await loginService.login({ username, password });
 
             setUser(user);
+            console.log(user);
+
             setUsername("");
             setPassword("");
             console.log("login OK");
