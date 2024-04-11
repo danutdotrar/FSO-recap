@@ -9,21 +9,7 @@ const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-
-    // store the token containing the token, username and name in a 'user' state
-
-    // show blogs only if logged in
-    // use the token to find the user
-
-    // login
-    // facem un HTTP request pentru login (POST)
-    // request-ul trebuie sa contina username si parola pentru a trimite catre backend
-    // backend-ul verifica username si parola
-    // daca user este gasit si parola corespunde, creeaza un token (jwt sign (detalii user, secret, expire time))
-    // in token se ataseaza username, id care pot fi folosite daca se decodeaza token-ul cu jwt.verify
-    // backend trimite ca raspuns token-ul (codul) si username si name
-
-    // login form pentru login POST request
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -34,14 +20,21 @@ const App = () => {
 
         // facem un POST request pentru login cu username si parola
         try {
-            await loginService.login({ username, password });
+            const user = await loginService.login({ username, password });
+
+            // save the user to state
+            setUser(user);
+
+            setUsername("");
+            setPassword("");
         } catch (error) {
             alert("username or password not ok");
         }
     };
 
-    return (
-        <div>
+    const loginForm = () => (
+        <>
+            <h2>Log in to app</h2>
             <form onSubmit={handleLogin}>
                 <div>
                     username:{" "}
@@ -62,13 +55,20 @@ const App = () => {
 
                 <button type="submit">Login</button>
             </form>
+        </>
+    );
 
+    const renderData = () => (
+        <>
             <h2>blogs</h2>
+            <p>{user.name} is Logged In</p>
             {blogs.map((blog) => (
                 <Blog key={blog.id} blog={blog} />
             ))}
-        </div>
+        </>
     );
+
+    return <div>{user === null ? loginForm() : renderData()}</div>;
 };
 
 export default App;
