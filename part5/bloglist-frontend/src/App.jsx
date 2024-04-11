@@ -15,12 +15,25 @@ const App = () => {
         blogService.getAll().then((blogs) => setBlogs(blogs));
     }, []);
 
+    useEffect(() => {
+        const userFromLocalStorage = window.localStorage.getItem("blogUser");
+
+        // if user exists in local storage, save it in the 'user' state
+        if (userFromLocalStorage) {
+            setUser(userFromLocalStorage);
+        }
+    }, []);
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
         // facem un POST request pentru login cu username si parola
         try {
+            // save the user from the backend request (token, username, name)
             const user = await loginService.login({ username, password });
+
+            // save the user to local storage
+            window.localStorage.setItem("blogUser", JSON.stringify(user));
 
             // save the user to state
             setUser(user);
@@ -58,10 +71,22 @@ const App = () => {
         </>
     );
 
+    const handleLogOut = () => {
+        // clear local storage
+        window.localStorage.clear();
+        // set user to null to logout
+        setUser(null);
+    };
+
     const renderData = () => (
         <>
             <h2>blogs</h2>
-            <p>{user.name} is Logged In</p>
+            <div>
+                <p>
+                    {user.name} is Logged In{" "}
+                    <button onClick={handleLogOut}>Logout</button>
+                </p>
+            </div>
             {blogs.map((blog) => (
                 <Blog key={blog.id} blog={blog} />
             ))}
