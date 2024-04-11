@@ -25,6 +25,16 @@ const App = () => {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        // check if there is a user in local storage
+        // if user exists, save it in user state
+        const loggedUserJSON = window.localStorage.getItem("loggedNoteappUser");
+        if (loggedUserJSON) {
+            const user = JSON.parse(loggedUserJSON);
+            setUser(user);
+        }
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -95,8 +105,15 @@ const App = () => {
             // POST request for login
             const user = await loginService.login({ username, password });
 
+            //  save the user in local storage
+            window.localStorage.setItem(
+                "loggedNoteappUser",
+                JSON.stringify(user)
+            );
+
+            // set the token of the user for HTTP requests
+            noteService.setToken(user.token);
             setUser(user);
-            console.log(user);
 
             setUsername("");
             setPassword("");
