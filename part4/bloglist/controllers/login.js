@@ -42,7 +42,9 @@ loginRouter.post("/", async (request, response) => {
 
     // send the token with the response
     // trimitem tokenul cu response pentru a putea fi folosit de frontend
-    response.status(200).send({ token, username: user.username, id: user.id });
+    response
+        .status(200)
+        .send({ token, username: user.username, name: user.name });
 });
 
 module.exports = loginRouter;
