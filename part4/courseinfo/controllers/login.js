@@ -34,6 +34,7 @@ loginRouter.post("/", async (request, response) => {
     }
 
     // create user obj for jwt token
+    // attach username and id in the token
     const userForToken = {
         username: user.username,
         id: user._id,
