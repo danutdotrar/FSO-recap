@@ -78,6 +78,7 @@ blogRoutes.post("/", async (request, response, next) => {
     // find the user in collection that has the same id as the id in body request (current user)
     // const user = await User.findById(decodedToken.id);
 
+    console.log(request.user);
     const user = await User.findById(request.user.id);
 
     // create new document based on Blog model
