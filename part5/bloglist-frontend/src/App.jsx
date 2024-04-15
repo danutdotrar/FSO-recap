@@ -15,7 +15,11 @@ const App = () => {
     const [url, setUrl] = useState("");
 
     useEffect(() => {
-        blogService.getAll().then((blogs) => setBlogs(blogs));
+        const fetchData = async () => {
+            const blogs = await blogService.getAll();
+            setBlogs(blogs);
+        };
+        fetchData();
     }, []);
 
     useEffect(() => {
@@ -57,13 +61,26 @@ const App = () => {
         setUser(null);
     };
 
-    const handleBlogSubmit = (event) => {
+    const handleBlogSubmit = async (event) => {
         event.preventDefault();
 
-        console.log(title, author, url);
+        const newObj = { title, author, url };
+
+        // set the token to headers Authorization
+        blogService.setToken(user.token);
+
         // add the user that created this request
         // make a POST request to '/api/blogs'
-        // add likes?
+        const addNewBlog = await blogService.createBlog(newObj);
+
+        // update frontend
+        const updatedBlogs = blogs.concat(addNewBlog);
+        setBlogs(updatedBlogs);
+
+        // reset fields
+        setTitle("");
+        setAuthor("");
+        setUrl("");
     };
 
     const createBlogForm = () => (
