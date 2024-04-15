@@ -6,7 +6,7 @@ const baseURL = "/api/login";
 const login = async (credentials) => {
     // make a post request and store the response in a variable
     const response = await axios.post(baseURL, credentials);
-    // return the user object containing toke, username and name
+    // return the user object containing token, username and name
     return response.data;
 };
 

@@ -50,32 +50,6 @@ const App = () => {
         }
     };
 
-    const loginForm = () => (
-        <>
-            <h2>Log in to app</h2>
-            <form onSubmit={handleLogin}>
-                <div>
-                    username:{" "}
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={({ target }) => setUsername(target.value)}
-                    />
-                </div>
-                <div>
-                    password:{" "}
-                    <input
-                        type="text"
-                        value={password}
-                        onChange={({ target }) => setPassword(target.value)}
-                    />
-                </div>
-
-                <button type="submit">Login</button>
-            </form>
-        </>
-    );
-
     const handleLogOut = () => {
         // clear local storage
         window.localStorage.clear();
@@ -123,6 +97,32 @@ const App = () => {
                 <button type="submit">create blog</button>
             </form>
         </div>
+    );
+
+    const loginForm = () => (
+        <>
+            <h2>Log in to app</h2>
+            <form onSubmit={handleLogin}>
+                <div>
+                    username:{" "}
+                    <input
+                        type="text"
+                        value={username}
+                        onChange={({ target }) => setUsername(target.value)}
+                    />
+                </div>
+                <div>
+                    password:{" "}
+                    <input
+                        type="text"
+                        value={password}
+                        onChange={({ target }) => setPassword(target.value)}
+                    />
+                </div>
+
+                <button type="submit">Login</button>
+            </form>
+        </>
     );
 
     const renderData = () => (
