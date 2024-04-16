@@ -15,12 +15,16 @@ const App = () => {
     const [url, setUrl] = useState("");
 
     useEffect(() => {
-        const fetchData = async () => {
-            const blogs = await blogService.getAll();
-            setBlogs(blogs);
-        };
-        fetchData();
-    }, []);
+        if (user) {
+            const fetchData = async () => {
+                blogService.setToken(user.token);
+
+                const blogs = await blogService.getAll();
+                setBlogs(blogs);
+            };
+            fetchData();
+        }
+    }, [user]);
 
     useEffect(() => {
         const userFromLocalStorage = window.localStorage.getItem("blogUser");
