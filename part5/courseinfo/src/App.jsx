@@ -131,7 +131,6 @@ const App = () => {
     };
 
     const loginForm = () => {
-        // hide login button
         const hideWhenVisible = { display: loginVisible ? "none" : "" };
         const showWhenVisible = { display: loginVisible ? "" : "none" };
 
