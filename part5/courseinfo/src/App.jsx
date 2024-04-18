@@ -5,6 +5,7 @@ import loginService from "./services/login";
 
 import Note from "./components/Note";
 import Notification from "./components/Notification";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
     const [notes, setNotes] = useState(null);
@@ -14,6 +15,7 @@ const App = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
+    const [loginVisible, setLoginVisible] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -128,29 +130,39 @@ const App = () => {
         console.log("logging in with ", username, password);
     };
 
-    const loginForm = () => (
-        <form onSubmit={handleLogin}>
-            <div>
-                username{" "}
-                <input
-                    type="text"
-                    value={username}
-                    name="Username"
-                    onChange={({ target }) => setUsername(target.value)}
-                />
-            </div>
-            <div>
-                password{" "}
-                <input
-                    type="text"
-                    value={password}
-                    name="Password"
-                    onChange={({ target }) => setPassword(target.value)}
-                />
-            </div>
-            <button type="submit">login</button>
-        </form>
-    );
+    const loginForm = () => {
+        // hide login button
+        const hideWhenVisible = { display: loginVisible ? "none" : "" };
+        const showWhenVisible = { display: loginVisible ? "" : "none" };
+
+        return (
+            <>
+                <div style={hideWhenVisible}>
+                    <button onClick={() => setLoginVisible(true)}>
+                        log in
+                    </button>
+                </div>
+
+                <div style={showWhenVisible}>
+                    <LoginForm
+                        handleSubmit={handleLogin}
+                        handleUsernameChange={({ target }) =>
+                            setUsername(target.value)
+                        }
+                        handlePasswordChange={({ target }) =>
+                            setPassword(target.value)
+                        }
+                        username={username}
+                        password={password}
+                    />
+
+                    <button onClick={() => setLoginVisible(false)}>
+                        cancel
+                    </button>
+                </div>
+            </>
+        );
+    };
 
     const noteForm = () => (
         <form onSubmit={handleSubmit}>
