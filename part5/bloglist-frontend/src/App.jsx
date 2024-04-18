@@ -17,10 +17,14 @@ const App = () => {
     useEffect(() => {
         if (user) {
             const fetchData = async () => {
-                blogService.setToken(user.token);
+                try {
+                    blogService.setToken(user.token);
 
-                const blogs = await blogService.getAll();
-                setBlogs(blogs);
+                    const blogs = await blogService.getAll();
+                    setBlogs(blogs);
+                } catch (error) {
+                    setUser(null);
+                }
             };
             fetchData();
         }
