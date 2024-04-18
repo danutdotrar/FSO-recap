@@ -13,6 +13,7 @@ const App = () => {
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
+    const [errorMessage, setErrorMessage] = useState(null);
 
     useEffect(() => {
         if (user) {
@@ -58,7 +59,10 @@ const App = () => {
             setUsername("");
             setPassword("");
         } catch (error) {
-            alert("username or password not ok");
+            setErrorMessage("username or password not ok");
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
         }
     };
 
@@ -74,21 +78,32 @@ const App = () => {
 
         const newObj = { title, author, url };
 
-        // set the token to headers Authorization
-        blogService.setToken(user.token);
+        try {
+            // set the token to headers Authorization
+            blogService.setToken(user.token);
 
-        // add the user that created this request
-        // make a POST request to '/api/blogs'
-        const addNewBlog = await blogService.createBlog(newObj);
+            // add the user that created this request
+            // make a POST request to '/api/blogs'
+            const addNewBlog = await blogService.createBlog(newObj);
 
-        // update frontend
-        const updatedBlogs = blogs.concat(addNewBlog);
-        setBlogs(updatedBlogs);
+            // update frontend
+            const updatedBlogs = blogs.concat(addNewBlog);
+            setBlogs(updatedBlogs);
 
-        // reset fields
-        setTitle("");
-        setAuthor("");
-        setUrl("");
+            // reset fields
+            setTitle("");
+            setAuthor("");
+            setUrl("");
+
+            // add an alert for 5 seconds with the details of the posted blog
+            setErrorMessage(`new blog '${title} by ${author}' added`);
+
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
+        } catch (error) {
+            //
+        }
     };
 
     const createBlogForm = () => (
@@ -127,6 +142,19 @@ const App = () => {
     const loginForm = () => (
         <>
             <h2>Log in to app</h2>
+            {errorMessage && (
+                <>
+                    <div
+                        style={{
+                            borderRadius: "5px",
+                            backgroundColor: "lightpink",
+                            padding: "6px",
+                        }}
+                    >
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </>
+            )}
             <form onSubmit={handleLogin}>
                 <div>
                     username:{" "}
@@ -152,6 +180,20 @@ const App = () => {
 
     const renderData = () => (
         <>
+            {errorMessage && (
+                <>
+                    <div
+                        style={{
+                            borderRadius: "5px",
+                            backgroundColor: "lightgreen",
+                            padding: "6px",
+                        }}
+                    >
+                        <h2>{errorMessage}</h2>
+                    </div>
+                </>
+            )}
+
             <h2>blogs</h2>
             <div>
                 <p>
