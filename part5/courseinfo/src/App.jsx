@@ -6,6 +6,8 @@ import loginService from "./services/login";
 import Note from "./components/Note";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
+import NoteForm from "./components/NoteForm";
+import Togglable from "./components/Togglable";
 
 const App = () => {
     const [notes, setNotes] = useState(null);
@@ -126,8 +128,6 @@ const App = () => {
                 setErrorMessage(null);
             }, 5000);
         }
-
-        console.log("logging in with ", username, password);
     };
 
     const loginForm = () => {
@@ -163,22 +163,6 @@ const App = () => {
         );
     };
 
-    const noteForm = () => (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <input
-                    type="text"
-                    value={newNote}
-                    onChange={handleInputChange}
-                />
-            </div>
-
-            <div>
-                <button type="submit">save note</button>
-            </div>
-        </form>
-    );
-
     return (
         <div>
             <h1>Notes</h1>
@@ -189,7 +173,13 @@ const App = () => {
             ) : (
                 <div>
                     <p>{user.name} is logged in</p>
-                    {noteForm()}
+                    <Togglable buttonLabel="new note">
+                        <NoteForm
+                            handleSubmit={handleSubmit}
+                            value={newNote}
+                            handleInputChange={handleInputChange}
+                        />
+                    </Togglable>
                 </div>
             )}
 
