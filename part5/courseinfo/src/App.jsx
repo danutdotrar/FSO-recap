@@ -11,7 +11,6 @@ import Togglable from "./components/Togglable";
 
 const App = () => {
     const [notes, setNotes] = useState(null);
-    const [newNote, setNewNote] = useState("");
     const [showAll, setShowAll] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [username, setUsername] = useState("");
@@ -38,29 +37,6 @@ const App = () => {
             setUser(user);
         }
     }, []);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        // Create new noteObject
-        const noteObject = {
-            content: newNote,
-            important: Math.random() < 0.5,
-            id: (notes.length + 1).toString(),
-        };
-
-        const responseData = await noteService.create(noteObject);
-
-        // Concat noteObject to notes state
-        setNotes(notes.concat(responseData));
-
-        // reset newNote value
-        setNewNote("");
-    };
-
-    const handleInputChange = (e) => {
-        setNewNote(e.target.value);
-    };
 
     const toggleImportance = async (id) => {
         // find the note with the id of the clicked note
@@ -162,26 +138,44 @@ const App = () => {
             </>
         );
     };
+    const addNote = async (noteObject) => {
+        try {
+            // POST request
+            // attach the token to current request
+            noteService.setToken(user.token);
+
+            // make HTTP POST request
+            const response = await noteService.create(noteObject);
+
+            // update frontend
+            setNotes(notes.concat(response));
+        } catch (error) {
+            // if token expired, reset user
+            setUser(null);
+            setErrorMessage("Login expired, please authenticate again");
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
+        }
+    };
+
+    const noteForm = () => {
+        return (
+            <div>
+                <p>{user.name} is logged in</p>
+                <Togglable buttonLabel="new note">
+                    <NoteForm createNote={addNote} />
+                </Togglable>
+            </div>
+        );
+    };
 
     return (
         <div>
             <h1>Notes</h1>
             <Notification message={errorMessage} />
 
-            {!user ? (
-                loginForm()
-            ) : (
-                <div>
-                    <p>{user.name} is logged in</p>
-                    <Togglable buttonLabel="new note">
-                        <NoteForm
-                            handleSubmit={handleSubmit}
-                            value={newNote}
-                            handleInputChange={handleInputChange}
-                        />
-                    </Togglable>
-                </div>
-            )}
+            {!user ? loginForm() : noteForm()}
 
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
