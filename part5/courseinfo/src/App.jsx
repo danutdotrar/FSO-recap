@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import noteService from "./services/notes";
 import loginService from "./services/login";
@@ -17,6 +17,9 @@ const App = () => {
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
     const [loginVisible, setLoginVisible] = useState(false);
+
+    // add ref for Togglable component
+    const noteFormRef = useRef();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -138,8 +141,12 @@ const App = () => {
             </>
         );
     };
+
     const addNote = async (noteObject) => {
         try {
+            // hide create form after addin new note
+            noteFormRef.current.toggleVisibility();
+
             // POST request
             // attach the token to current request
             noteService.setToken(user.token);
@@ -163,7 +170,7 @@ const App = () => {
         return (
             <div>
                 <p>{user.name} is logged in</p>
-                <Togglable buttonLabel="new note">
+                <Togglable buttonLabel="new note" ref={noteFormRef}>
                     <NoteForm createNote={addNote} />
                 </Togglable>
             </div>
