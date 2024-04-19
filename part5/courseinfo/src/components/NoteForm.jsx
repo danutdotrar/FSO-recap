@@ -4,7 +4,7 @@ import { useState } from "react";
 const NoteForm = ({ createNote }) => {
     const [newNote, setNewNote] = useState("");
 
-    const addNote = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
 
         createNote({ content: newNote, important: true });
@@ -15,7 +15,7 @@ const NoteForm = ({ createNote }) => {
     return (
         <>
             <h2>Create a new note</h2>
-            <form onSubmit={addNote}>
+            <form onSubmit={handleSubmit}>
                 <div>
                     <input
                         type="text"
