@@ -29,6 +29,7 @@ const User = require("../models/user");
 // @@ Path '/api/blogs'
 // @@ Set response to the found blogs from Model
 blogRoutes.get("/", async (request, response) => {
+    // get the user decoded from middleware
     const user = request.user;
 
     const result = await Blog.find({ user: user.id }).populate("user", {

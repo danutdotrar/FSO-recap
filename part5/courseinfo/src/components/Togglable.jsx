@@ -10,7 +10,7 @@ const Togglable = forwardRef((props, refs) => {
         setVisible(!visible);
     };
 
-    // make available toggleVisibility outside component
+    // make toggleVisibility available outside component
     useImperativeHandle(refs, () => {
         return { toggleVisibility };
     });
