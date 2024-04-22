@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
+import BlogForm from "./components/BlogForm";
+
 import blogService from "./services/blogs";
 import axios from "axios";
 
@@ -106,39 +108,6 @@ const App = () => {
         }
     };
 
-    const createBlogForm = () => (
-        <div>
-            <form onSubmit={handleBlogSubmit}>
-                <h2>create new blog</h2>
-                <div>
-                    title{" "}
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={({ target }) => setTitle(target.value)}
-                    />
-                </div>
-                <div>
-                    author{" "}
-                    <input
-                        type="text"
-                        value={author}
-                        onChange={({ target }) => setAuthor(target.value)}
-                    />
-                </div>
-                <div>
-                    url{" "}
-                    <input
-                        type="text"
-                        value={url}
-                        onChange={({ target }) => setUrl(target.value)}
-                    />
-                </div>
-                <button type="submit">create blog</button>
-            </form>
-        </div>
-    );
-
     const loginForm = () => (
         <>
             <h2>Log in to app</h2>
@@ -202,7 +171,15 @@ const App = () => {
                 </p>
             </div>
 
-            {createBlogForm()}
+            <BlogForm
+                handleBlogSubmit={handleBlogSubmit}
+                title={title}
+                author={author}
+                url={url}
+                handleTitle={(event) => setTitle(event.target.value)}
+                handleAuthor={(event) => setAuthor(event.target.value)}
+                handleUrl={(event) => setUrl(event.target.value)}
+            />
 
             <h2>blogs list</h2>
             {blogs.map((blog) => (
