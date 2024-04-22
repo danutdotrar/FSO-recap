@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 
 import blogService from "./services/blogs";
-import axios from "axios";
-
 import loginService from "./services/login";
 
 const App = () => {
@@ -16,6 +15,8 @@ const App = () => {
     const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
+
+    const blogFormRef = useRef();
 
     useEffect(() => {
         if (user) {
@@ -77,6 +78,11 @@ const App = () => {
 
     const handleBlogSubmit = async (event) => {
         event.preventDefault();
+
+        // hide the form after submitted
+        // call toggleVisibility from BlogForm
+        // use useRef to access that function inside BlogForm component
+        // blogFormRef.current.toggleVisibility()
 
         const newObj = { title, author, url };
 
@@ -170,16 +176,17 @@ const App = () => {
                     <button onClick={handleLogOut}>Logout</button>
                 </p>
             </div>
-
-            <BlogForm
-                handleBlogSubmit={handleBlogSubmit}
-                title={title}
-                author={author}
-                url={url}
-                handleTitle={(event) => setTitle(event.target.value)}
-                handleAuthor={(event) => setAuthor(event.target.value)}
-                handleUrl={(event) => setUrl(event.target.value)}
-            />
+            <Togglable buttonLabel="new blog">
+                <BlogForm
+                    handleBlogSubmit={handleBlogSubmit}
+                    title={title}
+                    author={author}
+                    url={url}
+                    handleTitle={(event) => setTitle(event.target.value)}
+                    handleAuthor={(event) => setAuthor(event.target.value)}
+                    handleUrl={(event) => setUrl(event.target.value)}
+                />
+            </Togglable>
 
             <h2>blogs list</h2>
             {blogs.map((blog) => (
