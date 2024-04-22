@@ -82,7 +82,7 @@ const App = () => {
         // hide the form after submitted
         // call toggleVisibility from BlogForm
         // use useRef to access that function inside BlogForm component
-        // blogFormRef.current.toggleVisibility()
+        blogFormRef.current.toggleVisibility();
 
         const newObj = { title, author, url };
 
@@ -176,7 +176,7 @@ const App = () => {
                     <button onClick={handleLogOut}>Logout</button>
                 </p>
             </div>
-            <Togglable buttonLabel="new blog">
+            <Togglable ref={blogFormRef} buttonLabel="new blog">
                 <BlogForm
                     handleBlogSubmit={handleBlogSubmit}
                     title={title}
