@@ -79,9 +79,6 @@ const App = () => {
     const handleBlogSubmit = async (event) => {
         event.preventDefault();
 
-        // hide the form after submitted
-        // call toggleVisibility from BlogForm
-        // use useRef to access that function inside BlogForm component
         blogFormRef.current.toggleVisibility();
 
         const newObj = { title, author, url };
