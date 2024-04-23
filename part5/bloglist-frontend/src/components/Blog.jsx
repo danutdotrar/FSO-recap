@@ -19,7 +19,7 @@ const Blog = ({ blog, updateBlog }) => {
 
     return (
         <div style={blogStyle}>
-            {blog.title}{" "}
+            {blog.title}, {blog.author}
             <button style={hideWhenvisible} onClick={handleClick}>
                 view
             </button>
@@ -32,7 +32,7 @@ const Blog = ({ blog, updateBlog }) => {
                     likes: {blog.likes}{" "}
                     <button onClick={() => updateBlog(blog)}>like</button>
                 </div>
-                <div>author: {blog.author}</div>
+                <div>{blog.user.name}</div>
             </div>
         </div>
     );

@@ -125,7 +125,7 @@ const App = () => {
 
         // take the updated object and update frontend
         const updatedBlogs = blogs.map((blog) =>
-            blog.id !== blogId ? blog : response
+            blog.id !== blogId ? blog : updatedBlogObj
         );
 
         setBlogs(updatedBlogs);
