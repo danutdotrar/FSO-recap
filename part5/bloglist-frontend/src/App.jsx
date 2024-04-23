@@ -131,6 +131,26 @@ const App = () => {
         setBlogs(updatedBlogs);
     };
 
+    const handleBlogRemove = async (blogId) => {
+        // HTTP DELETE request with the blog id
+        // update backend and frontend
+
+        // set the bearer token for request config
+        blogService.setToken(user.token);
+
+        const currentBlog = blogs.find((blog) => blog.id === blogId);
+
+        if (window.confirm(`Remove '${currentBlog.title}'?`)) {
+            const response = await blogService.deleteBlog(blogId);
+
+            // update frontend
+            // remove the blog with the blogId from the blog Array
+            const filteredBlogs = blogs.filter((blog) => blog.id !== blogId);
+
+            setBlogs(filteredBlogs);
+        }
+    };
+
     const loginForm = () => (
         <>
             <h2>Log in to app</h2>
@@ -213,6 +233,7 @@ const App = () => {
                         key={blog.id}
                         blog={blog}
                         updateBlog={handleBlogUpdate}
+                        removeBlog={handleBlogRemove}
                     />
                 ))}
         </>
