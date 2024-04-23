@@ -30,7 +30,7 @@ const Blog = ({ blog, updateBlog }) => {
                 <div>url: {blog.url}</div>
                 <div>
                     likes: {blog.likes}{" "}
-                    <button onClick={() => updateBlog(blog.id)}>like</button>
+                    <button onClick={() => updateBlog(blog)}>like</button>
                 </div>
                 <div>author: {blog.author}</div>
             </div>

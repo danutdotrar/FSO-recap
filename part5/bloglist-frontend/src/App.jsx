@@ -111,9 +111,24 @@ const App = () => {
         }
     };
 
-    const handleBlogUpdate = (blogId) => {
-        // PUT request
-        console.log(blogId);
+    // PUT request
+    const handleBlogUpdate = async (blog) => {
+        const blogId = blog.id;
+
+        const updatedBlogObj = {
+            ...blog,
+            likes: +blog.likes + 1,
+        };
+
+        // HTTP PUT request to the backend
+        const response = await blogService.updateBlog(blogId, updatedBlogObj);
+
+        // take the updated object and update frontend
+        const updatedBlogs = blogs.map((blog) =>
+            blog.id !== blogId ? blog : response
+        );
+
+        setBlogs(updatedBlogs);
     };
 
     const loginForm = () => (
