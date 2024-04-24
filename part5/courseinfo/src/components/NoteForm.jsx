@@ -13,7 +13,7 @@ const NoteForm = ({ createNote }) => {
     };
 
     return (
-        <>
+        <div classname="formDiv">
             <h2>Create a new note</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -28,7 +28,7 @@ const NoteForm = ({ createNote }) => {
                     <button type="submit">save note</button>
                 </div>
             </form>
-        </>
+        </div>
     );
 };
 
