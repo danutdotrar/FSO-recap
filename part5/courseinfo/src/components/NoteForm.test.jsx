@@ -9,7 +9,8 @@ describe("<NoteForm />", () => {
 
         render(<NoteForm createNote={createNote} />);
 
-        const input = screen.getByRole("textbox");
+        // const inputs = screen.getAllByRole("textbox");
+        const input = screen.getByPlaceholderText("write note content here");
         const sendButton = screen.getByText("save note");
 
         await user.type(input, "testing a form...");
