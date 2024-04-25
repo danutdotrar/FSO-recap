@@ -8,12 +8,8 @@ describe("<NoteForm />", () => {
         const user = userEvent.setup();
 
         const { container } = render(<NoteForm createNote={createNote} />);
-        // const container = render(
-        //     <NoteForm createNote={createNote} />
-        // ).container;
 
-        // const input = screen.getByPlaceholderText("write note content here");
-        const input = container.querySelector("#note-input");
+        const input = screen.getByPlaceholderText("write note content here");
         const sendButton = screen.getByText("save note");
 
         await user.type(input, "testing a form...");
