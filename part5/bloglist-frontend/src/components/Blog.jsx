@@ -18,15 +18,17 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     const hideWhenvisible = { display: visibility ? "none" : "" };
 
     return (
-        <div style={blogStyle}>
-            {blog.title}, {blog.author}
+        <div style={blogStyle} className="blog-container">
+            <div>
+                {blog.title}, {blog.author}
+            </div>
             <button style={hideWhenvisible} onClick={handleClick}>
                 view
             </button>
             <button style={showWhenVisible} onClick={handleClick}>
                 hide
             </button>
-            <div style={showWhenVisible}>
+            <div style={showWhenVisible} className="togglableContent">
                 <div>url: {blog.url}</div>
                 <div>
                     likes: {blog.likes}{" "}
