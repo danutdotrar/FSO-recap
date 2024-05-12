@@ -16,7 +16,12 @@ const BlogForm = ({
                 <h2>create new blog</h2>
                 <div>
                     title{" "}
-                    <input type="text" value={title} onChange={handleTitle} />
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={handleTitle}
+                        placeholder="enter title here"
+                    />
                 </div>
                 <div>
                     author{" "}
@@ -31,14 +36,14 @@ const BlogForm = ({
     );
 };
 
-BlogForm.propTypes = {
-    handleBlogSubmit: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    handleTitle: PropTypes.func.isRequired,
-    author: PropTypes.string.isRequired,
-    handleAuthor: PropTypes.func.isRequired,
-    url: PropTypes.string.isRequired,
-    handleUrl: PropTypes.func.isRequired,
-};
+// BlogForm.propTypes = {
+//     handleBlogSubmit: PropTypes.func.isRequired,
+//     title: PropTypes.string.isRequired,
+//     handleTitle: PropTypes.func.isRequired,
+//     author: PropTypes.string.isRequired,
+//     handleAuthor: PropTypes.func.isRequired,
+//     url: PropTypes.string.isRequired,
+//     handleUrl: PropTypes.func.isRequired,
+// };
 
 export default BlogForm;
