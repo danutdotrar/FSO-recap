@@ -66,3 +66,33 @@ test("url and number of likes are shown when view is clicked", async () => {
 
     expect(togglableContent).not.toHaveStyle("display: none;");
 });
+
+test("like button is called twice if clicked twice", async () => {
+    // render the component with dummy data
+    // get the like button
+    // create mock function
+
+    // create dummy obj
+    const blog = {
+        title: "title",
+        author: "author",
+        url: "www",
+        likes: "3",
+        user: {
+            name: "name",
+        },
+    };
+
+    const mockHandler = vi.fn();
+
+    render(<Blog blog={blog} updateBlog={mockHandler} />);
+
+    const likeButton = screen.getByText("like");
+
+    // start user session
+    const user = userEvent.setup();
+    await user.click(likeButton);
+    await user.click(likeButton);
+
+    expect(mockHandler.mock.calls).toHaveLength(2);
+});
