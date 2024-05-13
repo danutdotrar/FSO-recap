@@ -15,8 +15,6 @@ describe("<NoteForm />", () => {
         await user.type(input, "testing a form...");
         await user.click(sendButton);
 
-        console.log(createNote.mock.calls);
-
         expect(createNote.mock.calls).toHaveLength(1);
         expect(createNote.mock.calls[0][0].content).toBe("testing a form...");
     });
