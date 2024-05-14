@@ -169,12 +169,22 @@ const App = () => {
     const noteForm = () => {
         return (
             <div>
-                <p>{user.name} is logged in</p>
+                <p>
+                    {user.name} is logged in{" "}
+                    <button onClick={handleLogOut}>log out</button>
+                </p>
                 <Togglable buttonLabel="new note" ref={noteFormRef}>
                     <NoteForm createNote={addNote} />
                 </Togglable>
             </div>
         );
+    };
+
+    const handleLogOut = () => {
+        // clear local storage
+        window.localStorage.clear();
+        // set user to null to logout
+        setUser(null);
     };
 
     return (
@@ -183,7 +193,6 @@ const App = () => {
             <Notification message={errorMessage} />
 
             {!user ? loginForm() : noteForm()}
-
             <div>
                 <button onClick={() => setShowAll(!showAll)}>
                     show {showAll ? "important" : "all"}
