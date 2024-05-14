@@ -19,6 +19,7 @@ const NoteForm = ({ createNote }) => {
                 <div>
                     <input
                         type="text"
+                        data-testid="noteContent"
                         value={newNote}
                         onChange={(event) => setNewNote(event.target.value)}
                         id="note-input"
