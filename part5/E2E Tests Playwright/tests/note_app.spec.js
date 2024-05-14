@@ -15,10 +15,8 @@ describe("Note app", () => {
         await page.goto("http://localhost:5173");
         await page.getByRole("button", { name: "log in" }).click();
 
-        const textboxes = await page.getByRole("textbox").all();
-
-        await textboxes[0].fill("danut");
-        await textboxes[1].fill("danut");
+        await page.getByTestId("username").fill("danut");
+        await page.getByTestId("password").fill("danut");
 
         await page.getByRole("button", { name: "login" }).click();
 
