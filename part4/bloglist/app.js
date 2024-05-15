@@ -42,6 +42,12 @@ app.use("/api/blogs", blogRoutes);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 
+// use if app is running in test mode
+if (process.env.MONGODB_URI == "test") {
+    const testingRouter = require("./controllers/testing");
+    app.use("/api/testing", testingRouter);
+}
+
 app.use(middleware.requestLogger);
 
 app.use(middleware.unknownEndpoint);
