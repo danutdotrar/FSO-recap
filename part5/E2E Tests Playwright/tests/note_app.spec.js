@@ -2,8 +2,31 @@ const { test, describe, expect, beforeEach } = require("@playwright/test");
 const { before } = require("node:test");
 
 describe("Note app", () => {
-    beforeEach(async ({ page }) => {
+    beforeEach(async ({ page, request }) => {
+        // empty db
+        await request.post("http://localhost:3001/api/testing/reset");
+        await request.post("http://localhost:3001/api/users", {
+            data: {
+                name: "Danut",
+                username: "danut",
+                password: "danut",
+            },
+        });
+
         await page.goto("http://localhost:5173");
+    });
+
+    test("login fails with wrong password", async ({ page }) => {
+        // get 'log in' button and click it
+        // fill the username and wrong password
+        // get 'login' and click it
+        // expect 'wrong credentials' to be visible
+        await page.getByRole("button", { name: "log in" }).click();
+        await page.getByTestId("username").fill("danut");
+        await page.getByTestId("password").fill("wrong");
+        await page.getByRole("button", { name: "login" }).click();
+
+        await expect(page.getByText("Wrong credentials")).toBeVisible();
     });
 
     test("front page can be opened", async ({ page }) => {
@@ -47,6 +70,23 @@ describe("Note app", () => {
             await page.getByRole("button", { name: "save note" }).click();
 
             await expect(page.getByText("testing e2e")).toBeVisible();
+        });
+
+        describe("and a note exists", () => {
+            beforeEach(async ({ page }) => {
+                await page.getByRole("button", { name: "new note" }).click();
+                await page
+                    .getByRole("textbox")
+                    .fill("another note by playwright");
+                await page.getByRole("button", { name: "save" }).click();
+            });
+
+            test("importance can be changed", async ({ page }) => {
+                await page
+                    .getByRole("button", { name: "make not important" })
+                    .click();
+                await expect(page.getByText("make important")).toBeVisible();
+            });
         });
     });
 });
