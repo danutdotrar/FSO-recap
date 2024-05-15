@@ -23,10 +23,6 @@ describe("Blog app", () => {
 
     describe("Login", () => {
         test("succeeds with correct credentials", async ({ page }) => {
-            // get the username input and fiil in
-            // get the password input and fill in
-            // get the login and click
-            // expect 'Danut is Logged In' to be visible
             await loginWith(page, "danut", "danut");
 
             await expect(page.getByText("Danut is Logged In")).toBeVisible();
@@ -42,5 +38,10 @@ describe("Blog app", () => {
                 page.getByText("Danut is Logged In")
             ).not.toBeVisible();
         });
+    });
+
+    describe("When logged in", () => {
+        // a new blog can be created
+        // ex 5.19
     });
 });
