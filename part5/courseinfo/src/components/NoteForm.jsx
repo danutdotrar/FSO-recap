@@ -25,7 +25,6 @@ const NoteForm = ({ createNote }) => {
                         id="note-input"
                         placeholder="write note content here"
                     />
-                    <input type="text" value={"test"} onChange={"test"} />
                 </div>
 
                 <div>
