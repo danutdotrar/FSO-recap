@@ -26,7 +26,10 @@ describe("Note app", () => {
         await page.getByTestId("password").fill("wrong");
         await page.getByRole("button", { name: "login" }).click();
 
-        await expect(page.getByText("Wrong credentials")).toBeVisible();
+        const errorDiv = await page.locator(".error");
+        await expect(errorDiv).toContainText("Wrong credentials");
+
+        await expect(page.getByText("Danut is logged in")).not.toBeVisible();
     });
 
     test("front page can be opened", async ({ page }) => {
