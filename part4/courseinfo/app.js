@@ -45,6 +45,11 @@ app.use("/api/notes", notesRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
 
+if (process.env.NODE_ENV === "test") {
+    const testingRouter = require("../courseinfo/controllers/testing");
+    app.use("/api/testing", testingRouter);
+}
+
 // middlewares
 app.use(middleware.requestLogger);
 
