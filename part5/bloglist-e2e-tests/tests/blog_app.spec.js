@@ -8,9 +8,11 @@ describe("Blog app", () => {
 
         // create user for backend
         await request.post("http://localhost:3001/api/users", {
-            name: "Danut",
-            username: "danut",
-            password: "danut",
+            data: {
+                name: "Danut",
+                username: "danut",
+                password: "danut",
+            },
         });
 
         await page.goto("http://localhost:5173");
@@ -43,8 +45,6 @@ describe("Blog app", () => {
     describe("When logged in", () => {
         beforeEach(async ({ page, request }) => {
             await loginWith(page, "danut", "danut");
-
-            await request.post("http://localhost:3001/api/testing/reset");
         });
 
         // a new blog can be created

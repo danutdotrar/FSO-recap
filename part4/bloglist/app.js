@@ -43,8 +43,9 @@ app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 
 // use if app is running in test mode
-if (process.env.MONGODB_URI === "test") {
+if (process.env.NODE_ENV === "test") {
     const testingRouter = require("./controllers/testing");
+
     app.use("/api/testing", testingRouter);
 }
 
