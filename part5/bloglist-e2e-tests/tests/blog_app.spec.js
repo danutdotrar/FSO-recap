@@ -41,7 +41,28 @@ describe("Blog app", () => {
     });
 
     describe("When logged in", () => {
+        beforeEach(async ({ page, request }) => {
+            await loginWith(page, "danut", "danut");
+
+            await request.post("http://localhost:3001/api/testing/reset");
+        });
+
         // a new blog can be created
         // ex 5.19
+        test("a new blog can be created", async ({ page }) => {
+            // get the button 'new blog' and click it
+            // get the title author and url and fill them
+            // get the create 'blog button' and click it
+            await page.getByRole("button", { name: "new blog" }).click();
+            await page.getByTestId("title").fill("typing from playwright");
+            await page.getByTestId("author").fill("author from playwright");
+            await page.getByTestId("url").fill("url from playwright");
+
+            await page.getByRole("button", { name: "create blog" }).click();
+
+            await expect(
+                page.getByText("typing from playwright, author from playwright")
+            ).toBeVisible();
+        });
     });
 });

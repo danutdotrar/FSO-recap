@@ -18,6 +18,7 @@ const BlogForm = ({
                     title{" "}
                     <input
                         type="text"
+                        data-testid="title"
                         value={title}
                         onChange={handleTitle}
                         placeholder="enter title here"
@@ -25,10 +26,21 @@ const BlogForm = ({
                 </div>
                 <div>
                     author{" "}
-                    <input type="text" value={author} onChange={handleAuthor} />
+                    <input
+                        type="text"
+                        data-testid="author"
+                        value={author}
+                        onChange={handleAuthor}
+                    />
                 </div>
                 <div>
-                    url <input type="text" value={url} onChange={handleUrl} />
+                    url{" "}
+                    <input
+                        type="text"
+                        data-testid="url"
+                        value={url}
+                        onChange={handleUrl}
+                    />
                 </div>
                 <button type="submit">create blog</button>
             </form>
