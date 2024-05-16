@@ -59,10 +59,19 @@ describe("Blog app", () => {
             await createBlog(page, "test 1", "test author", "test url");
 
             await page.getByRole("button", { name: "view" }).click();
-
             await page.getByRole("button", { name: "like" }).click();
 
             await expect(page.getByText("likes: 1")).toBeVisible();
+        });
+
+        test("the logged in user sees its own blogs", async ({ page }) => {
+            // user is 'Danut'
+            await createBlog(page, "test 1", "test author", "test url");
+
+            await page.getByRole("button", { name: "view" }).click();
+
+            await expect(page.getByText("Danut is Logged In")).toBeVisible();
+            await expect(page.getByText("Danut")).toBeVisible();
         });
     });
 });
