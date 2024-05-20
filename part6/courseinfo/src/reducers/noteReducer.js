@@ -3,7 +3,7 @@ import { createStore } from "redux";
 const noteReducer = (state = [], action) => {
     switch (action.type) {
         case "NEW_NOTE":
-            return state.concat(action.payload);
+            return [...state, action.payload];
 
         case "TOGGLE_IMPORTANCE":
             // search in the state the obj with the id equals to payload id
