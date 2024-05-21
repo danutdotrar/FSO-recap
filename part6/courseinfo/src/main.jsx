@@ -49,51 +49,53 @@ import { createStore } from "redux";
 //     );
 // };
 
-const noteReducer = (state = [], action) => {
-    if (action.type === "NEW_NOTE") {
-        return state.concat(action.payload);
-    }
-
-    if (action.type === "TOGGLE_IMPORTANCE") {
-        //
-    }
-
-    return state;
-};
+import { noteReducer } from "./reducers/noteReducer";
 
 const store = createStore(noteReducer);
 
-store.dispatch({
-    type: "NEW_NOTE",
-    payload: {
-        content: "the app state is in redux store",
-        important: true,
-        id: 1,
-    },
-});
-
-store.dispatch({
-    type: "NEW_NOTE",
-    payload: {
-        content: "state changes are made with actions",
-        important: false,
-        id: 2,
-    },
-});
-
-store.dispatch({ type: "TOGGLE_IMPORTANCE", payload: { id: 2 } });
-
 const root = ReactDOM.createRoot(document.getElementById("root"));
+
+// App
+const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
 const App = () => {
     const storeData = store.getState();
 
+    const addNote = (event) => {
+        event.preventDefault();
+
+        const content = event.target.note.value;
+        event.target.note.value = "";
+        store.dispatch({
+            type: "NEW_NOTE",
+            payload: {
+                content,
+                important: true,
+                id: generateId(),
+            },
+        });
+    };
+
+    const toggleImportance = (id) => {
+        store.dispatch({
+            type: "TOGGLE_IMPORTANCE",
+            payload: { id },
+        });
+    };
+
     return (
         <>
             <div>
+                <form onSubmit={addNote}>
+                    <input name="note" />
+                    <button type="submit">add</button>
+                </form>
                 <ul>
                     {storeData.map((note) => (
-                        <li>
+                        <li
+                            key={note.id}
+                            onClick={() => toggleImportance(note.id)}
+                        >
                             {note.content}{" "}
                             {note.important ? " - important" : ""}
                         </li>
