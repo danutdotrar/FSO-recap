@@ -5,9 +5,6 @@ import Notes from "./components/Notes";
 
 // App
 const App = () => {
-    const dispatch = useDispatch();
-    const notes = useSelector((state) => state);
-
     return (
         <>
             <div>
