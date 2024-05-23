@@ -5,10 +5,6 @@ const App = () => {
     const anecdotes = useSelector((state) => state);
     const dispatch = useDispatch();
 
-    const vote = (id) => {
-        dispatch(voteAnecdote(id));
-    };
-
     return (
         <div>
             <h2>Anecdotes</h2>
@@ -17,10 +13,15 @@ const App = () => {
                     <div>{anecdote.content}</div>
                     <div>
                         has {anecdote.votes}
-                        <button onClick={() => vote(anecdote.id)}>vote</button>
+                        <button
+                            onClick={() => dispatch(voteAnecdote(anecdote.id))}
+                        >
+                            vote
+                        </button>
                     </div>
                 </div>
             ))}
+
             <h2>create new</h2>
             <form>
                 <div>
