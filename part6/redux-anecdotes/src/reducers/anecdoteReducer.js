@@ -25,13 +25,22 @@ const reducer = (state = initialState, action) => {
 
     switch (action.type) {
         case "VOTE_ANECDOTE":
-            // take the id of the current anecdote
             // find the anecdote we need to update in the state based on payload id
+            const anecdoteToUpdate = state.find(
+                (item) => item.id === action.payload.id
+            );
+
             // create a copy based on anecdote and update votes + 1
+            const changedAnecdote = {
+                ...anecdoteToUpdate,
+                votes: anecdoteToUpdate.votes + 1,
+            };
+
             // map over the state and for the items with id !== anecdote id, leave them alone
             //  for the item with id == action.payload.id, replace with changed object
-            console.log("PAYLOAD ID - ", action.payload.id);
-            return state;
+            return state.map((item) =>
+                item.id !== action.payload.id ? item : changedAnecdote
+            );
 
         default:
             return state;
