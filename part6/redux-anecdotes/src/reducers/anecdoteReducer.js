@@ -42,6 +42,10 @@ const reducer = (state = initialState, action) => {
                 item.id !== action.payload.id ? item : changedAnecdote
             );
 
+        case "ADD_NEW":
+            // return new state with old content from state and the new anecdote
+            return [...state, action.payload];
+
         default:
             return state;
     }
@@ -52,6 +56,17 @@ export const voteAnecdote = (id) => {
         type: "VOTE_ANECDOTE",
         payload: {
             id: id,
+        },
+    };
+};
+
+export const createNew = (content) => {
+    return {
+        type: "ADD_NEW",
+        payload: {
+            content: content,
+            id: getId(),
+            votes: 0,
         },
     };
 };
