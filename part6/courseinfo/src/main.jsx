@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import { createStore } from "redux";
 import App from "./App";
 
 // // un reducer are ca parametrii state-ul curent si o actiune
@@ -19,13 +18,28 @@ import App from "./App";
 // //     console.log(storeNow);
 // // });
 
-import noteReducer from "./reducers/noteReducer";
+import { createStore, combineReducers } from "redux";
+import noteReducer, { createNote } from "./reducers/noteReducer";
+import filterReducer, { filterChange } from "./reducers/filterReducer";
 import { Provider } from "react-redux";
 
-const store = createStore(noteReducer);
+const reducer = combineReducers({
+    notes: noteReducer,
+    filter: filterReducer,
+});
+
+const store = createStore(reducer);
+
+console.log(store.getState());
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
         <App />
     </Provider>
+);
+
+store.subscribe(() => console.log(store.getState()));
+store.dispatch(filterChange("IMPORTANT"));
+store.dispatch(
+    createNote("combineReducers forms one reducer from many simple reducers")
 );

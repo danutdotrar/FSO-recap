@@ -1,5 +1,3 @@
-import { createStore } from "redux";
-
 const initialState = [
     {
         content: "reducer defines how redux store works",
