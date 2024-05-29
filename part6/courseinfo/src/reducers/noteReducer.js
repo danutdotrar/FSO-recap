@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 const initialState = [
     {
@@ -18,7 +18,6 @@ const noteSlice = createSlice({
     initialState,
     reducers: {
         createNote(state, action) {
-            console.log(action);
             const content = action.payload;
             state.push({ content, important: false, id: generateId() });
         },
@@ -34,6 +33,8 @@ const noteSlice = createSlice({
                 ...noteToChange,
                 important: !noteToChange?.important,
             };
+
+            console.log(current(state));
 
             // map over the state and if id is different than keep the obj, if id === payload id than keep new obj
             return state.map((item) =>
