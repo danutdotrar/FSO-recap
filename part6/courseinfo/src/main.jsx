@@ -18,17 +18,21 @@ import App from "./App";
 // //     console.log(storeNow);
 // // });
 
-import { createStore, combineReducers } from "redux";
-import noteReducer, { createNote } from "./reducers/noteReducer";
+import { configureStore } from "@reduxjs/toolkit";
+import noteReducer, {
+    createNote,
+    toggleImportanceOf,
+} from "./reducers/noteReducer";
 import filterReducer, { filterChange } from "./reducers/filterReducer";
+
 import { Provider } from "react-redux";
 
-const reducer = combineReducers({
-    notes: noteReducer,
-    filter: filterReducer,
+const store = configureStore({
+    reducer: {
+        notes: noteReducer,
+        filter: filterReducer,
+    },
 });
-
-const store = createStore(reducer);
 
 console.log(store.getState());
 
@@ -39,7 +43,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 );
 
 store.subscribe(() => console.log(store.getState()));
-store.dispatch(filterChange("IMPORTANT"));
+store.dispatch(toggleImportanceOf("IMPORTANT"));
 store.dispatch(
     createNote("combineReducers forms one reducer from many simple reducers")
 );

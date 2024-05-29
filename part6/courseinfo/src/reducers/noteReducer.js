@@ -1,3 +1,5 @@
+import { createSlice } from "@reduxjs/toolkit";
+
 const initialState = [
     {
         content: "reducer defines how redux store works",
@@ -11,15 +13,20 @@ const initialState = [
     },
 ];
 
-const noteReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case "NEW_NOTE":
-            return [...state, action.payload];
+const noteSlice = createSlice({
+    name: "notes",
+    initialState,
+    reducers: {
+        createNote(state, action) {
+            console.log(action);
+            const content = action.payload;
+            state.push({ content, important: false, id: generateId() });
+        },
 
-        case "TOGGLE_IMPORTANCE": {
+        toggleImportanceOf(state, action) {
             // search in the state the obj with the id equals to payload id
             const noteToChange = state.find(
-                (item) => item.id === action.payload.id
+                (item) => item.id === action.payload
             );
 
             // create a new object based on previous values but update only the important property
@@ -30,35 +37,16 @@ const noteReducer = (state = initialState, action) => {
 
             // map over the state and if id is different than keep the obj, if id === payload id than keep new obj
             return state.map((item) =>
-                item.id !== action.payload.id ? item : changedNote
+                item.id !== action.payload ? item : changedNote
             );
-        }
-
-        default:
-            return state;
-    }
-};
+        },
+    },
+});
 
 const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
-export const createNote = (content) => {
-    return {
-        type: "NEW_NOTE",
-        payload: {
-            content,
-            important: false,
-            id: generateId(),
-        },
-    };
-};
+// export noteSlice actions to dispatch them as needed
+export const { createNote, toggleImportanceOf } = noteSlice.actions;
 
-export const toggleImportanceOf = (id) => {
-    return {
-        type: "TOGGLE_IMPORTANCE",
-        payload: {
-            id,
-        },
-    };
-};
-
-export default noteReducer;
+// export the reducer to use it in configureStore
+export default noteSlice.reducer;
