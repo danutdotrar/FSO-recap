@@ -46,8 +46,6 @@ const noteSlice = createSlice({
 
 const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
-// export noteSlice actions to dispatch them as needed
 export const { createNote, toggleImportanceOf } = noteSlice.actions;
 
-// export the reducer to use it in configureStore
 export default noteSlice.reducer;

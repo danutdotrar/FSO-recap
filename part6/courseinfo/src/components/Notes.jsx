@@ -23,8 +23,6 @@ const Notes = () => {
             : state.notes.filter((note) => note.important === false);
     });
 
-    // filter by state.filter
-
     return (
         <ul>
             {notes.map((note) => (
