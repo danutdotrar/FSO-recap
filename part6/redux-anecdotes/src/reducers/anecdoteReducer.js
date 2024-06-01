@@ -1,9 +1,3 @@
-// import createSlice
-// define initialState
-// create anecdoteSlice
-// define reducers
-// export slice's actions and reducer
-
 import { createSlice } from "@reduxjs/toolkit";
 
 const anecdotesAtStart = [
@@ -34,9 +28,6 @@ const anecdoteSlice = createSlice({
         voteAnecdote(state, action) {
             const id = action.payload;
 
-            // find the anecdote in the state by the id
-            // create a copy of that anecdote and change what we need
-            // map over the state, if id == anecdote id than change with new copy, else if id !== anecdote id, leave item alone
             const foundAnecdote = state.find((item) => item.id === id);
 
             const changedAnecdote = {
@@ -49,7 +40,16 @@ const anecdoteSlice = createSlice({
             );
         },
 
-        createNew(state, action) {},
+        createNew(state, action) {
+            const newAnecdote = {
+                content: action.payload,
+                id: getId(),
+                votes: 0,
+            };
+
+            // add the new anecdote to the current state
+            return [...state, newAnecdote];
+        },
     },
 });
 
