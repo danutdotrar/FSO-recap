@@ -1,12 +1,23 @@
 import { useSelector, useDispatch } from "react-redux";
-import { createNote, toggleImportanceOf } from "./reducers/noteReducer";
 import NewNote from "./components/NewNote";
 import Notes from "./components/Notes";
-import { filterChange } from "./reducers/filterReducer";
 import VisibilityFilter from "./components/VisibilityFilter";
+import noteService from "./services/notes";
+import { useEffect } from "react";
+import { setNotes } from "./reducers/noteReducer";
 
-// App
 const App = () => {
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await noteService.getAll();
+
+            dispatch(setNotes(response));
+        };
+        fetchData();
+    }, []);
+
     return (
         <>
             <div>

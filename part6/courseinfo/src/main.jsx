@@ -18,10 +18,13 @@ import App from "./App";
 // //     console.log(storeNow);
 // // });
 
+import noteService from "./services/notes";
 import { configureStore } from "@reduxjs/toolkit";
 import noteReducer, {
     createNote,
     toggleImportanceOf,
+    appendNote,
+    setNotes,
 } from "./reducers/noteReducer";
 import filterReducer, { filterChange } from "./reducers/filterReducer";
 
@@ -34,8 +37,6 @@ const store = configureStore({
     },
 });
 
-console.log(store.getState());
-
 ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
         <App />
@@ -43,7 +44,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 );
 
 store.subscribe(() => console.log(store.getState()));
-store.dispatch(toggleImportanceOf("IMPORTANT"));
-store.dispatch(
-    createNote("combineReducers forms one reducer from many simple reducers")
-);
