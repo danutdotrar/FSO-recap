@@ -15,10 +15,8 @@ const createNote = async (content) => {
     return response.data;
 };
 
-const updateNote = async (id, newObject) => {
-    const object = { ...newObject, important: !newObject.important };
-
-    const response = await axios.put(`${baseUrl}/${id}`, object);
+const updateNote = async (id, updatedObject) => {
+    const response = await axios.put(`${baseUrl}/${id}`, updatedObject);
 
     return response.data;
 };

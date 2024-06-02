@@ -25,7 +25,8 @@ const Notes = () => {
     });
 
     const handleUpdate = async (id, note) => {
-        const response = await noteService.updateNote(id, note);
+        const updatedNote = { ...note, important: !note.important };
+        const response = await noteService.updateNote(id, updatedNote);
 
         dispatch(toggleImportanceOf(response));
     };
