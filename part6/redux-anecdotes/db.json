@@ -1,0 +1,14 @@
+{
+    "anecdotes": [
+        {
+            "content": "Just an anecdote from db.json",
+            "important": false,
+            "id": 1
+        },
+        {
+            "content": "Another anecdote from db.json",
+            "important": false,
+            "id": 2
+        }
+    ]
+}
