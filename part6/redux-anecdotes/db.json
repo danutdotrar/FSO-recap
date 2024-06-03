@@ -3,12 +3,19 @@
         {
             "content": "Just an anecdote from db.json",
             "important": false,
+            "votes": 0,
             "id": 1
         },
         {
             "content": "Another anecdote from db.json",
             "important": false,
+            "votes": 0,
             "id": 2
+        },
+        {
+            "id": "f4b6",
+            "content": "gigel are o gigica",
+            "votes": 0
         }
     ]
 }

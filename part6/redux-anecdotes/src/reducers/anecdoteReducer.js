@@ -43,11 +43,7 @@ const anecdoteSlice = createSlice({
         },
 
         createNew(state, action) {
-            const newAnecdote = {
-                content: action.payload,
-                id: getId(),
-                votes: 0,
-            };
+            const newAnecdote = action.payload;
 
             // add the new anecdote to the current state
             return [...state, newAnecdote];
