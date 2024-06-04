@@ -1,8 +1,6 @@
 import React from "react";
 import { createNew } from "../reducers/anecdoteReducer";
-import anecdoteService from "../services/anecdoteService";
 import { useDispatch } from "react-redux";
-import Notification from "./Notification";
 import {
     removeNotification,
     setNotification,
@@ -16,9 +14,8 @@ const AnecdoteForm = () => {
 
         const inputValue = event.target.anecdote.value;
         const newObject = { content: inputValue, important: false, votes: 0 };
-        const response = await anecdoteService.createAnecdote(newObject);
 
-        dispatch(createNew(response));
+        dispatch(createNew(newObject));
         dispatch(setNotification(`"${inputValue}" anecdote has been added`));
 
         // remove notification
