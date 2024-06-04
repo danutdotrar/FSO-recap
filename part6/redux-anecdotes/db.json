@@ -17,6 +17,12 @@
       "content": "test",
       "important": false,
       "votes": 4
+    },
+    {
+      "id": "a056",
+      "content": "another test",
+      "important": false,
+      "votes": 0
     }
   ]
 }

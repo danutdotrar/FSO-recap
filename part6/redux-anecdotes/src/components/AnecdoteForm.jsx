@@ -23,17 +23,10 @@ const AnecdoteForm = () => {
 
             dispatch(createNew(newObject));
             dispatch(
-                setNotification(`"${inputValue}" anecdote has been added`)
+                setNotification(`"${inputValue}" anecdote has been added`, 5)
             );
-
-            setTimeout(() => {
-                dispatch(removeNotification());
-            }, 5000);
         } else {
-            dispatch(setNotification(`Please enter your anecdote!`));
-            setTimeout(() => {
-                dispatch(removeNotification());
-            }, 5000);
+            dispatch(setNotification(`Please enter your anecdote!`, 5));
         }
 
         event.target.anecdote.value = "";
