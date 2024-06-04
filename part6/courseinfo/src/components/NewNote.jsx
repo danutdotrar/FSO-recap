@@ -11,10 +11,6 @@ const NewNote = () => {
 
         const content = event.target.note.value;
         event.target.note.value = "";
-
-        // // HTTP POST request
-        // const newNote = await noteService.createNote(content);
-
         dispatch(createNote(content));
     };
 

@@ -27,15 +27,8 @@ import noteReducer, {
     setNotes,
 } from "./reducers/noteReducer";
 import filterReducer, { filterChange } from "./reducers/filterReducer";
-
+import store from "./store/store";
 import { Provider } from "react-redux";
-
-const store = configureStore({
-    reducer: {
-        notes: noteReducer,
-        filter: filterReducer,
-    },
-});
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <Provider store={store}>
