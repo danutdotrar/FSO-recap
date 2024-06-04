@@ -1,16 +1,22 @@
 {
-    "anecdotes": [
-        {
-            "content": "Just an anecdote from db.json",
-            "important": false,
-            "votes": 0,
-            "id": "1"
-        },
-        {
-            "content": "Another anecdote from db.json",
-            "important": false,
-            "votes": 0,
-            "id": "2"
-        }
-    ]
+  "anecdotes": [
+    {
+      "content": "Just an anecdote from db.json",
+      "important": false,
+      "votes": 3,
+      "id": "1"
+    },
+    {
+      "content": "Another anecdote from db.json",
+      "important": false,
+      "votes": 1,
+      "id": "2"
+    },
+    {
+      "id": "fe74",
+      "content": "test",
+      "important": false,
+      "votes": 4
+    }
+  ]
 }

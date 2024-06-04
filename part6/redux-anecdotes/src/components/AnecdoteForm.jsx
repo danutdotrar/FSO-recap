@@ -13,15 +13,28 @@ const AnecdoteForm = () => {
         event.preventDefault();
 
         const inputValue = event.target.anecdote.value;
-        const newObject = { content: inputValue, important: false, votes: 0 };
 
-        dispatch(createNew(newObject));
-        dispatch(setNotification(`"${inputValue}" anecdote has been added`));
+        if (inputValue !== "") {
+            const newObject = {
+                content: inputValue,
+                important: false,
+                votes: 0,
+            };
 
-        // remove notification
-        setTimeout(() => {
-            dispatch(removeNotification());
-        }, 5000);
+            dispatch(createNew(newObject));
+            dispatch(
+                setNotification(`"${inputValue}" anecdote has been added`)
+            );
+
+            setTimeout(() => {
+                dispatch(removeNotification());
+            }, 5000);
+        } else {
+            dispatch(setNotification(`Please enter your anecdote!`));
+            setTimeout(() => {
+                dispatch(removeNotification());
+            }, 5000);
+        }
 
         event.target.anecdote.value = "";
     };

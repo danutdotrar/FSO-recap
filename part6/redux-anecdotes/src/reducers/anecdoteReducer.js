@@ -5,18 +5,9 @@ const anecdoteSlice = createSlice({
     name: "anecdote",
     initialState: [],
     reducers: {
-        voteAnecdote(state, action) {
-            const id = action.payload;
-
-            const foundAnecdote = state.find((item) => item.id === id);
-
-            const changedAnecdote = {
-                ...foundAnecdote,
-                votes: foundAnecdote.votes + 1,
-            };
-
+        updateVoteAnecdote(state, action) {
             return state.map((item) =>
-                item.id !== id ? item : changedAnecdote
+                item.id !== action.payload.id ? item : action.payload
             );
         },
 
@@ -31,13 +22,11 @@ const anecdoteSlice = createSlice({
     },
 });
 
-export const { voteAnecdote, appendAnecdote, setAnecdotes } =
+export const { appendAnecdote, setAnecdotes, updateVoteAnecdote } =
     anecdoteSlice.actions;
 
 export const initializeAnecdotes = () => {
     return async (dispatch) => {
-        // HTTP GET Request
-        // dispatch the result from the HTTP GET req to the redux store
         const response = await anecdoteService.getAll();
         dispatch(setAnecdotes(response));
     };
@@ -47,6 +36,18 @@ export const createNew = (newObject) => {
     return async (dispatch) => {
         const response = await anecdoteService.createAnecdote(newObject);
         dispatch(appendAnecdote(response));
+    };
+};
+
+export const voteAnecdote = (anecdote) => {
+    return async (dispatch) => {
+        const newObject = { ...anecdote, votes: anecdote.votes + 1 };
+        const response = await anecdoteService.updateAnecdote(
+            anecdote.id,
+            newObject
+        );
+
+        dispatch(updateVoteAnecdote(response));
     };
 };
 

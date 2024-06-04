@@ -14,11 +14,11 @@ const AnecdoteList = () => {
 
     const dispatch = useDispatch();
 
-    const handleClick = (id, content) => {
-        dispatch(voteAnecdote(id));
+    const handleClick = (anecdote) => {
+        dispatch(voteAnecdote(anecdote));
 
         // show message based on anecdote content
-        const notificationMessage = `you voted "${content}"`;
+        const notificationMessage = `you voted "${anecdote.content}"`;
         dispatch(setNotification(notificationMessage));
 
         // remove notification
@@ -34,11 +34,7 @@ const AnecdoteList = () => {
                     <div>{anecdote.content}</div>
                     <div>
                         has {anecdote.votes}
-                        <button
-                            onClick={() =>
-                                handleClick(anecdote.id, anecdote.content)
-                            }
-                        >
+                        <button onClick={() => handleClick(anecdote)}>
                             vote
                         </button>
                     </div>
