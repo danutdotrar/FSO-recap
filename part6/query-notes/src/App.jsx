@@ -1,11 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { getNotes, createNote } from "./services/requests";
+import { getNotes, createNote, updateNote } from "./services/requests";
 
 const App = () => {
     const queryClient = useQueryClient();
+
+    // new note mutation
     const newNoteMutation = useMutation({
         mutationFn: createNote,
+        onSuccess: (newNote) => {
+            const notes = queryClient.getQueryData(["notes"]);
+            queryClient.setQueryData(["notes"], notes.concat(newNote));
+        },
+    });
+
+    // update note mutation
+    const updateNoteMutation = useMutation({
+        mutationFn: updateNote,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["notes"] });
         },
@@ -20,7 +31,7 @@ const App = () => {
     };
 
     const toggleImportance = (note) => {
-        console.log("toggle importance of", note.id);
+        updateNoteMutation.mutate({ ...note, important: !note.important });
     };
 
     // retrieve notes from backend with React Query
