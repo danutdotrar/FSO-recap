@@ -13,12 +13,12 @@
     {
       "id": "a008",
       "content": "rickRolled",
-      "important": false
+      "important": true
     },
     {
       "id": "cc02",
       "content": "new note",
-      "important": false
+      "important": true
     },
     {
       "id": "461a",
@@ -33,6 +33,11 @@
     {
       "id": "d905",
       "content": "rickRolled",
+      "important": true
+    },
+    {
+      "id": "5902",
+      "content": "new note testssss",
       "important": true
     }
   ]

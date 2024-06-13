@@ -9,6 +9,7 @@ const App = () => {
     const newNoteMutation = useMutation({
         mutationFn: createNote,
         onSuccess: (newNote) => {
+            // manually update new note mutation
             const notes = queryClient.getQueryData(["notes"]);
             queryClient.setQueryData(["notes"], notes.concat(newNote));
         },
