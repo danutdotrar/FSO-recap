@@ -17,20 +17,17 @@ const App = () => {
         console.log("vote");
     };
 
-    const anecdotes = [
-        {
-            content: "If it hurts, do it more often",
-            id: "47145",
-            votes: 0,
-        },
-    ];
-
     if (result.isPending) {
         return <div>Loading...</div>;
     }
 
     if (result.isError) {
-        return <div>Error: {result.error.message}</div>;
+        return (
+            <div>
+                Anecdote service not available due to problems in server.{" "}
+                {result.error.message}
+            </div>
+        );
     }
 
     return (
