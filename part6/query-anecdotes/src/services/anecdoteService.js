@@ -10,6 +10,4 @@ const getAll = async () => {
     return response.data;
 };
 
-export default {
-    getAll,
-};
+export { getAll };

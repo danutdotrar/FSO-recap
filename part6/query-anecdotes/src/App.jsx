@@ -1,9 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
+import { getAll } from "./services/anecdoteService";
 
 const App = () => {
-    // React Query
+    // Get the anecdotes from the backend
+    const result = useQuery({
+        queryKey: ["anecdotes"],
+        queryFn: getAll,
+        retry: false,
+    });
+
+    console.log("result ", result.data);
 
     const handleVote = (anecdote) => {
         console.log("vote");
@@ -17,6 +25,14 @@ const App = () => {
         },
     ];
 
+    if (result.isPending) {
+        return <div>Loading...</div>;
+    }
+
+    if (result.isError) {
+        return <div>Error: {result.error.message}</div>;
+    }
+
     return (
         <div>
             <h3>Anecdote app</h3>
@@ -24,7 +40,7 @@ const App = () => {
             <Notification />
             <AnecdoteForm />
 
-            {anecdotes.map((anecdote) => (
+            {result?.data?.map((anecdote) => (
                 <div key={anecdote.id}>
                     <div>{anecdote.content}</div>
                     <div>
