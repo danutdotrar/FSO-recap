@@ -18,4 +18,11 @@ const createNew = async (newObject) => {
     return response.data;
 };
 
-export { getAll, createNew };
+// @@ PUT request
+// @@ Path baseURL/id of the unique resource
+// Update the resource with the new data
+const updateAnecdote = async (anecdote) => {
+    const response = await axios.put(`${baseURL}/${anecdote.id}`, anecdote);
+    return response.data;
+};
+export { getAll, createNew, updateAnecdote };
