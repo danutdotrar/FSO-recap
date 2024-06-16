@@ -11,8 +11,6 @@ const App = () => {
         retry: false,
     });
 
-    console.log("result ", result.data);
-
     const handleVote = (anecdote) => {
         console.log("vote");
     };
