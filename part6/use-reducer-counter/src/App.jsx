@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import CounterContext from "./CounterContext";
+import CounterContext from "./context/CounterContext";
 
 import Button from "./components/Button";
 import Display from "./components/Display";
@@ -23,11 +23,11 @@ const App = () => {
     return (
         <CounterContext.Provider value={[counter, counterDispatch]}>
             <div>
-                <Display counter={counter} />
+                <Display />
                 <div>
-                    <Button dispatch={counterDispatch} type="INC" label="+" />
-                    <Button dispatch={counterDispatch} type="DEC" label="-" />
-                    <Button dispatch={counterDispatch} type="ZERO" label="0" />
+                    <Button type="INC" label="+" />
+                    <Button type="DEC" label="-" />
+                    <Button type="ZERO" label="0" />
                 </div>
             </div>
         </CounterContext.Provider>
