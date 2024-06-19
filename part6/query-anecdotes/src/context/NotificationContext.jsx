@@ -36,5 +36,13 @@ export const useNotificationDispatch = () => {
     const context = useContext(NotificationContext);
     const dispatchFunction = context[1];
 
-    return dispatchFunction;
+    const setMessage = (payload) => {
+        return dispatchFunction({ type: "SET_MESSAGE", payload });
+    };
+    // return dispatchFunction
+
+    const clearMessage = () => {
+        return dispatchFunction({ type: "SET_MESSAGE", payload: "" });
+    };
+    return { setMessage, clearMessage };
 };

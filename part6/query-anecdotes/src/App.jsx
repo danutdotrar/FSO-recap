@@ -32,7 +32,7 @@ const App = () => {
         },
     });
 
-    const dispatchMessage = useNotificationDispatch();
+    const { setMessage, clearMessage } = useNotificationDispatch();
 
     const handleVote = (anecdote) => {
         const updatedAnecdote = { ...anecdote, votes: anecdote.votes + 1 };
@@ -41,13 +41,14 @@ const App = () => {
 
         const messageForNotification = `anecdote "${updatedAnecdote.content}" voted`;
 
-        dispatchMessage({
-            type: "SET_MESSAGE",
-            payload: messageForNotification,
-        });
+        // dispatchMessage({
+        //     type: "SET_MESSAGE",
+        //     payload: messageForNotification,
+        // });
+        setMessage(messageForNotification);
 
         setTimeout(() => {
-            dispatchMessage({ type: "SET_MESSAGE", payload: "" });
+            clearMessage();
         }, 5000);
     };
 
