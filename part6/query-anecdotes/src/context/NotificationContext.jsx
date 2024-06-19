@@ -9,7 +9,6 @@ const notificationReducer = (state, action) => {
     }
 };
 
-// create the context
 export const NotificationContext = createContext();
 
 export const NotificationProvider = (props) => {
