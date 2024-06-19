@@ -41,10 +41,6 @@ const App = () => {
 
         const messageForNotification = `anecdote "${updatedAnecdote.content}" voted`;
 
-        // dispatchMessage({
-        //     type: "SET_MESSAGE",
-        //     payload: messageForNotification,
-        // });
         setMessage(messageForNotification);
 
         setTimeout(() => {

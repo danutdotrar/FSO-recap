@@ -34,15 +34,22 @@ export const useNotificationValue = () => {
 // custom hook to export the function
 export const useNotificationDispatch = () => {
     const context = useContext(NotificationContext);
+
+    if (!context) {
+        throw new Error(
+            "useNotificationDispatch must be used within a NotificationProvider"
+        );
+    }
+
     const dispatchFunction = context[1];
 
     const setMessage = (payload) => {
         return dispatchFunction({ type: "SET_MESSAGE", payload });
     };
-    // return dispatchFunction
 
     const clearMessage = () => {
         return dispatchFunction({ type: "SET_MESSAGE", payload: "" });
     };
+
     return { setMessage, clearMessage };
 };
