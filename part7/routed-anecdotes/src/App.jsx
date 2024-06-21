@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link,
+    useMatch,
+} from "react-router-dom";
 
 // import BrowserRouter as Router, Routes, Route, Link
 // create the routes that will render a specific page based on params
@@ -24,12 +30,29 @@ const Menu = () => {
     );
 };
 
+const Anecdote = ({ anecdote }) => {
+    return (
+        <div>
+            <ul>
+                <li>Content: {anecdote.content}</li>
+                <li>Author: {anecdote.author}</li>
+                <li>Info: {anecdote.info}</li>
+                <li>votes: {anecdote.votes}</li>
+            </ul>
+        </div>
+    );
+};
+
 const AnecdoteList = ({ anecdotes }) => (
     <div>
         <h2>Anecdotes</h2>
         <ul>
             {anecdotes.map((anecdote) => (
-                <li key={anecdote.id}>{anecdote.content}</li>
+                <li key={anecdote.id}>
+                    <Link to={`/anecdotes/${anecdote.id}`}>
+                        {anecdote.content}
+                    </Link>
+                </li>
             ))}
         </ul>
     </div>
@@ -156,25 +179,39 @@ const App = () => {
         setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
     };
 
+    // match the parameter
+    // match is reactive, so will update everytime the URL is changed
+    // useMatch will check if the current path is matching a specific path
+    const match = useMatch("/anecdotes/:id");
+    // find the anecdote in the state, based on match.params.id
+    const anecdote = match
+        ? anecdotes.find((anecdote) => {
+              return anecdote.id === Number(match.params.id);
+          })
+        : null;
+
     return (
         <div>
-            <Router>
-                <div>
-                    <h1>Software anecdotes</h1>
-                    <Menu />
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={<AnecdoteList anecdotes={anecdotes} />}
-                        />
-                        <Route path="/about" element={<About />} />
-                        <Route
-                            path="/create"
-                            element={<CreateNew addNew={addNew} />}
-                        />
-                    </Routes>
-                </div>
-            </Router>
+            <div>
+                <h1>Software anecdotes</h1>
+                <Menu />
+                <Routes>
+                    <Route
+                        path="/"
+                        element={<AnecdoteList anecdotes={anecdotes} />}
+                    />
+                    <Route path="/about" element={<About />} />
+                    <Route
+                        path="/create"
+                        element={<CreateNew addNew={addNew} />}
+                    />
+                    <Route
+                        path="/anecdotes/:id"
+                        element={<Anecdote anecdote={anecdote} />}
+                    />
+                </Routes>
+            </div>
+
             <Footer />
         </div>
     );
