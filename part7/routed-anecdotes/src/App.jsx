@@ -5,6 +5,8 @@ import {
     Route,
     Link,
     useMatch,
+    Navigate,
+    useNavigate,
 } from "react-router-dom";
 
 // import BrowserRouter as Router, Routes, Route, Link
@@ -141,6 +143,18 @@ const CreateNew = (props) => {
     );
 };
 
+const Notification = ({ message }) => {
+    if (!message) return null;
+
+    return (
+        <>
+            <div>
+                <p>{`A new anecdote "${message}" has been added`}</p>
+            </div>
+        </>
+    );
+};
+
 const App = () => {
     const [anecdotes, setAnecdotes] = useState([
         {
@@ -161,9 +175,20 @@ const App = () => {
 
     const [notification, setNotification] = useState("");
 
+    const navigate = useNavigate();
+
     const addNew = (anecdote) => {
         anecdote.id = Math.round(Math.random() * 10000);
         setAnecdotes(anecdotes.concat(anecdote));
+
+        // navigate to home
+        navigate("/");
+        // set notification message
+        setNotification(anecdote.content);
+        // after 5 seconds set notification to ""
+        setTimeout(() => {
+            setNotification("");
+        }, 5000);
     };
 
     const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -195,6 +220,7 @@ const App = () => {
             <div>
                 <h1>Software anecdotes</h1>
                 <Menu />
+                <Notification message={notification} />
                 <Routes>
                     <Route
                         path="/"
