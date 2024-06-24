@@ -9,10 +9,6 @@ import {
     useNavigate,
 } from "react-router-dom";
 
-// import BrowserRouter as Router, Routes, Route, Link
-// create the routes that will render a specific page based on params
-// attach the Link to needed buttons
-
 const Menu = () => {
     const padding = {
         paddingRight: 5,
