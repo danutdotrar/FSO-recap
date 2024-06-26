@@ -9,5 +9,10 @@ export const useField = (name) => {
         setValue(e.target.value);
     };
 
-    return { name, value, onChange };
+    // reset the value to ""
+    const reset = () => {
+        setValue("");
+    };
+
+    return { name, value, onChange, reset };
 };
