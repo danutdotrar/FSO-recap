@@ -14,5 +14,8 @@ export const useField = (name) => {
         setValue("");
     };
 
-    return { name, value, onChange, reset };
+    // keep only the props needed for <input/>
+    const inputProps = { name, value, onChange };
+
+    return { inputProps, reset };
 };
