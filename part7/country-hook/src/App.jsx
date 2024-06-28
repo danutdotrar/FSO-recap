@@ -43,7 +43,6 @@ const useCountry = (name) => {
 };
 
 const Country = ({ country }) => {
-    console.log("COUNTRY", country);
     if (!country) {
         return null;
     }
@@ -74,7 +73,6 @@ const App = () => {
     const fetch = (e) => {
         e.preventDefault();
         setName(nameInput.value);
-        console.log(country);
     };
 
     return (
