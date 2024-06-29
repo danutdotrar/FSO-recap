@@ -128,7 +128,6 @@ const App = () => {
     // every time the URL is changed, the match is updated
     const match = useMatch("/notes/:id");
 
-    // find the note by the id of the match.params
     const note = match
         ? notes.find((note) => note.id === Number(match.params.id))
         : null;

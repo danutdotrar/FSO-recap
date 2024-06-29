@@ -4,12 +4,10 @@ import { useState } from "react";
 export const useField = (name) => {
     const [value, setValue] = useState("");
 
-    // set the value
     const onChange = (e) => {
         setValue(e.target.value);
     };
 
-    // reset the value to ""
     const reset = () => {
         setValue("");
     };

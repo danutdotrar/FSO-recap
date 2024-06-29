@@ -179,11 +179,10 @@ const App = () => {
 
         setAnecdotes(anecdotes.concat(anecdote));
 
-        // navigate to home
         navigate("/");
-        // set notification message
+
         setNotification(anecdote.content);
-        // after 5 seconds set notification to ""
+
         setTimeout(() => {
             setNotification("");
         }, 5000);
