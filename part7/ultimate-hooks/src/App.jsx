@@ -8,11 +8,17 @@ const useField = (type) => {
         setValue(event.target.value);
     };
 
-    return {
+    const reset = () => {
+        setValue("");
+    };
+
+    const inputProps = {
         type,
         value,
         onChange,
     };
+
+    return { inputProps, reset };
 };
 
 const useResource = (baseUrl) => {
@@ -60,21 +66,29 @@ const App = () => {
         "http://localhost:3005/persons"
     );
 
-    const handleNoteSubmit = (event) => {
+    const handleNoteSubmit = async (event) => {
         event.preventDefault();
-        noteService.create({ content: content.value });
+        noteService.create({ content: content.inputProps.value });
+
+        content.reset();
     };
 
     const handlePersonSubmit = (event) => {
         event.preventDefault();
-        personService.create({ name: name.value, number: number.value });
+        personService.create({
+            name: name.inputProps.value,
+            number: number.inputProps.value,
+        });
+
+        name.reset();
+        number.reset();
     };
 
     return (
         <div>
             <h2>notes</h2>
             <form onSubmit={handleNoteSubmit}>
-                <input {...content} />
+                <input {...content.inputProps} />
                 <button>create</button>
             </form>
             {notes.map((n) => (
@@ -83,8 +97,8 @@ const App = () => {
 
             <h2>persons</h2>
             <form onSubmit={handlePersonSubmit}>
-                name <input {...name} /> <br />
-                number <input {...number} />
+                name <input {...name.inputProps} /> <br />
+                number <input {...number.inputProps} />
                 <button>create</button>
             </form>
             {persons.map((n) => (
