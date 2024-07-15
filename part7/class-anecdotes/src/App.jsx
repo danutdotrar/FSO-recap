@@ -1,26 +1,28 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
 import React from "react";
 import axios from "axios";
 
 class App extends React.Component {
     constructor(props) {
+        // super gives us access to 'this'
+        // configures the properties and methods inherited from React.Component
         super(props);
 
+        // state in class components is an object with multiple states if needed
         this.state = {
             anecdotes: [],
             current: 0,
         };
     }
 
+    // execute after component is rendered
     componentDidMount = () => {
         axios.get("http://localhost:3000/anecdotes").then((response) => {
             this.setState({ anecdotes: response.data });
         });
     };
 
+    // 'this' points to the current instance of the class
     handleClick = () => {
         const current = Math.floor(Math.random() * this.state.anecdotes.length);
         this.setState({ current });
