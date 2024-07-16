@@ -3,6 +3,7 @@ import React from "react";
 import axios from "axios";
 
 class App extends React.Component {
+    // initiate the state of the component
     constructor(props) {
         // super gives us access to 'this'
         // configures the properties and methods inherited from React.Component
