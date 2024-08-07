@@ -1,22 +1,29 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import { NotificationContext } from "./context/notificationContext";
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
-    const [title, setTitle] = useState("");
-    const [author, setAuthor] = useState("");
+    // const [title, setTitle] = useState("");
+    // const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
 
     const blogFormRef = useRef();
+
+    const [state, dispatchState] = useContext(NotificationContext);
+
+    const { title, author } = state;
+
+    console.log(state);
 
     useEffect(() => {
         if (user) {
@@ -96,8 +103,9 @@ const App = () => {
             setBlogs(updatedBlogs);
 
             // reset fields
-            setTitle("");
-            setAuthor("");
+            dispatchState({ type: "CLEAR_FIELDS" });
+            // setTitle("");
+            // setAuthor("");
             setUrl("");
 
             // add an alert for 5 seconds with the details of the posted blog
@@ -107,7 +115,11 @@ const App = () => {
                 setErrorMessage(null);
             }, 5000);
         } catch (error) {
-            //
+            setErrorMessage(`${error.response.data.error}`);
+
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
         }
     };
 
@@ -221,8 +233,18 @@ const App = () => {
                     title={title}
                     author={author}
                     url={url}
-                    handleTitle={(event) => setTitle(event.target.value)}
-                    handleAuthor={(event) => setAuthor(event.target.value)}
+                    handleTitle={(event) =>
+                        dispatchState({
+                            type: "SET_TITLE",
+                            payload: event.target.value,
+                        })
+                    }
+                    handleAuthor={(event) =>
+                        dispatchState({
+                            type: "SET_AUTHOR",
+                            payload: event.target.value,
+                        })
+                    }
                     handleUrl={(event) => setUrl(event.target.value)}
                 />
             </Togglable>

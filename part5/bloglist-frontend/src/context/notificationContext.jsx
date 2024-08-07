@@ -26,6 +26,10 @@ const notificationReducer = (state, action) => {
             return newState;
         }
 
+        case "CLEAR_FIELDS": {
+            return { title: "", author: "" };
+        }
+
         default:
             return state;
     }
@@ -34,13 +38,13 @@ const notificationReducer = (state, action) => {
 // create the wrapper provider that wraps the children and pass the value to them
 export const NotificationWrapper = ({ children }) => {
     // use the useReducer with the reducer and the initialState
-    const [value, dispatchValue] = useReducer(
+    const [state, dispatchState] = useReducer(
         notificationReducer,
         initialState
     );
 
     return (
-        <NotificationContext.Provider value={[value, dispatchValue]}>
+        <NotificationContext.Provider value={[state, dispatchState]}>
             {children}
         </NotificationContext.Provider>
     );
