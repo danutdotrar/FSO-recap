@@ -1,6 +1,47 @@
 // import stuff
+import { useReducer, createContext } from "react";
+
 // define initial state
-// create context and export it
-// define reducer
-// define reducer's actions
-// create provider wrapper that wraps children
+const initialState = {
+    title: "",
+    author: "",
+};
+
+// create the context
+export const NotificationContext = createContext();
+
+// define the reducer
+const notificationReducer = (state, action) => {
+    // define the reducer actions
+    switch (action.type) {
+        case "SET_TITLE": {
+            const newState = { ...state, title: action.payload };
+
+            return newState;
+        }
+
+        case "SET_AUTHOR": {
+            const newState = { ...state, author: action.payload };
+
+            return newState;
+        }
+
+        default:
+            return state;
+    }
+};
+
+// create the wrapper provider that wraps the children and pass the value to them
+export const NotificationWrapper = ({ children }) => {
+    // use the useReducer with the reducer and the initialState
+    const [value, dispatchValue] = useReducer(
+        notificationReducer,
+        initialState
+    );
+
+    return (
+        <NotificationContext.Provider value={[value, dispatchValue]}>
+            {children}
+        </NotificationContext.Provider>
+    );
+};
