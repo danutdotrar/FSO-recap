@@ -19,8 +19,6 @@ const App = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
-    // const [title, setTitle] = useState("");
-    // const [author, setAuthor] = useState("");
     const [url, setUrl] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
 
@@ -52,6 +50,7 @@ const App = () => {
             dispatchState({ type: "CLEAR_FIELDS" });
             setUrl("");
         },
+        // handle errors
         onError: (error) => {
             // error message
             setErrorMessage(`${error.response?.data?.error || error.message}`);
@@ -66,7 +65,7 @@ const App = () => {
         if (user) {
             const fetchData = async () => {
                 try {
-                    // the token is set only after use is logged in
+                    // the token is set only after user is logged in
                     blogService.setToken(user.token);
                 } catch (error) {
                     setUser(null);
@@ -76,6 +75,7 @@ const App = () => {
         }
     }, [user]);
 
+    // get the blogs
     const { data, error, isLoading } = useQuery({
         queryKey: ["blogs"],
         queryFn: blogService.getAll,
