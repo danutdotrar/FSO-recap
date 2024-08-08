@@ -33,11 +33,40 @@ const App = () => {
     // access the queryClient
     const queryClient = useQueryClient();
 
+    // define mutation for posting blogs
+    const newBlogMutation = useMutation({
+        mutationFn: blogService.createBlog,
+        onSuccess: (newBlog) => {
+            // invalidate queries
+            queryClient.invalidateQueries("blogs");
+
+            // notification
+            setErrorMessage(
+                `new blog '${newBlog.title} by ${newBlog.author}' added`
+            );
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
+
+            // reset fields
+            dispatchState({ type: "CLEAR_FIELDS" });
+            setUrl("");
+        },
+        onError: (error) => {
+            // error message
+            setErrorMessage(`${error.response?.data?.error || error.message}`);
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
+        },
+    });
+
     // query the data from server
     useEffect(() => {
         if (user) {
             const fetchData = async () => {
                 try {
+                    // the token is set only after use is logged in
                     blogService.setToken(user.token);
                 } catch (error) {
                     setUser(null);
@@ -50,6 +79,7 @@ const App = () => {
     const { data, error, isLoading } = useQuery({
         queryKey: ["blogs"],
         queryFn: blogService.getAll,
+        // the request is executed only if user exists
         enabled: !!user,
     });
 
@@ -112,37 +142,20 @@ const App = () => {
 
         const newObj = { title, author, url };
 
-        try {
-            // set the token to headers Authorization
-            blogService.setToken(user.token);
+        // set the token to headers Authorization
+        blogService.setToken(user.token);
 
-            // add the user that created this request
-            // make a POST request to '/api/blogs'
-            const addNewBlog = await blogService.createBlog(newObj);
+        // add the user that created this request
+        // make a POST request to '/api/blogs'
+        // const addNewBlog = await blogService.createBlog(newObj);
 
-            // update frontend
-            const updatedBlogs = blogs.concat(addNewBlog);
-            setBlogs(updatedBlogs);
+        newBlogMutation.mutate(newObj);
 
-            // reset fields
-            dispatchState({ type: "CLEAR_FIELDS" });
-            // setTitle("");
-            // setAuthor("");
-            setUrl("");
-
-            // add an alert for 5 seconds with the details of the posted blog
-            setErrorMessage(`new blog '${title} by ${author}' added`);
-
-            setTimeout(() => {
-                setErrorMessage(null);
-            }, 5000);
-        } catch (error) {
-            setErrorMessage(`${error.response.data.error}`);
-
-            setTimeout(() => {
-                setErrorMessage(null);
-            }, 5000);
-        }
+        // reset fields
+        dispatchState({ type: "CLEAR_FIELDS" });
+        // setTitle("");
+        // setAuthor("");
+        setUrl("");
     };
 
     // PUT request
