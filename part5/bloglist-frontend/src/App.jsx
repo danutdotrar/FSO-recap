@@ -6,6 +6,13 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { NotificationContext } from "./context/notificationContext";
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+} from "@tanstack/react-query";
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -23,16 +30,15 @@ const App = () => {
 
     const { title, author } = state;
 
-    console.log(state);
+    // access the queryClient
+    const queryClient = useQueryClient();
 
+    // query the data from server
     useEffect(() => {
         if (user) {
             const fetchData = async () => {
                 try {
                     blogService.setToken(user.token);
-
-                    const blogs = await blogService.getAll();
-                    setBlogs(blogs);
                 } catch (error) {
                     setUser(null);
                 }
@@ -40,6 +46,22 @@ const App = () => {
             fetchData();
         }
     }, [user]);
+
+    const { data, error, isLoading } = useQuery({
+        queryKey: ["blogs"],
+        queryFn: blogService.getAll,
+        enabled: !!user,
+    });
+
+    useEffect(() => {
+        if (data) {
+            setBlogs(data);
+        }
+
+        if (error) {
+            setUser(null);
+        }
+    }, [data, error, setUser]);
 
     useEffect(() => {
         const userFromLocalStorage = window.localStorage.getItem("blogUser");
