@@ -60,6 +60,39 @@ const App = () => {
         },
     });
 
+    // define login mutation
+    const loginMutation = useMutation({
+        mutationFn: loginService.login,
+        // react query will execute 'onSuccess' after the promise from mutationFn is resolved
+        // 'user' will be the response received by loginService.login fn
+        onSuccess: (user) => {
+            window.localStorage.setItem("blogUser", JSON.stringify(user));
+
+            console.log(user);
+            setUser(user);
+
+            setUsername("");
+            setPassword("");
+        },
+        onError: (error) => {
+            setErrorMessage("username or password not ok");
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
+        },
+    });
+
+    useEffect(() => {
+        const userFromLocalStorage = window.localStorage.getItem("blogUser");
+
+        // if user exists in local storage, save it in the 'user' state
+        if (userFromLocalStorage) {
+            // convert string to object with JSON parse
+            const user = JSON.parse(userFromLocalStorage);
+            setUser(user);
+        }
+    }, []);
+
     // query the data from server
     useEffect(() => {
         if (user) {
@@ -93,39 +126,30 @@ const App = () => {
         }
     }, [data, error, setUser]);
 
-    useEffect(() => {
-        const userFromLocalStorage = window.localStorage.getItem("blogUser");
-
-        // if user exists in local storage, save it in the 'user' state
-        if (userFromLocalStorage) {
-            // convert string to object with JSON parse
-            const user = JSON.parse(userFromLocalStorage);
-            setUser(user);
-        }
-    }, []);
-
     const handleLogin = async (event) => {
         event.preventDefault();
 
         // facem un POST request pentru login cu username si parola
-        try {
-            // save the user from the backend request (token, username, name)
-            const user = await loginService.login({ username, password });
+        // try {
+        //     // save the user from the backend request (token, username, name)
+        //     const user = await loginService.login({ username, password });
 
-            // save the user to local storage
-            window.localStorage.setItem("blogUser", JSON.stringify(user));
+        //     // save the user to local storage
+        //     window.localStorage.setItem("blogUser", JSON.stringify(user));
 
-            // save the user to state
-            setUser(user);
+        //     // save the user to state
+        //     setUser(user);
 
-            setUsername("");
-            setPassword("");
-        } catch (error) {
-            setErrorMessage("username or password not ok");
-            setTimeout(() => {
-                setErrorMessage(null);
-            }, 5000);
-        }
+        //     setUsername("");
+        //     setPassword("");
+        // } catch (error) {
+        //     setErrorMessage("username or password not ok");
+        //     setTimeout(() => {
+        //         setErrorMessage(null);
+        //     }, 5000);
+        // }
+
+        loginMutation.mutate({ username, password });
     };
 
     const handleLogOut = () => {
