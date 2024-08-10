@@ -15,7 +15,7 @@ import {
 } from "@tanstack/react-query";
 
 const App = () => {
-    const [blogs, setBlogs] = useState([]);
+    // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
@@ -30,6 +30,18 @@ const App = () => {
 
     // access the queryClient
     const queryClient = useQueryClient();
+
+    // get the blogs
+    const {
+        data: blogs,
+        error,
+        isLoading,
+    } = useQuery({
+        queryKey: ["blogs"],
+        queryFn: blogService.getAll,
+        // the request is executed only if user exists
+        enabled: !!user,
+    });
 
     // define mutation for posting blogs
     const newBlogMutation = useMutation({
@@ -108,23 +120,15 @@ const App = () => {
         }
     }, [user]);
 
-    // get the blogs
-    const { data, error, isLoading } = useQuery({
-        queryKey: ["blogs"],
-        queryFn: blogService.getAll,
-        // the request is executed only if user exists
-        enabled: !!user,
-    });
+    // useEffect(() => {
+    //     if (data) {
+    //         setBlogs(data);
+    //     }
 
-    useEffect(() => {
-        if (data) {
-            setBlogs(data);
-        }
-
-        if (error) {
-            setUser(null);
-        }
-    }, [data, error, setUser]);
+    //     if (error) {
+    //         setUser(null);
+    //     }
+    // }, [data, error, setUser]);
 
     const handleLogin = async (event) => {
         event.preventDefault();
@@ -182,24 +186,55 @@ const App = () => {
         setUrl("");
     };
 
+    // use mutation to update blogs
+    const updateBlogMutation = useMutation({
+        mutationFn: ({ id, updatedData }) =>
+            blogService.updateBlog(id, updatedData),
+
+        onSuccess: (updatedBlog) => {
+            console.log(updatedBlog);
+            queryClient.setQueryData(["blogs"], (oldData) => {
+                if (!oldData) {
+                    return oldData;
+                } else {
+                    return [
+                        ...oldData.map((blog) =>
+                            blog.id === updatedBlog?.id ? updatedBlog : blog
+                        ),
+                    ];
+                }
+            });
+        },
+        onError: (error) => {
+            console.log(error);
+        },
+    });
+
     // PUT request
     const handleBlogUpdate = async (blog) => {
-        const blogId = blog.id;
+        if (blog) {
+            const blogId = blog?.id;
 
-        const updatedBlogObj = {
-            ...blog,
-            likes: +blog.likes + 1,
-        };
+            const updatedBlogObj = {
+                ...blog,
+                likes: +blog.likes + 1,
+            };
 
-        // HTTP PUT request to the backend
-        const response = await blogService.updateBlog(blogId, updatedBlogObj);
+            updateBlogMutation.mutate({
+                id: blogId,
+                updatedData: updatedBlogObj,
+            });
+        }
 
-        // take the updated object and update frontend
-        const updatedBlogs = blogs.map((blog) =>
-            blog.id !== blogId ? blog : updatedBlogObj
-        );
+        // // HTTP PUT request to the backend
+        // const response = await blogService.updateBlog(blogId, updatedBlogObj);
 
-        setBlogs(updatedBlogs);
+        // // take the updated object and update frontend
+        // const updatedBlogs = blogs.map((blog) =>
+        //     blog.id !== blogId ? blog : updatedBlogObj
+        // );
+
+        // setBlogs(updatedBlogs);
     };
 
     const handleBlogRemove = async (blogId) => {
@@ -310,8 +345,8 @@ const App = () => {
 
             <h2>blogs list</h2>
             {blogs
-                .sort((a, b) => +a.likes - +b.likes)
-                .map((blog) => (
+                ?.sort((a, b) => +a.likes - +b.likes)
+                ?.map((blog) => (
                     <Blog
                         key={blog.id}
                         blog={blog}
