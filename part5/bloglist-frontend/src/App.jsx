@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useContext } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import { useNavigate } from "react-router-dom";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -21,12 +22,43 @@ const App = () => {
     const [user, setUser] = useState(null);
     const [url, setUrl] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
+    const [isUserLoaded, setIsUserLoaded] = useState(false);
 
     const blogFormRef = useRef();
 
     const [state, dispatchState] = useContext(NotificationContext);
 
     const { title, author } = state;
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const userFromLocalStorage = window.localStorage.getItem("blogUser");
+
+        // if user exists in local storage, save it in the 'user' state
+        if (userFromLocalStorage) {
+            // convert string to object with JSON parse
+            const user = JSON.parse(userFromLocalStorage);
+            setUser(user);
+        }
+    }, []);
+
+    // query the data from server
+    useEffect(() => {
+        if (user) {
+            const fetchData = async () => {
+                try {
+                    // the token is set only after user is logged in
+                    blogService.setToken(user.token);
+
+                    setIsUserLoaded(true);
+                } catch (error) {
+                    setUser(null);
+                }
+            };
+            fetchData();
+        }
+    }, [user]);
 
     // access the queryClient
     const queryClient = useQueryClient();
@@ -40,7 +72,35 @@ const App = () => {
         queryKey: ["blogs"],
         queryFn: blogService.getAll,
         // the request is executed only if user exists
-        enabled: !!user,
+        enabled: !!user && isUserLoaded,
+        onError: (error) => {
+            console.log("getall ", error);
+        },
+    });
+
+    // define login mutation
+    const loginMutation = useMutation({
+        mutationFn: loginService.login,
+        // react query will execute 'onSuccess' after the promise from mutationFn is resolved
+        // 'user' will be the response received by loginService.login fn
+        onSuccess: (user) => {
+            window.localStorage.setItem("blogUser", JSON.stringify(user));
+
+            console.log(user);
+
+            // blogService.setToken(user.token);
+
+            setUser(user);
+
+            setUsername("");
+            setPassword("");
+        },
+        onError: (error) => {
+            setErrorMessage("username or password not ok");
+            setTimeout(() => {
+                setErrorMessage(null);
+            }, 5000);
+        },
     });
 
     // define mutation for posting blogs
@@ -72,53 +132,29 @@ const App = () => {
         },
     });
 
-    // define login mutation
-    const loginMutation = useMutation({
-        mutationFn: loginService.login,
-        // react query will execute 'onSuccess' after the promise from mutationFn is resolved
-        // 'user' will be the response received by loginService.login fn
-        onSuccess: (user) => {
-            window.localStorage.setItem("blogUser", JSON.stringify(user));
+    // use mutation to update blogs
+    const updateBlogMutation = useMutation({
+        mutationFn: ({ id, updatedData }) =>
+            blogService.updateBlog(id, updatedData),
 
-            console.log(user);
-            setUser(user);
-
-            setUsername("");
-            setPassword("");
+        onSuccess: (updatedBlog) => {
+            console.log(updatedBlog);
+            queryClient.setQueryData(["blogs"], (oldData) => {
+                if (!oldData) {
+                    return oldData;
+                } else {
+                    return [
+                        ...oldData.map((blog) =>
+                            blog.id === updatedBlog?.id ? updatedBlog : blog
+                        ),
+                    ];
+                }
+            });
         },
         onError: (error) => {
-            setErrorMessage("username or password not ok");
-            setTimeout(() => {
-                setErrorMessage(null);
-            }, 5000);
+            console.log(error);
         },
     });
-
-    useEffect(() => {
-        const userFromLocalStorage = window.localStorage.getItem("blogUser");
-
-        // if user exists in local storage, save it in the 'user' state
-        if (userFromLocalStorage) {
-            // convert string to object with JSON parse
-            const user = JSON.parse(userFromLocalStorage);
-            setUser(user);
-        }
-    }, []);
-
-    // query the data from server
-    useEffect(() => {
-        if (user) {
-            const fetchData = async () => {
-                try {
-                    // the token is set only after user is logged in
-                    blogService.setToken(user.token);
-                } catch (error) {
-                    setUser(null);
-                }
-            };
-            fetchData();
-        }
-    }, [user]);
 
     // useEffect(() => {
     //     if (data) {
@@ -161,6 +197,8 @@ const App = () => {
         window.localStorage.clear();
         // set user to null to logout
         setUser(null);
+
+        navigate("/login");
     };
 
     const handleBlogSubmit = async (event) => {
@@ -185,30 +223,6 @@ const App = () => {
         // setAuthor("");
         setUrl("");
     };
-
-    // use mutation to update blogs
-    const updateBlogMutation = useMutation({
-        mutationFn: ({ id, updatedData }) =>
-            blogService.updateBlog(id, updatedData),
-
-        onSuccess: (updatedBlog) => {
-            console.log(updatedBlog);
-            queryClient.setQueryData(["blogs"], (oldData) => {
-                if (!oldData) {
-                    return oldData;
-                } else {
-                    return [
-                        ...oldData.map((blog) =>
-                            blog.id === updatedBlog?.id ? updatedBlog : blog
-                        ),
-                    ];
-                }
-            });
-        },
-        onError: (error) => {
-            console.log(error);
-        },
-    });
 
     // PUT request
     const handleBlogUpdate = async (blog) => {
@@ -236,6 +250,12 @@ const App = () => {
 
         // setBlogs(updatedBlogs);
     };
+
+    const removeBlogMutation = useMutation({
+        mutationFn: ({ id }) => blogService.deleteBlog(id),
+        onSuccess: () => {},
+        onError: () => {},
+    });
 
     const handleBlogRemove = async (blogId) => {
         // HTTP DELETE request with the blog id
@@ -344,16 +364,17 @@ const App = () => {
             </Togglable>
 
             <h2>blogs list</h2>
-            {blogs
-                ?.sort((a, b) => +a.likes - +b.likes)
-                ?.map((blog) => (
-                    <Blog
-                        key={blog.id}
-                        blog={blog}
-                        updateBlog={handleBlogUpdate}
-                        removeBlog={handleBlogRemove}
-                    />
-                ))}
+            {blogs &&
+                blogs
+                    ?.sort((a, b) => +a.likes - +b.likes)
+                    ?.map((blog) => (
+                        <Blog
+                            key={blog.id}
+                            blog={blog}
+                            updateBlog={handleBlogUpdate}
+                            removeBlog={handleBlogRemove}
+                        />
+                    ))}
         </>
     );
 
