@@ -162,38 +162,26 @@ const App = () => {
         },
     });
 
-    // useEffect(() => {
-    //     if (data) {
-    //         setBlogs(data);
-    //     }
-
-    //     if (error) {
-    //         setUser(null);
-    //     }
-    // }, [data, error, setUser]);
+    const removeBlogMutation = useMutation({
+        mutationFn: async ({ id }) => {
+            await blogService.deleteBlog(id);
+            // return the id from the request
+            return id;
+        },
+        onSuccess: (blogId) => {
+            queryClient.setQueryData(["blogs"], (oldData) => {
+                if (!oldData) {
+                    return oldData;
+                } else {
+                    return [...oldData.filter((blog) => blog.id !== blogId)];
+                }
+            });
+        },
+        onError: () => {},
+    });
 
     const handleLogin = async (event) => {
         event.preventDefault();
-
-        // facem un POST request pentru login cu username si parola
-        // try {
-        //     // save the user from the backend request (token, username, name)
-        //     const user = await loginService.login({ username, password });
-
-        //     // save the user to local storage
-        //     window.localStorage.setItem("blogUser", JSON.stringify(user));
-
-        //     // save the user to state
-        //     setUser(user);
-
-        //     setUsername("");
-        //     setPassword("");
-        // } catch (error) {
-        //     setErrorMessage("username or password not ok");
-        //     setTimeout(() => {
-        //         setErrorMessage(null);
-        //     }, 5000);
-        // }
 
         loginMutation.mutate({ username, password });
     };
@@ -225,8 +213,6 @@ const App = () => {
 
         // reset fields
         dispatchState({ type: "CLEAR_FIELDS" });
-        // setTitle("");
-        // setAuthor("");
         setUrl("");
     };
 
@@ -245,35 +231,7 @@ const App = () => {
                 updatedData: updatedBlogObj,
             });
         }
-
-        // // HTTP PUT request to the backend
-        // const response = await blogService.updateBlog(blogId, updatedBlogObj);
-
-        // // take the updated object and update frontend
-        // const updatedBlogs = blogs.map((blog) =>
-        //     blog.id !== blogId ? blog : updatedBlogObj
-        // );
-
-        // setBlogs(updatedBlogs);
     };
-
-    const removeBlogMutation = useMutation({
-        mutationFn: async ({ id }) => {
-            await blogService.deleteBlog(id);
-            // return the id from the request
-            return id;
-        },
-        onSuccess: (blogId) => {
-            queryClient.setQueryData(["blogs"], (oldData) => {
-                if (!oldData) {
-                    return oldData;
-                } else {
-                    return [...oldData.filter((blog) => blog.id !== blogId)];
-                }
-            });
-        },
-        onError: () => {},
-    });
 
     const handleBlogRemove = async (blogId) => {
         // HTTP DELETE request with the blog id
@@ -286,14 +244,6 @@ const App = () => {
 
         if (window.confirm(`Remove '${currentBlog.title}'?`)) {
             removeBlogMutation.mutate({ id: blogId });
-
-            // const response = await blogService.deleteBlog(blogId);
-
-            // // update frontend
-            // // remove the blog with the blogId from the blog Array
-            // const filteredBlogs = blogs.filter((blog) => blog.id !== blogId);
-
-            // setBlogs(filteredBlogs);
         }
     };
 
