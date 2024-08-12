@@ -73,9 +73,6 @@ const App = () => {
         queryFn: blogService.getAll,
         // the request is executed only if user exists
         enabled: !!user && isUserLoaded,
-        onError: (error) => {
-            console.log("getall ", error);
-        },
     });
 
     // define login mutation
@@ -108,6 +105,15 @@ const App = () => {
         mutationFn: blogService.createBlog,
         onSuccess: (newBlog) => {
             // invalidate queries
+            queryClient.setQueryData(["blogs"], (oldData) => {
+                if (!oldData) {
+                    return oldData;
+                }
+
+                if (oldData) {
+                    return [...oldData.concat(newBlog)];
+                }
+            });
             queryClient.invalidateQueries("blogs");
 
             // notification
@@ -252,8 +258,20 @@ const App = () => {
     };
 
     const removeBlogMutation = useMutation({
-        mutationFn: ({ id }) => blogService.deleteBlog(id),
-        onSuccess: () => {},
+        mutationFn: async ({ id }) => {
+            await blogService.deleteBlog(id);
+            // return the id from the request
+            return id;
+        },
+        onSuccess: (blogId) => {
+            queryClient.setQueryData(["blogs"], (oldData) => {
+                if (!oldData) {
+                    return oldData;
+                } else {
+                    return [...oldData.filter((blog) => blog.id !== blogId)];
+                }
+            });
+        },
         onError: () => {},
     });
 
@@ -267,13 +285,15 @@ const App = () => {
         const currentBlog = blogs.find((blog) => blog.id === blogId);
 
         if (window.confirm(`Remove '${currentBlog.title}'?`)) {
-            const response = await blogService.deleteBlog(blogId);
+            removeBlogMutation.mutate({ id: blogId });
 
-            // update frontend
-            // remove the blog with the blogId from the blog Array
-            const filteredBlogs = blogs.filter((blog) => blog.id !== blogId);
+            // const response = await blogService.deleteBlog(blogId);
 
-            setBlogs(filteredBlogs);
+            // // update frontend
+            // // remove the blog with the blogId from the blog Array
+            // const filteredBlogs = blogs.filter((blog) => blog.id !== blogId);
+
+            // setBlogs(filteredBlogs);
         }
     };
 
