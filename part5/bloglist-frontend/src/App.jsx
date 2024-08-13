@@ -43,7 +43,7 @@ const App = () => {
         }
     }, []);
 
-    // query the data from server
+    // set the token after user logged in
     useEffect(() => {
         if (user) {
             const fetchData = async () => {
@@ -169,9 +169,7 @@ const App = () => {
                 }
             });
         },
-        onError: (error) => {
-            console.log(error);
-        },
+        onError: () => {},
     });
 
     const removeBlogMutation = useMutation({
@@ -201,6 +199,7 @@ const App = () => {
     const handleLogOut = () => {
         // clear local storage
         window.localStorage.clear();
+
         // set user to null to logout
         dispatchUser({ type: "CLEAR_USER" });
 

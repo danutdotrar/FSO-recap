@@ -19,6 +19,7 @@ const getAll = async () => {
         const response = await axios.get(baseUrl, config);
         return response.data;
     } catch (error) {
+        // throw error to useQuery
         throw error;
     }
 };
