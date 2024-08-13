@@ -15,8 +15,12 @@ const getAll = async () => {
         },
     };
 
-    const response = await axios.get(baseUrl, config);
-    return response.data;
+    try {
+        const response = await axios.get(baseUrl, config);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const createBlog = async (newObject) => {

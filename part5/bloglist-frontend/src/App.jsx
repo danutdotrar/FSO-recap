@@ -54,6 +54,7 @@ const App = () => {
                     setIsUserLoaded(true);
                 } catch (error) {
                     dispatchUser({ type: "CLEAR_USER" });
+                    setIsUserLoaded(false);
                 }
             };
             fetchData();
@@ -73,7 +74,22 @@ const App = () => {
         queryFn: blogService.getAll,
         // the request is executed only if user exists
         enabled: !!user && isUserLoaded,
+        retry: false,
     });
+
+    useEffect(() => {
+        if (error) {
+            if (error.response && error.response.status === 401) {
+                setErrorMessage(`Session expired. Please login again`);
+
+                setTimeout(() => {
+                    setErrorMessage(null);
+                }, 3000);
+
+                handleLogOut();
+            }
+        }
+    }, [error]);
 
     // define login mutation
     const loginMutation = useMutation({
@@ -342,6 +358,10 @@ const App = () => {
                     ))}
         </>
     );
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
 
     return <div>{user === null ? loginForm() : renderData()}</div>;
 };
