@@ -17,25 +17,19 @@ import {
 } from "@tanstack/react-query";
 
 const App = () => {
-    // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    // const [user, setUser] = useState(null);
     const [url, setUrl] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
     const [isUserLoaded, setIsUserLoaded] = useState(false);
 
-    const blogFormRef = useRef();
-
     const [state, dispatchState] = useContext(NotificationContext);
+    const { title, author } = state;
 
     const [user, dispatchUser] = useContext(UserContext);
 
-    const { title, author } = state;
-
-    // console.log(user);
-
     const navigate = useNavigate();
+    const blogFormRef = useRef();
 
     useEffect(() => {
         const userFromLocalStorage = window.localStorage.getItem("blogUser");
@@ -44,8 +38,7 @@ const App = () => {
         if (userFromLocalStorage) {
             // convert string to object with JSON parse
             const user = JSON.parse(userFromLocalStorage);
-            console.log(user);
-            // setUser(user);
+
             dispatchUser({ type: "SET_USER", payload: user });
         }
     }, []);
@@ -60,7 +53,6 @@ const App = () => {
 
                     setIsUserLoaded(true);
                 } catch (error) {
-                    // setUser(null);
                     dispatchUser({ type: "CLEAR_USER" });
                 }
             };
@@ -91,11 +83,6 @@ const App = () => {
         onSuccess: (user) => {
             window.localStorage.setItem("blogUser", JSON.stringify(user));
 
-            console.log(user);
-
-            // blogService.setToken(user.token);
-
-            // setUser(user);
             dispatchUser({ type: "SET_USER", payload: user });
 
             setUsername("");
@@ -153,7 +140,6 @@ const App = () => {
             blogService.updateBlog(id, updatedData),
 
         onSuccess: (updatedBlog) => {
-            console.log(updatedBlog);
             queryClient.setQueryData(["blogs"], (oldData) => {
                 if (!oldData) {
                     return oldData;
@@ -199,7 +185,6 @@ const App = () => {
         // clear local storage
         window.localStorage.clear();
         // set user to null to logout
-        // setUser(null);
         dispatchUser({ type: "CLEAR_USER" });
 
         navigate("/login");
@@ -358,7 +343,7 @@ const App = () => {
         </>
     );
 
-    return <div>{user == null ? loginForm() : renderData()}</div>;
+    return <div>{user === null ? loginForm() : renderData()}</div>;
 };
 
 export default App;
