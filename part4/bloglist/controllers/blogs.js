@@ -32,6 +32,10 @@ blogRoutes.get("/", async (request, response) => {
     // get the user decoded from middleware
     const user = request.user;
 
+    if (!user) {
+        return response.status(401).json({ error: "401 - unauthorized :(" });
+    }
+
     const result = await Blog.find({ user: user.id }).populate("user", {
         username: 1,
         name: 1,
@@ -113,29 +117,31 @@ blogRoutes.post("/", async (request, response, next) => {
 // @@ Set the response to the newly created obj based on the request body
 blogRoutes.put("/:id", async (request, response, next) => {
     // get the id from the url request params
-    const id = request.params.id;
+    const id = request?.params?.id;
 
-    // get the body from request.body
-    const body = request.body;
+    if (id) {
+        // get the body from request.body
+        const body = request.body;
 
-    // define new obj with the data from the body
-    const blog = {
-        // title: body.title,
-        // author: body.author,
-        // url: body.url,
-        likes: body.likes,
-    };
+        // define new obj with the data from the body
+        const blog = {
+            // title: body.title,
+            // author: body.author,
+            // url: body.url,
+            likes: body.likes,
+        };
 
-    // use findByIdAndUpdate method from the model Blog
-    try {
-        const result = await Blog.findByIdAndUpdate(id, blog, {
-            new: true,
-            runValidators: true,
-        });
+        // use findByIdAndUpdate method from the model Blog
+        try {
+            const result = await Blog.findByIdAndUpdate(id, blog, {
+                new: true,
+                runValidators: true,
+            });
 
-        response.json(result);
-    } catch (error) {
-        next(error);
+            response.json(result);
+        } catch (error) {
+            next(error);
+        }
     }
 });
 

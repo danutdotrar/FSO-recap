@@ -77,6 +77,7 @@ const App = () => {
         retry: false,
     });
 
+    // if error is 401 then redirect to /login
     useEffect(() => {
         if (error) {
             if (error.response && error.response.status === 401) {
