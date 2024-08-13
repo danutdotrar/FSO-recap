@@ -6,11 +6,7 @@
 
 import { createContext, useReducer } from "react";
 
-const initialState = {
-    token: "",
-    username: "",
-    name: "",
-};
+const initialState = null;
 
 export const UserContext = createContext();
 
@@ -18,8 +14,9 @@ const userReducer = (state, action) => {
     switch (action.type) {
         case "SET_USER":
             return { ...action.payload };
+
         case "CLEAR_USER": {
-            return { ...initialState };
+            return null;
         }
         default:
             return state;
@@ -28,13 +25,10 @@ const userReducer = (state, action) => {
 
 // define provider wrapper
 export const UserProviderWrapper = ({ children }) => {
-    const [userValue, dispatchUserValue] = useReducer(
-        userReducer,
-        initialState
-    );
+    const [user, dispatchUser] = useReducer(userReducer, initialState);
 
     return (
-        <UserContext.Provider value={{ userValue, dispatchUserValue }}>
+        <UserContext.Provider value={[user, dispatchUser]}>
             {children}
         </UserContext.Provider>
     );

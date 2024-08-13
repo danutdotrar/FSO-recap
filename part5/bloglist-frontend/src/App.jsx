@@ -20,7 +20,7 @@ const App = () => {
     // const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [user, setUser] = useState(null);
+    // const [user, setUser] = useState(null);
     const [url, setUrl] = useState("");
     const [errorMessage, setErrorMessage] = useState(null);
     const [isUserLoaded, setIsUserLoaded] = useState(false);
@@ -29,7 +29,7 @@ const App = () => {
 
     const [state, dispatchState] = useContext(NotificationContext);
 
-    const { userValue, dispatchUserValue } = useContext(UserContext);
+    const [user, dispatchUser] = useContext(UserContext);
 
     const { title, author } = state;
 
@@ -44,7 +44,9 @@ const App = () => {
         if (userFromLocalStorage) {
             // convert string to object with JSON parse
             const user = JSON.parse(userFromLocalStorage);
-            setUser(user);
+            console.log(user);
+            // setUser(user);
+            dispatchUser({ type: "SET_USER", payload: user });
         }
     }, []);
 
@@ -58,7 +60,8 @@ const App = () => {
 
                     setIsUserLoaded(true);
                 } catch (error) {
-                    setUser(null);
+                    // setUser(null);
+                    dispatchUser({ type: "CLEAR_USER" });
                 }
             };
             fetchData();
@@ -92,7 +95,8 @@ const App = () => {
 
             // blogService.setToken(user.token);
 
-            setUser(user);
+            // setUser(user);
+            dispatchUser({ type: "SET_USER", payload: user });
 
             setUsername("");
             setPassword("");
@@ -195,7 +199,8 @@ const App = () => {
         // clear local storage
         window.localStorage.clear();
         // set user to null to logout
-        setUser(null);
+        // setUser(null);
+        dispatchUser({ type: "CLEAR_USER" });
 
         navigate("/login");
     };
@@ -353,7 +358,7 @@ const App = () => {
         </>
     );
 
-    return <div>{user === null ? loginForm() : renderData()}</div>;
+    return <div>{user == null ? loginForm() : renderData()}</div>;
 };
 
 export default App;
