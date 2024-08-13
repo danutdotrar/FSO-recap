@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import { NotificationContext } from "./context/notificationContext";
+import { UserContext } from "./context/userContext";
 import {
     useQuery,
     useMutation,
@@ -28,7 +29,11 @@ const App = () => {
 
     const [state, dispatchState] = useContext(NotificationContext);
 
+    const { userValue, dispatchUserValue } = useContext(UserContext);
+
     const { title, author } = state;
+
+    // console.log(user);
 
     const navigate = useNavigate();
 

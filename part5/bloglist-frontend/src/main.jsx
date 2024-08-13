@@ -1,6 +1,7 @@
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { NotificationWrapper } from "./context/notificationContext";
+import { UserProviderWrapper } from "./context/userContext";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import {
     useQuery,
@@ -14,10 +15,12 @@ const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <Router>
-        <NotificationWrapper>
-            <QueryClientProvider client={queryClient}>
-                <App />
-            </QueryClientProvider>
-        </NotificationWrapper>
+        <UserProviderWrapper>
+            <NotificationWrapper>
+                <QueryClientProvider client={queryClient}>
+                    <App />
+                </QueryClientProvider>
+            </NotificationWrapper>
+        </UserProviderWrapper>
     </Router>
 );
