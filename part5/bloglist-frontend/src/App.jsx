@@ -31,6 +31,7 @@ const App = () => {
     const navigate = useNavigate();
     const blogFormRef = useRef();
 
+    // if user exists in local storage, save that user
     useEffect(() => {
         const userFromLocalStorage = window.localStorage.getItem("blogUser");
 
@@ -178,6 +179,7 @@ const App = () => {
             // return the id from the request
             return id;
         },
+        // blogId will be the 'id' returned from mutationFn
         onSuccess: (blogId) => {
             queryClient.setQueryData(["blogs"], (oldData) => {
                 if (!oldData) {
