@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import usersService from "./services/users";
 import { NotificationContext } from "./context/notificationContext";
 import { UserContext } from "./context/userContext";
 import {
@@ -51,6 +52,7 @@ const App = () => {
                 try {
                     // the token is set only after user is logged in
                     blogService.setToken(user.token);
+                    usersService.setToken(user.token);
 
                     setIsUserLoaded(true);
                 } catch (error) {
@@ -116,7 +118,9 @@ const App = () => {
 
     // define mutation for posting blogs
     const newBlogMutation = useMutation({
+        // react query will execute the onSuccess function after the promise from the mutationFn is resolved
         mutationFn: blogService.createBlog,
+        // 'newBlog' will be the response returned from mutationFn
         onSuccess: (newBlog) => {
             // invalidate queries
             queryClient.setQueryData(["blogs"], (oldData) => {
