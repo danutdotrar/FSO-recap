@@ -28,6 +28,22 @@ userRouter.get("/", async (request, response) => {
     response.json(result);
 });
 
+// @@ GET request
+// @@ Path '/api/users/:id'
+// @@ Get single user
+userRouter.get("/:id", async (request, response) => {
+    const id = request.params.id;
+
+    const user = await User.findById(id).populate("blogs", {
+        url: 1,
+        title: 1,
+        author: 1,
+        id: 1,
+    });
+
+    response.json(user);
+});
+
 // post req for creating new user and save it to the database
 // create new user
 // @@ POST request

@@ -1,9 +1,3 @@
-// get all users
-// create get request to /api/users
-// attach the token to the config obj (headers-authorization)
-// return the response data
-// export the service
-
 import axios from "axios";
 
 const baseUrl = "/api/users";
@@ -25,5 +19,7 @@ const getAllUsers = async () => {
     const response = await axios.get(baseUrl, config);
     return response.data;
 };
+
+// get single user
 
 export default { setToken, getAllUsers };
