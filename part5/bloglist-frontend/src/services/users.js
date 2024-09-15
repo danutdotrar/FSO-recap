@@ -11,7 +11,6 @@ const baseUrl = "/api/users";
 let token = "";
 
 const setToken = (token) => {
-    console.log(token);
     return `Bearer ${token}`;
 };
 

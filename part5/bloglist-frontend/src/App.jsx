@@ -88,7 +88,7 @@ const App = () => {
         retry: false,
     });
 
-    console.log("users from useQuery: ", users);
+    // console.log("users from useQuery: ", users);
 
     // if error is 401 then redirect to /login
     useEffect(() => {
@@ -363,11 +363,24 @@ const App = () => {
 
             <h2>users</h2>
             <div>
-                <ul>
-                    {users.map((user) => (
-                        <li>{user.username}</li>
-                    ))}
-                </ul>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>users</th>
+                            <th>blogs created</th>
+                        </tr>
+                    </thead>
+                    {users?.map((user) => {
+                        return (
+                            <>
+                                <tr>
+                                    <td>{user.username}</td>
+                                    <td>{user.blogs.length}</td>
+                                </tr>
+                            </>
+                        );
+                    })}
+                </table>
             </div>
 
             <h2>blogs list</h2>
