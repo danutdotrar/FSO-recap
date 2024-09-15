@@ -338,6 +338,7 @@ const App = () => {
                     <button onClick={handleLogOut}>Logout</button>
                 </p>
             </div>
+
             <Togglable ref={blogFormRef} buttonLabel="new blog">
                 <BlogForm
                     handleBlogSubmit={handleBlogSubmit}
@@ -359,6 +360,15 @@ const App = () => {
                     handleUrl={(event) => setUrl(event.target.value)}
                 />
             </Togglable>
+
+            <h2>users</h2>
+            <div>
+                <ul>
+                    {users.map((user) => (
+                        <li>{user.username}</li>
+                    ))}
+                </ul>
+            </div>
 
             <h2>blogs list</h2>
             {blogs &&
