@@ -370,16 +370,17 @@ const App = () => {
                             <th>blogs created</th>
                         </tr>
                     </thead>
-                    {users?.map((user) => {
-                        return (
-                            <>
-                                <tr>
+                    <tbody>
+                        {users?.map((user) => {
+                            return (
+                                <tr key={user.id}>
                                     <td>{user.username}</td>
                                     <td>{user.blogs.length}</td>
+                                    <td>{user.id}</td>
                                 </tr>
-                            </>
-                        );
-                    })}
+                            );
+                        })}
+                    </tbody>
                 </table>
             </div>
 
