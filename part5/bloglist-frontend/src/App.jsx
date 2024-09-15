@@ -80,6 +80,16 @@ const App = () => {
         retry: false,
     });
 
+    // get the users
+    const { data: users } = useQuery({
+        queryKey: ["users"],
+        queryFn: usersService.getAllUsers,
+        enabled: !!user && isUserLoaded,
+        retry: false,
+    });
+
+    console.log("users from useQuery: ", users);
+
     // if error is 401 then redirect to /login
     useEffect(() => {
         if (error) {
