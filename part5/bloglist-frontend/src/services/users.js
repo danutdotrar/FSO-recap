@@ -21,5 +21,14 @@ const getAllUsers = async () => {
 };
 
 // get single user
+const getSingleUser = async (id) => {
+    const config = {
+        headers: {
+            Authorization: token,
+        },
+    };
+    const response = await axios.get(`${baseUrl}/${id}`, config);
+    return response.data;
+};
 
-export default { setToken, getAllUsers };
+export default { setToken, getAllUsers, getSingleUser };
