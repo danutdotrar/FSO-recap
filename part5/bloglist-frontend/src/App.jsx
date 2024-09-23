@@ -119,7 +119,7 @@ const App = () => {
 
             dispatchUser({ type: "SET_USER", payload: user });
 
-            navigate("/");
+            navigate("/users");
 
             setUsername("");
             setPassword("");
