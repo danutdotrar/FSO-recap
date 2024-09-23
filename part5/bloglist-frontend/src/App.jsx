@@ -3,6 +3,7 @@ import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import { useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -16,6 +17,9 @@ import {
     QueryClient,
     QueryClientProvider,
 } from "@tanstack/react-query";
+import Header from "./components/Header";
+import ViewUsers from "./components/ViewUsers";
+import UserBlogs from "./components/UserBlogs";
 
 const App = () => {
     const [username, setUsername] = useState("");
@@ -114,6 +118,8 @@ const App = () => {
             window.localStorage.setItem("blogUser", JSON.stringify(user));
 
             dispatchUser({ type: "SET_USER", payload: user });
+
+            navigate("/");
 
             setUsername("");
             setPassword("");
@@ -219,7 +225,7 @@ const App = () => {
         // set user to null to logout
         dispatchUser({ type: "CLEAR_USER" });
 
-        navigate("/login");
+        // navigate("/login");
     };
 
     const handleBlogSubmit = async (event) => {
@@ -317,27 +323,11 @@ const App = () => {
 
     const renderData = () => (
         <>
-            {errorMessage && (
-                <>
-                    <div
-                        style={{
-                            borderRadius: "5px",
-                            backgroundColor: "lightgreen",
-                            padding: "6px",
-                        }}
-                    >
-                        <h2>{errorMessage}</h2>
-                    </div>
-                </>
-            )}
-
-            <h2>blogs</h2>
-            <div>
-                <p>
-                    {user.name} is Logged In{" "}
-                    <button onClick={handleLogOut}>Logout</button>
-                </p>
-            </div>
+            <Header
+                errorMessage={errorMessage}
+                user={user}
+                handleLogOut={handleLogOut}
+            />
 
             <Togglable ref={blogFormRef} buttonLabel="new blog">
                 <BlogForm
@@ -361,28 +351,7 @@ const App = () => {
                 />
             </Togglable>
 
-            <h2>users</h2>
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>users</th>
-                            <th>blogs created</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users?.map((user) => {
-                            return (
-                                <tr key={user.id}>
-                                    <td>{user.username}</td>
-                                    <td>{user.blogs.length}</td>
-                                    <td>{user.id}</td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
+            <ViewUsers users={users} />
 
             <h2>blogs list</h2>
             {blogs &&
@@ -403,7 +372,24 @@ const App = () => {
         return <div>Loading...</div>;
     }
 
-    return <div>{user === null ? loginForm() : renderData()}</div>;
+    if (user === null) {
+        return loginForm();
+    }
+
+    return (
+        <div>
+            {/* {user === null ? loginForm() : renderData()} */}
+            <Header
+                errorMessage={errorMessage}
+                user={user}
+                handleLogOut={handleLogOut}
+            />
+            <Routes>
+                <Route path="/users" element={<ViewUsers users={users} />} />
+                <Route path="/users/:id" element={<UserBlogs />} />
+            </Routes>
+        </div>
+    );
 };
 
 export default App;
