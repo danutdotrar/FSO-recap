@@ -20,6 +20,7 @@ import {
 import Header from "./components/Header";
 import ViewUsers from "./components/ViewUsers";
 import UserBlogs from "./components/UserBlogs";
+import ViewBlog from "./components/ViewBlog";
 
 const App = () => {
     const [username, setUsername] = useState("");
@@ -178,6 +179,7 @@ const App = () => {
             blogService.updateBlog(id, updatedData),
 
         onSuccess: (updatedBlog) => {
+            // force data refresh
             queryClient.setQueryData(["blogs"], (oldData) => {
                 if (!oldData) {
                     return oldData;
@@ -387,6 +389,12 @@ const App = () => {
             <Routes>
                 <Route path="/users" element={<ViewUsers users={users} />} />
                 <Route path="/users/:id" element={<UserBlogs />} />
+                <Route
+                    path="/blogs/:id"
+                    element={
+                        <ViewBlog blogs={blogs} updateBlog={handleBlogUpdate} />
+                    }
+                />
             </Routes>
         </div>
     );
