@@ -323,52 +323,53 @@ const App = () => {
         </>
     );
 
-    const renderData = () => (
-        <>
-            <Header
-                errorMessage={errorMessage}
-                user={user}
-                handleLogOut={handleLogOut}
-            />
+    // no longer needed after implementing part7 ex7.16
+    // const renderData = () => (
+    //     <>
+    //         <Header
+    //             errorMessage={errorMessage}
+    //             user={user}
+    //             handleLogOut={handleLogOut}
+    //         />
 
-            <Togglable ref={blogFormRef} buttonLabel="new blog">
-                <BlogForm
-                    handleBlogSubmit={handleBlogSubmit}
-                    title={title}
-                    author={author}
-                    url={url}
-                    handleTitle={(event) =>
-                        dispatchState({
-                            type: "SET_TITLE",
-                            payload: event.target.value,
-                        })
-                    }
-                    handleAuthor={(event) =>
-                        dispatchState({
-                            type: "SET_AUTHOR",
-                            payload: event.target.value,
-                        })
-                    }
-                    handleUrl={(event) => setUrl(event.target.value)}
-                />
-            </Togglable>
+    //         <Togglable ref={blogFormRef} buttonLabel="new blog">
+    //             <BlogForm
+    //                 handleBlogSubmit={handleBlogSubmit}
+    //                 title={title}
+    //                 author={author}
+    //                 url={url}
+    //                 handleTitle={(event) =>
+    //                     dispatchState({
+    //                         type: "SET_TITLE",
+    //                         payload: event.target.value,
+    //                     })
+    //                 }
+    //                 handleAuthor={(event) =>
+    //                     dispatchState({
+    //                         type: "SET_AUTHOR",
+    //                         payload: event.target.value,
+    //                     })
+    //                 }
+    //                 handleUrl={(event) => setUrl(event.target.value)}
+    //             />
+    //         </Togglable>
 
-            <ViewUsers users={users} />
+    //         <ViewUsers users={users} />
 
-            <h2>blogs list</h2>
-            {blogs &&
-                blogs
-                    ?.sort((a, b) => +a.likes - +b.likes)
-                    ?.map((blog) => (
-                        <Blog
-                            key={blog.id}
-                            blog={blog}
-                            updateBlog={handleBlogUpdate}
-                            removeBlog={handleBlogRemove}
-                        />
-                    ))}
-        </>
-    );
+    //         <h2>blogs list</h2>
+    //         {blogs &&
+    //             blogs
+    //                 ?.sort((a, b) => +a.likes - +b.likes)
+    //                 ?.map((blog) => (
+    //                     <Blog
+    //                         key={blog.id}
+    //                         blog={blog}
+    //                         updateBlog={handleBlogUpdate}
+    //                         removeBlog={handleBlogRemove}
+    //                     />
+    //                 ))}
+    //     </>
+    // );
 
     if (isLoading) {
         return <div>Loading...</div>;
