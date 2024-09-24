@@ -24,6 +24,22 @@ const getAll = async () => {
     }
 };
 
+const getSingleBlog = async (blogId) => {
+    const config = {
+        headers: {
+            Authorization: token,
+        },
+    };
+
+    try {
+        const response = await axios.get(`${baseUrl}/${blogId}`, config);
+
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 const createBlog = async (newObject) => {
     // add token to Authorization header
     const config = {
@@ -48,4 +64,11 @@ const deleteBlog = async (blogId) => {
     return response.data;
 };
 
-export default { getAll, setToken, createBlog, updateBlog, deleteBlog };
+export default {
+    getAll,
+    getSingleBlog,
+    setToken,
+    createBlog,
+    updateBlog,
+    deleteBlog,
+};
