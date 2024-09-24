@@ -379,6 +379,7 @@ const App = () => {
         return loginForm();
     }
 
+    // TODO: add 'create new blogs' button to /blogs page
     return (
         <div>
             {/* {user === null ? loginForm() : renderData()} */}
