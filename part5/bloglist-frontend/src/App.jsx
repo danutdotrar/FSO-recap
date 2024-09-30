@@ -93,7 +93,16 @@ const App = () => {
         retry: false,
     });
 
-    // console.log("users from useQuery: ", users);
+    // get single user
+
+    // const { data: loggedUser } = useQuery({
+    //     queryKey: ["loggedUser"],
+    //     queryFn: usersService.getSingleUser(user.id),
+    //     enabled: !!user && isUserLoaded,
+    //     retry: false,
+    // });
+
+    // console.log(loggedUser);
 
     // if error is 401 then redirect to /login
     useEffect(() => {
@@ -120,7 +129,7 @@ const App = () => {
 
             dispatchUser({ type: "SET_USER", payload: user });
 
-            navigate("/users");
+            navigate("/");
 
             setUsername("");
             setPassword("");
@@ -331,7 +340,6 @@ const App = () => {
         return loginForm();
     }
 
-    // TODO: add 'create new blogs' button to /blogs page
     return (
         <div>
             <Header
@@ -340,6 +348,20 @@ const App = () => {
                 handleLogOut={handleLogOut}
             />
             <Routes>
+                <Route
+                    path={"/"}
+                    element={
+                        <UserBlogs
+                            handleBlogSubmit={handleBlogSubmit}
+                            title={title}
+                            author={author}
+                            url={url}
+                            setUrl={setUrl}
+                            blogFormRef={blogFormRef}
+                            userId={user.id}
+                        />
+                    }
+                />
                 <Route path="/users" element={<ViewUsers users={users} />} />
                 <Route
                     path="/users/:id"
