@@ -323,54 +323,6 @@ const App = () => {
         </>
     );
 
-    // no longer needed after implementing part7 ex7.16
-    // const renderData = () => (
-    //     <>
-    //         <Header
-    //             errorMessage={errorMessage}
-    //             user={user}
-    //             handleLogOut={handleLogOut}
-    //         />
-
-    //         <Togglable ref={blogFormRef} buttonLabel="new blog">
-    //             <BlogForm
-    //                 handleBlogSubmit={handleBlogSubmit}
-    //                 title={title}
-    //                 author={author}
-    //                 url={url}
-    //                 handleTitle={(event) =>
-    //                     dispatchState({
-    //                         type: "SET_TITLE",
-    //                         payload: event.target.value,
-    //                     })
-    //                 }
-    //                 handleAuthor={(event) =>
-    //                     dispatchState({
-    //                         type: "SET_AUTHOR",
-    //                         payload: event.target.value,
-    //                     })
-    //                 }
-    //                 handleUrl={(event) => setUrl(event.target.value)}
-    //             />
-    //         </Togglable>
-
-    //         <ViewUsers users={users} />
-
-    //         <h2>blogs list</h2>
-    //         {blogs &&
-    //             blogs
-    //                 ?.sort((a, b) => +a.likes - +b.likes)
-    //                 ?.map((blog) => (
-    //                     <Blog
-    //                         key={blog.id}
-    //                         blog={blog}
-    //                         updateBlog={handleBlogUpdate}
-    //                         removeBlog={handleBlogRemove}
-    //                     />
-    //                 ))}
-    //     </>
-    // );
-
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -382,7 +334,6 @@ const App = () => {
     // TODO: add 'create new blogs' button to /blogs page
     return (
         <div>
-            {/* {user === null ? loginForm() : renderData()} */}
             <Header
                 errorMessage={errorMessage}
                 user={user}
@@ -390,7 +341,19 @@ const App = () => {
             />
             <Routes>
                 <Route path="/users" element={<ViewUsers users={users} />} />
-                <Route path="/users/:id" element={<UserBlogs />} />
+                <Route
+                    path="/users/:id"
+                    element={
+                        <UserBlogs
+                            handleBlogSubmit={handleBlogSubmit}
+                            title={title}
+                            author={author}
+                            url={url}
+                            setUrl={setUrl}
+                            blogFormRef={blogFormRef}
+                        />
+                    }
+                />
                 <Route
                     path="/blogs/:id"
                     element={
