@@ -10,7 +10,8 @@ const ViewBlog = ({ updateBlog, blogs }) => {
     // find the blog with the same 'id' as the params
     const blogData = blogs?.find((blog) => blog.id === id);
 
-    if (!blogData) return <div>Blog not found...</div>;
+    if (!blogData)
+        return <div>Only the owner of the blog can see its details...</div>;
 
     return (
         <div>
