@@ -31,8 +31,8 @@ const UserBlogs = ({
     //     getUserBlogs();
     // }, [id, handleBlogSubmit]);
 
-    const { data: userBlogs, isLoading } = useQuery({
-        queryKey: ["userBlogs", id],
+    const { data: user, isLoading } = useQuery({
+        queryKey: ["user", id],
         queryFn: () => usersService.getSingleUser(id),
     });
 
@@ -43,7 +43,7 @@ const UserBlogs = ({
 
     return (
         <div>
-            <h2>{userBlogs.name} - added blogs</h2>
+            <h2>{user.name} - added blogs</h2>
 
             <Togglable ref={blogFormRef} buttonLabel="new blog">
                 <BlogForm
@@ -68,7 +68,7 @@ const UserBlogs = ({
             </Togglable>
             <>
                 <ul>
-                    {userBlogs?.blogs.map((blog) => (
+                    {user?.blogs.map((blog) => (
                         <Link to={`/blogs/${blog.id}`} key={blog.id}>
                             <li>{blog.title}</li>
                         </Link>
