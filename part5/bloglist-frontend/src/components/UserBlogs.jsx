@@ -13,27 +13,37 @@ const UserBlogs = ({
     url,
     setUrl,
     blogFormRef,
+    userId,
 }) => {
     const params = useParams();
-    const id = params.id;
+    // const id = params.id;
+    const id = userId ?? params.id;
 
     const [state, dispatchState] = useContext(NotificationContext);
-    const [userBlogs, setUserBlogs] = useState([]);
+    // const [userBlogs, setUserBlogs] = useState([]);
 
-    useEffect(() => {
-        const getUserBlogs = async () => {
-            const userData = await usersService.getSingleUser(id);
+    // useEffect(() => {
+    //     const getUserBlogs = async () => {
+    //         const userData = await usersService.getSingleUser(id);
 
-            setUserBlogs(userData.blogs);
-        };
-        getUserBlogs();
-    }, [id, handleBlogSubmit]);
+    //         setUserBlogs(userData.blogs);
+    //     };
+    //     getUserBlogs();
+    // }, [id, handleBlogSubmit]);
 
-    if (!userBlogs) return <p>Loading...</p>;
+    const { data: userBlogs, isLoading } = useQuery({
+        queryKey: ["userBlogs", id],
+        queryFn: () => usersService.getSingleUser(id),
+    });
+
+    // query is loading
+    if (isLoading) return <p>Loading...</p>;
+
+    // if (!userBlogs) return <p>Loading...</p>;
 
     return (
         <div>
-            <h2>added blogs</h2>
+            <h2>{userBlogs.name} - added blogs</h2>
 
             <Togglable ref={blogFormRef} buttonLabel="new blog">
                 <BlogForm
@@ -58,7 +68,7 @@ const UserBlogs = ({
             </Togglable>
             <>
                 <ul>
-                    {userBlogs.map((blog) => (
+                    {userBlogs?.blogs.map((blog) => (
                         <Link to={`/blogs/${blog.id}`} key={blog.id}>
                             <li>{blog.title}</li>
                         </Link>
