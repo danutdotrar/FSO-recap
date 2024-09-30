@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = ({ errorMessage, user, handleLogOut }) => {
     return (
@@ -17,13 +18,39 @@ const Header = ({ errorMessage, user, handleLogOut }) => {
                 </>
             )}
 
-            <h2>blogs</h2>
-            <div>
-                <p>
-                    {user.name} is Logged In{" "}
-                    <button onClick={handleLogOut}>Logout</button>
-                </p>
+            <div
+                className="navbar"
+                style={{
+                    display: "flex",
+                    backgroundColor: "lightgrey",
+                    padding: "12px 12px",
+                    gap: "32px",
+                }}
+            >
+                <ul
+                    style={{
+                        display: "flex",
+                        listStyleType: "none",
+                        gap: "12px",
+                        paddingLeft: "0",
+                    }}
+                >
+                    <li>
+                        <Link to={"/"}>blogs</Link>
+                    </li>
+                    <li>
+                        <Link to={"users"}>users</Link>
+                    </li>
+                </ul>
+                <div>
+                    <p>
+                        {user.name} is Logged In{" "}
+                        <button onClick={handleLogOut}>Logout</button>
+                    </p>
+                </div>
             </div>
+
+            <h2>blogs</h2>
         </div>
     );
 };
