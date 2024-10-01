@@ -112,6 +112,37 @@ blogRoutes.post("/", async (request, response, next) => {
     }
 });
 
+// @@ POST request for adding comments to a blog
+// @@ Path '/api/blogs/:id/comments'
+// @@ concat/push comments to the blog obj
+blogRoutes.post("/:id/comments", async (request, response, next) => {
+    // take the id from the request.params.id
+    const id = request?.params?.id;
+    const body = request.body;
+    const comment = body.comment;
+
+    try {
+        // find that blog in the mongo db
+        const blog = await Blog.findById(id);
+
+        if (!blog) {
+            return response.status(404).json({ error: "Blog not found" });
+        }
+
+        // add/concat/push the blog from the request body to the blog.comments
+        blog.comments = blog.comments.concat(comment);
+
+        // save the blog
+        const updatedBlog = await blog.save();
+
+        // send the saved blog with response.json
+        response.status(200).json(updatedBlog);
+    } catch (error) {
+        next(error);
+        response.status(500).json({ error: "Something went wrong" });
+    }
+});
+
 // @@ PUT request for single resource
 // @@ Path '/api/blogs/:id'
 // @@ Set the response to the newly created obj based on the request body
