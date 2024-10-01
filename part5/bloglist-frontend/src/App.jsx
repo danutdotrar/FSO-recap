@@ -37,6 +37,9 @@ const App = () => {
     const navigate = useNavigate();
     const blogFormRef = useRef();
 
+    // access the queryClient
+    const queryClient = useQueryClient();
+
     // if user exists in local storage, save that user
     useEffect(() => {
         const userFromLocalStorage = window.localStorage.getItem("blogUser");
@@ -68,9 +71,6 @@ const App = () => {
             fetchData();
         }
     }, [user]);
-
-    // access the queryClient
-    const queryClient = useQueryClient();
 
     // get the blogs
     const {
@@ -184,8 +184,10 @@ const App = () => {
 
     // use mutation to update blogs
     const updateBlogMutation = useMutation({
-        mutationFn: ({ id, updatedData }) =>
-            blogService.updateBlog(id, updatedData),
+        mutationFn: ({ id, updatedData }) => {
+            const updatedBlog = blogService.updateBlog(id, updatedData);
+            return updatedBlog;
+        },
 
         onSuccess: (updatedBlog) => {
             // force data refresh
