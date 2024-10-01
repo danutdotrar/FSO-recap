@@ -29,6 +29,14 @@ const ViewBlog = ({ updateBlog, blogs }) => {
                 </div>
             </div>
             <div className="author">{blogData.author}</div>
+            <h2>comments</h2>
+            <div>
+                <ul>
+                    {blogData.comments.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };
