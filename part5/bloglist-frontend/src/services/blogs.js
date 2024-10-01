@@ -52,6 +52,15 @@ const createBlog = async (newObject) => {
     return response.data;
 };
 
+const addComment = async (blogId, blogComment) => {
+    const response = await axios.post(
+        `${baseUrl}/${blogId}/comments`,
+        blogComment
+    );
+    console.log(response);
+    return response.data;
+};
+
 const updateBlog = async (blogId, blogObj) => {
     const response = await axios.put(`${baseUrl}/${blogId}`, blogObj);
     return response.data;
@@ -69,6 +78,7 @@ export default {
     getSingleBlog,
     setToken,
     createBlog,
+    addComment,
     updateBlog,
     deleteBlog,
 };
