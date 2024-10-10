@@ -34,7 +34,7 @@ let persons = [
     },
 ];
 
-// define typeDefs
+// define typeDefs - schema needed for GraphQL
 const typeDefs = `
     type Person {
         name: String!
@@ -51,6 +51,8 @@ const typeDefs = `
     }
 `;
 
+// define the resolvers
+// the resolvers correspond to the queries described in the schema
 const resolvers = {
     Query: {
         personCount: () => persons.length,
@@ -60,8 +62,7 @@ const resolvers = {
     },
 };
 
-// typeDefs containss the schema
-// resolvers contains the resolvers of the query
+// start new Apollo server with the schema and resolvers as params
 // the schema & resolvers define how GraphQL queries are respondend to
 const server = new ApolloServer({
     typeDefs,
