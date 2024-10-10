@@ -50,3 +50,26 @@ const typeDefs = `
         findPerson(name: String!): Person
     }
 `;
+
+const resolvers = {
+    Query: {
+        personCount: () => persons.length,
+        allPersons: () => persons,
+        findPerson: (root, args) =>
+            persons.find((person) => person.name === args.name),
+    },
+};
+
+// typeDefs containss the schema
+// resolvers contains the resolvers of the query
+// the schema & resolvers define how GraphQL queries are respondend to
+const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+});
+
+startStandaloneServer(server, {
+    listen: { port: 4000 },
+}).then(({ url }) => {
+    console.log(`Server ready at ${url}`);
+});
