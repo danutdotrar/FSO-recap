@@ -1,3 +1,4 @@
+// GraphQL is an query language, which executes the queries based on a schema, and returns only the data we need
 // GraphQL is used for implementing the interfaces servers offers for browsers, and in general the integration between different applications on the web.
 // The main principle of GraphQL is that the code on the browsers form a 'query' describing the data we wanted, and sends it to the API with an HTTP POST request.
 // All GraphQL queries are POST requests
@@ -36,11 +37,15 @@ let persons = [
 
 // define typeDefs - schema needed for GraphQL
 const typeDefs = `
+    type Address {
+        street: String!
+        city: String!
+    }
+
     type Person {
         name: String!
         phone: String
-        street: String!
-        city: String!
+        address: Address!
         id: ID!
     }
 
@@ -59,6 +64,12 @@ const resolvers = {
         allPersons: () => persons,
         findPerson: (root, args) =>
             persons.find((person) => person.name === args.name),
+    },
+
+    Person: {
+        address: (root) => {
+            return { city: root.city, street: root.street };
+        },
     },
 };
 
