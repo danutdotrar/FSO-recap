@@ -59,6 +59,11 @@ const typeDefs = `
             street: String!
             city: String!
         ): Person
+
+        editNumber(
+            name: String!
+            phone: String!
+        ): Person
     }
 
     enum YesNo {
@@ -114,6 +119,19 @@ const resolvers = {
             const person = { ...args, id: uuid() };
             persons = persons.concat(person);
             return person;
+        },
+
+        editNumber: (root, args) => {
+            // find the person in the db
+            const person = persons.find((person) => person.name === args.name);
+
+            const updatedPerson = { ...person, phone: args.phone };
+
+            persons = persons.map((p) =>
+                p.name === updatedPerson.name ? updatedPerson : p
+            );
+
+            return updatedPerson;
         },
     },
 };
