@@ -81,15 +81,17 @@ let books = [
 
 // define the typeDefs schema
 const typeDefs = `
-    type Query {
-        dummy: int
-    }
+   type Query {
+        bookCount: Int!
+        authorCount: Int!
+    }    
 `;
 
 // define the resolvers
 const resolvers = {
     Query: {
-        dummy: () => 0,
+        bookCount: () => books.length,
+        authorCount: () => authors.length,
     },
 };
 
