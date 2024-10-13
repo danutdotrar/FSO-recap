@@ -81,10 +81,18 @@ let books = [
 
 // define the typeDefs schema
 const typeDefs = `
-   type Query {
+    type Query {
         bookCount: Int!
         authorCount: Int!
-    }    
+        allBooks: [Books!]!
+    }
+
+    type Books {
+        title: String!
+        published: Int!
+        author: String!
+        genres: [String!]!
+    }
 `;
 
 // define the resolvers
@@ -92,6 +100,7 @@ const resolvers = {
     Query: {
         bookCount: () => books.length,
         authorCount: () => authors.length,
+        allBooks: () => books,
     },
 };
 
