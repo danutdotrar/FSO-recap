@@ -185,7 +185,23 @@ const resolvers = {
             return newBook;
         },
 
-        editAuthor: (root, args) => {},
+        editAuthor: (root, args) => {
+            const name = args.name;
+            const bornYear = args.setBornTo;
+
+            // find the author by the name
+            const author = authors.find((author) => author.name === name);
+
+            const updatedAuthor = { ...author, born: bornYear };
+
+            if (author) {
+                authors = authors.map((author) =>
+                    author.name === name ? updatedAuthor : author
+                );
+            }
+
+            return updatedAuthor;
+        },
     },
 };
 
