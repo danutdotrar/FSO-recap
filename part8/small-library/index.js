@@ -112,8 +112,8 @@ const typeDefs = `
         ) : Book
 
         editAuthor(
-            name: String!
-            setBornTo: Int!
+            name: String
+            setBornTo: Int
         ) : Author
     }
 `;
@@ -198,9 +198,10 @@ const resolvers = {
                 authors = authors.map((author) =>
                     author.name === name ? updatedAuthor : author
                 );
+                return updatedAuthor;
             }
 
-            return updatedAuthor;
+            if (!author) return null;
         },
     },
 };
