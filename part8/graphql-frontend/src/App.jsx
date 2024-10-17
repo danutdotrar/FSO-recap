@@ -2,27 +2,36 @@ import { useState } from "react";
 import { gql, useQuery } from "@apollo/client";
 import "./App.css";
 import Persons from "./components/Persons";
+import PersonForm from "./components/PersonForm";
+import { ALL_PERSONS } from "./queries/queries.js";
 
 // define the query
-const ALL_PERSONS = gql`
-    query {
-        allPersons {
-            name
-            phone
-            id
-        }
-    }
-`;
+// const ALL_PERSONS = gql`
+//     query {
+//         allPersons {
+//             name
+//             phone
+//             id
+//         }
+//     }
+// `;
 
 function App() {
     // useQuery will execute the query it receives as parameter
-    const result = useQuery(ALL_PERSONS);
+    const result = useQuery(ALL_PERSONS, {
+        pollInterval: 2000,
+    });
 
     if (result.loading) {
         return <div>Loading...</div>;
     }
 
-    return <Persons persons={result.data.allPersons} />;
+    return (
+        <>
+            <Persons persons={result.data.allPersons} />
+            <PersonForm />
+        </>
+    );
 }
 
 export default App;
