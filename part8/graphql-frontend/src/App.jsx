@@ -18,9 +18,7 @@ import { ALL_PERSONS } from "./queries/queries.js";
 
 function App() {
     // useQuery will execute the query it receives as parameter
-    const result = useQuery(ALL_PERSONS, {
-        pollInterval: 2000,
-    });
+    const result = useQuery(ALL_PERSONS);
 
     if (result.loading) {
         return <div>Loading...</div>;
