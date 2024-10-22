@@ -125,6 +125,10 @@ const resolvers = {
             // find the person in the db
             const person = persons.find((person) => person.name === args.name);
 
+            if (!person) {
+                return null;
+            }
+
             const updatedPerson = { ...person, phone: args.phone };
 
             persons = persons.map((p) =>
