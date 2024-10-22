@@ -5,17 +5,6 @@ import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import { ALL_PERSONS } from "./queries/queries.js";
 
-// define the query
-// const ALL_PERSONS = gql`
-//     query {
-//         allPersons {
-//             name
-//             phone
-//             id
-//         }
-//     }
-// `;
-
 function App() {
     // useQuery will execute the query it receives as parameter
     const result = useQuery(ALL_PERSONS);
