@@ -3,7 +3,7 @@ import { useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { ALL_PERSONS, CREATE_PERSON } from "../queries/queries.js";
 
-const PersonForm = () => {
+const PersonForm = ({ showError }) => {
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [street, setStreet] = useState("");
@@ -11,8 +11,15 @@ const PersonForm = () => {
 
     // useMutation with the GraphQL query 'CREATE_PERSON'
     // refetch the all_persons query after the mutation is done
+    // pass as many queries as needed for refetch
     const [createPerson] = useMutation(CREATE_PERSON, {
         refetchQueries: [{ query: ALL_PERSONS }],
+        onError: (error) => {
+            const message = error.graphQLErrors
+                .map((e) => e.message)
+                .join("\n");
+            showError(message);
+        },
     });
 
     const submit = (event) => {
@@ -25,6 +32,7 @@ const PersonForm = () => {
         setStreet("");
         setCity("");
     };
+
     return (
         <div>
             <h2>create new</h2>
