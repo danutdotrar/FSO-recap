@@ -4,8 +4,11 @@ import "./App.css";
 import Persons from "./components/Persons";
 import PersonForm from "./components/PersonForm";
 import { ALL_PERSONS } from "./queries/queries.js";
+import { Notify } from "./components/Notify";
 
 function App() {
+    const [errorMessage, setErrorMessage] = useState(null);
+
     // useQuery will execute the query it receives as parameter
     const result = useQuery(ALL_PERSONS);
 
@@ -13,10 +16,19 @@ function App() {
         return <div>Loading...</div>;
     }
 
+    // show error message
+    const showError = (error) => {
+        setErrorMessage(error);
+        setTimeout(() => {
+            setErrorMessage(null);
+        }, 7000);
+    };
+
     return (
         <>
+            <Notify error={errorMessage} />
             <Persons persons={result.data.allPersons} />
-            <PersonForm />
+            <PersonForm showError={showError} />
         </>
     );
 }
