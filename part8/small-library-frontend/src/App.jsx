@@ -7,6 +7,7 @@ import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
 import Books from "./components/Books";
 
+// TODO next: exercise 8.10
 function App() {
     return (
         <>
