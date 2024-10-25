@@ -6,8 +6,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
 import Books from "./components/Books";
+import AddBook from "./components/AddBook";
 
-// TODO next: exercise 8.10
 function App() {
     return (
         <>
@@ -17,6 +17,7 @@ function App() {
                     <Route path={"/"} element={<HomePage />} />
                     <Route path={"/authors"} element={<Authors />} />
                     <Route path={"/books"} element={<Books />} />
+                    <Route path={"/add-book"} element={<AddBook />} />
                 </Routes>
             </Router>
         </>
