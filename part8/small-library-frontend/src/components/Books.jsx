@@ -21,7 +21,7 @@ const Books = () => {
                 <tbody>
                     {books.data.allBooks.map((book) => {
                         return (
-                            <tr key={book.title}>
+                            <tr key={book.title + book.author}>
                                 <td style={{ textAlign: "start" }}>
                                     {book.title}
                                 </td>
