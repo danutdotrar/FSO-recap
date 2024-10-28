@@ -2,12 +2,20 @@ import React from "react";
 import { ALL_AUTHORS, EDIT_AUTHOR } from "../queries/queries";
 import { useMutation, useQuery } from "@apollo/client";
 import { useState } from "react";
+import Select from "react-select";
 
 export const Authors = () => {
-    const [name, setName] = useState("");
     const [born, setBorn] = useState("");
 
     const authors = useQuery(ALL_AUTHORS);
+
+    const authorsOptions = authors?.data?.allAuthors
+        .filter((author) => author.born)
+        .map((author) => {
+            return { ...author, label: author.name, value: author.name };
+        });
+
+    const [selectedOption, setSelectedOption] = useState(null);
 
     const [editAuthor] = useMutation(EDIT_AUTHOR);
 
@@ -15,15 +23,26 @@ export const Authors = () => {
         e.preventDefault();
 
         editAuthor({
-            variables: { name, setBornTo: Number(born) },
+            variables: { name: selectedOption.name, setBornTo: Number(born) },
             refetchQueries: [{ query: ALL_AUTHORS }],
         });
 
-        setName("");
+        setSelectedOption(null);
         setBorn("");
     };
 
     if (authors.loading) return <div>Loading...</div>;
+
+    const customStyles = {
+        option: (provided) => ({
+            ...provided,
+            color: "black",
+        }),
+        singleValue: (provided) => ({
+            ...provided,
+            color: "black",
+        }),
+    };
 
     return (
         <div>
@@ -54,12 +73,11 @@ export const Authors = () => {
             <h2>Set birthyear</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="name">name</label>
-                    <input
-                        id="name"
-                        type="text"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
+                    <Select
+                        defaultValue={selectedOption}
+                        onChange={setSelectedOption}
+                        options={authorsOptions}
+                        styles={customStyles}
                     />
                 </div>
                 <div>
