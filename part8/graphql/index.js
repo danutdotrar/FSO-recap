@@ -14,10 +14,13 @@ const { GraphQLError } = require("graphql");
 
 const { v1: uuid } = require("uuid");
 
+const jwt = require("jsonwebtoken");
+
 // connect to mongodb
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const Person = require("./models/person");
+const User = require("./models/user");
 
 require("dotenv").config();
 
@@ -71,6 +74,16 @@ const typeDefs = `
         id: ID!
     }
 
+    type User {
+        username: String!
+        friends: [Person!]!
+        id: ID!
+    } 
+
+    type Token {
+        value: String!
+    }
+
     type Mutation {
         addPerson(
             name: String!
@@ -83,6 +96,15 @@ const typeDefs = `
             name: String!
             phone: String!
         ): Person
+
+        createUser(
+            username: String!
+        ): User
+
+        login(
+            username: String!
+            password: String!
+        ): Token
     }
 
     enum YesNo {
@@ -94,6 +116,7 @@ const typeDefs = `
         personCount: Int!
         allPersons(phone: YesNo): [Person]!
         findPerson(name: String!): Person
+        me: User
     }
 `;
 
@@ -124,6 +147,9 @@ const resolvers = {
         findPerson: async (root, args) => {
             // return persons.find((person) => person.name === args.name);
             return Person.findOne({ name: args.name });
+        },
+        me: (root, args, context) => {
+            return context.currentUser;
         },
     },
 
@@ -198,6 +224,44 @@ const resolvers = {
             }
             return person;
         },
+
+        createUser: async (root, args) => {
+            const user = new User({ username: args.username });
+
+            return user.save().catch((error) => {
+                throw new GraphQLError("Creating the user failed", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                        invalidArgs: args.username,
+                        error,
+                    },
+                });
+            });
+        },
+
+        login: async (root, args) => {
+            // find the user in the mongodb
+            const user = await User.findOne({
+                username: args.username,
+            });
+
+            if (!user || args.password !== "secret") {
+                throw new GraphQLError("Wrong credentials", {
+                    extensions: { code: "BAD_USER_INPUT" },
+                });
+            }
+
+            // if user exists, create user obj with the info that will be included in the jwt token
+            const userForToken = {
+                username: user.username,
+                id: user._id,
+            };
+
+            const token = jwt.sign(userForToken, process.env.JWT_SECRET);
+
+            // create a jwt token with the jwt sign
+            return { value: token };
+        },
     },
 };
 
@@ -210,6 +274,25 @@ const server = new ApolloServer({
 
 startStandaloneServer(server, {
     listen: { port: 4000 },
+
+    // context is used to do things that are shared by multiple resolvers (like user identification)
+    context: async ({ req, res }) => {
+        const auth = req ? req.headers.authorization : null;
+
+        if (auth && auth.startsWith("Bearer ")) {
+            const decodedToken = jwt.verify(
+                auth.substring(7),
+                process.env.JWT_SECRET
+            );
+
+            // find the current user by its id and populate friends array
+            const currentUser = await User.findById(decodedToken.id).populate(
+                "friends"
+            );
+
+            return { currentUser };
+        }
+    },
 }).then(({ url }) => {
     console.log(`Server ready at ${url}`);
 });
