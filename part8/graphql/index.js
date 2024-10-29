@@ -14,6 +14,7 @@ const { GraphQLError } = require("graphql");
 
 const { v1: uuid } = require("uuid");
 
+// connect to mongodb
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 const Person = require("./models/person");
@@ -149,8 +150,22 @@ const resolvers = {
             // persons = persons.concat(person);
             // return person;
 
+            // create new Person with the Person model
             const person = new Person({ ...args });
-            return person.save();
+
+            try {
+                // try to save the new person
+                await person.save();
+            } catch (error) {
+                throw new GraphQLError("Saving person failed", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                        invalidArgs: args.name,
+                        error,
+                    },
+                });
+            }
+            return person;
         },
 
         editNumber: async (root, args) => {
@@ -170,7 +185,18 @@ const resolvers = {
             person.phone = args.phone;
 
             // save updated person
-            return person.save();
+            try {
+                await person.save();
+            } catch (error) {
+                throw new GraphQLError("Saving number failed", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                        invalidArgs: args.name,
+                        error,
+                    },
+                });
+            }
+            return person;
         },
     },
 };
