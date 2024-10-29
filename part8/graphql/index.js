@@ -36,30 +36,6 @@ mongoose
         console.log("error conencting to MongoDB: ", error.message)
     );
 
-// define persons array
-// let persons = [
-//     {
-//         name: "Arto Hellas",
-//         phone: "040-123543",
-//         street: "Tapiolankatu 5 A",
-//         city: "Espoo",
-//         id: "3d594650-3436-11e9-bc57-8b80ba54c431",
-//     },
-//     {
-//         name: "Matti Luukkainen",
-//         phone: "040-432342",
-//         street: "Malminkaari 10 A",
-//         city: "Helsinki",
-//         id: "3d599470-3436-11e9-bc57-8b80ba54c431",
-//     },
-//     {
-//         name: "Venla Ruuska",
-//         street: "Nallemäentie 22 C",
-//         city: "Helsinki",
-//         id: "3d599471-3436-11e9-bc57-8b80ba54c431",
-//     },
-// ];
-
 // define typeDefs - schema needed for GraphQL
 const typeDefs = `
     type Address {
@@ -125,14 +101,9 @@ const typeDefs = `
 const resolvers = {
     Query: {
         personCount: async () => {
-            // return persons.length;
             return Person.collection.countDocuments();
         },
         allPersons: async (root, args) => {
-            // if (!args.phone) {
-            //     return persons;
-            // }
-
             // const byPhone = (person) =>
             //     args.phone === "YES" ? person.phone : !person.phone;
 
@@ -145,7 +116,6 @@ const resolvers = {
             return Person.find({ phone: { $exists: args.phone === "YES" } });
         },
         findPerson: async (root, args) => {
-            // return persons.find((person) => person.name === args.name);
             return Person.findOne({ name: args.name });
         },
         me: (root, args, context) => {
@@ -161,21 +131,6 @@ const resolvers = {
 
     Mutation: {
         addPerson: async (root, args) => {
-            // // error handling for unique names
-            // if (persons.find((person) => person.name === args.name)) {
-            //     throw new GraphQLError("Name must be unique", {
-            //         extensions: {
-            //             code: "BAD_USER_INPUT",
-            //             invalidArgs: args.name,
-            //         },
-            //     });
-            // }
-
-            // // add the id to the person
-            // const person = { ...args, id: uuid() };
-            // persons = persons.concat(person);
-            // return person;
-
             // create new Person with the Person model
             const person = new Person({ ...args });
 
@@ -195,17 +150,6 @@ const resolvers = {
         },
 
         editNumber: async (root, args) => {
-            // // find the person in the db
-            // const person = persons.find((person) => person.name === args.name);
-            // if (!person) {
-            //     return null;
-            // }
-            // const updatedPerson = { ...person, phone: args.phone };
-            // persons = persons.map((p) =>
-            //     p.name === updatedPerson.name ? updatedPerson : p
-            // );
-            // return updatedPerson;
-
             // find and update person's phone
             const person = await Person.findOne({ name: args.name });
             person.phone = args.phone;
