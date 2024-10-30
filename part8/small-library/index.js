@@ -1,7 +1,9 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 
+// TODO next: ex 8.14
 const Book = require("./models/book");
+const Author = require("./models/author");
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
