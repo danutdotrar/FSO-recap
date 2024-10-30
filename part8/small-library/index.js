@@ -1,7 +1,21 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 
+const Book = require("./models/book");
+
+const mongoose = require("mongoose");
+mongoose.set("strictQuery", false);
+require("dotenv").config();
+
 const { v4: uuid } = require("uuid");
+
+// test mongodb connection
+const MONGODB_URI = process.env.MONGODB_URI;
+console.log("connecting to MongoDB ", MONGODB_URI);
+mongoose
+    .connect(MONGODB_URI)
+    .then(() => console.log("connected to MongoDB"))
+    .catch((error) => console.log("Error connecting to MongoDB: ", error));
 
 let authors = [
     {
@@ -93,8 +107,9 @@ const typeDefs = `
     type Book {
         title: String!
         published: Int!
-        author: String!
+        author: Author!
         genres: [String!]!
+        id: ID!
     }
 
     type Author {
@@ -109,7 +124,7 @@ const typeDefs = `
             author: String!
             published: Int!
             genres: [String!]!
-        ) : Book
+        ) : Book!
 
         editAuthor(
             name: String
@@ -121,7 +136,7 @@ const typeDefs = `
 // define the resolvers
 const resolvers = {
     Query: {
-        bookCount: () => books.length,
+        bookCount: async () => books.length,
         authorCount: () => authors.length,
         allBooks: (root, args) => {
             if (!args.author && !args.genre) {
