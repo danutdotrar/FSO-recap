@@ -81,6 +81,10 @@ const typeDefs = `
             username: String!
             password: String!
         ): Token
+
+        addAsFriend(
+            name: String!
+        ) : User
     }
 
     enum YesNo {
@@ -130,13 +134,27 @@ const resolvers = {
     },
 
     Mutation: {
-        addPerson: async (root, args) => {
+        addPerson: async (root, args, context) => {
             // create new Person with the Person model
             const person = new Person({ ...args });
+            const currentUser = context.currentUser;
+
+            if (!currentUser) {
+                throw new GraphQLError("Not Authenticated", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                    },
+                });
+            }
 
             try {
                 // try to save the new person
                 await person.save();
+
+                // updated current user list of friends
+                currentUser.friends = currentUser.friends.concat(person);
+                // save current user
+                await currentUser.save();
             } catch (error) {
                 throw new GraphQLError("Saving person failed", {
                     extensions: {
@@ -205,6 +223,30 @@ const resolvers = {
 
             // create a jwt token with the jwt sign
             return { value: token };
+        },
+
+        addAsFriend: async (root, args, { currentUser }) => {
+            // check if person is already in the currentUser list of friends
+            const isFriend = (person) =>
+                currentUser.friends
+                    .map((f) => f._id.toString())
+                    .includes(person._id.toString());
+
+            if (!currentUser) {
+                throw new GraphQLError("wrong credentials", {
+                    extensions: { code: "BAD_USER_INPUT" },
+                });
+            }
+
+            const person = await Person.findOne({ name: args.name });
+
+            if (!isFriend(person)) {
+                currentUser.friends = currentUser.friends.concat(person);
+            }
+
+            await currentUser.save();
+
+            return currentUser;
         },
     },
 };
