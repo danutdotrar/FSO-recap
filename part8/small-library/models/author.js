@@ -14,7 +14,7 @@ const authorSchema = new mongoose.Schema({
     },
 });
 
-schema.plugin(uniqueValidator);
+authorSchema.plugin(uniqueValidator);
 
 const Author = mongoose.model("Author", authorSchema);
 
