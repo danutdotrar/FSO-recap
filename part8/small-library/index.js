@@ -188,22 +188,6 @@ const resolvers = {
 
     Mutation: {
         addBook: async (root, args) => {
-            // // add the id to the new book
-            // const newBook = { ...args, id: uuid() };
-            // // add the book to the books list
-            // books = books.concat(newBook);
-            // // check if the author exists in the authors list
-            // const findAuthor = authors.find(
-            //     (author) => author.name === newBook.author
-            // );
-            // // if the author doesn't exist, create new author for the authors
-            // if (!findAuthor) {
-            //     const newAuthor = { name: newBook.author, id: uuid() };
-            //     authors = authors.concat(newAuthor);
-            // }
-            // return newBook;
-
-            // // refactor
             // use args to get the parameters
             // take the args.author and check if author exists in Author collection
             // if there is no author, create new Author and save it
