@@ -134,12 +134,13 @@ type Mutation {
         }
         `;
 
+// TODO next: allBooks query and the remaining, to complete 8.14
 // define the resolvers
 const resolvers = {
     Query: {
-        bookCount: async () => Book.collection.length,
-        authorCount: () => Author.collection.length,
-        allBooks: (root, args) => {
+        bookCount: async () => Book.collection.countDocuments(),
+        authorCount: async () => Author.collection.countDocuments(),
+        allBooks: async (root, args) => {
             if (!args.author && !args.genre) {
                 return books;
             }
@@ -161,6 +162,11 @@ const resolvers = {
                 const byGenre = (book) => book.genres.includes(args.genre);
                 return books.filter(byGenre);
             }
+
+            // // refactor
+            // check if the args.genres exists
+            // if args.genres exists
+            // use Book.collection.find({ genres: {$all: args.genres}})
         },
         allAuthors: () => {
             const authorList = authors.map((author) => {
