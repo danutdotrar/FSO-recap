@@ -201,6 +201,7 @@ const resolvers = {
 
                 return {
                     name: author.name,
+                    born: author.born || null,
                     bookCount: filteredBooks.length,
                 };
             });
@@ -245,23 +246,36 @@ const resolvers = {
             return book;
         },
 
-        editAuthor: (root, args) => {
+        editAuthor: async (root, args) => {
             const name = args.name;
             const bornYear = args.setBornTo;
 
-            // find the author by the name
-            const author = authors.find((author) => author.name === name);
+            // // find the author by the name
+            // const author = authors.find((author) => author.name === name);
 
-            const updatedAuthor = { ...author, born: bornYear };
+            // const updatedAuthor = { ...author, born: bornYear };
 
-            if (author) {
-                authors = authors.map((author) =>
-                    author.name === name ? updatedAuthor : author
-                );
-                return updatedAuthor;
+            // if (author) {
+            //     authors = authors.map((author) =>
+            //         author.name === name ? updatedAuthor : author
+            //     );
+            //     return updatedAuthor;
+            // }
+
+            // if (!author) return null;
+
+            // find and update the author with
+            const updatedAuthor = await Author.findOneAndUpdate(
+                { name: name },
+                { born: bornYear },
+                { new: true }
+            );
+
+            if (!updatedAuthor) {
+                return null;
             }
 
-            if (!author) return null;
+            return updatedAuthor;
         },
     },
 };
