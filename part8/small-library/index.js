@@ -141,48 +141,71 @@ const resolvers = {
         bookCount: async () => Book.collection.countDocuments(),
         authorCount: async () => Author.collection.countDocuments(),
         allBooks: async (root, args) => {
-            if (!args.author && !args.genre) {
-                return books;
-            }
+            // if (!args.author && !args.genre) {
+            //     return books;
+            // }
 
-            if (args.author && args.genre) {
-                return books.filter(
-                    (book) =>
-                        book.author === args.author &&
-                        book.genres.includes(args.genre)
-                );
-            }
+            // if (args.author && args.genre) {
+            //     return books.filter(
+            //         (book) =>
+            //             book.author === args.author &&
+            //             book.genres.includes(args.genre)
+            //     );
+            // }
 
-            if (args.author) {
-                const byAuthor = (book) => book.author === args.author;
-                return books.filter(byAuthor);
+            // if (args.author) {
+            //     const byAuthor = (book) => book.author === args.author;
+            //     return books.filter(byAuthor);
+            // }
+
+            // if (args.genre) {
+            //     const byGenre = (book) => book.genres.includes(args.genre);
+            //     return books.filter(byGenre);
+            // }
+
+            if (!args.genre) {
+                // return all books and populate the author field
+                return await Book.find({}).populate("author");
             }
 
             if (args.genre) {
-                const byGenre = (book) => book.genres.includes(args.genre);
-                return books.filter(byGenre);
+                const books = await Book.find({ genres: args.genre });
+                return books;
             }
-
-            // // refactor
-            // check if the args.genres exists
-            // if args.genres exists
-            // use Book.collection.find({ genres: {$all: args.genres}})
         },
-        allAuthors: () => {
-            const authorList = authors.map((author) => {
-                // filter the books by author name
-                const bookCount = books.filter(
-                    (book) => book.author === author.name
+        allAuthors: async () => {
+            // const authorList = authors.map((author) => {
+            //     // filter the books by author name
+            //     const bookCount = books.filter(
+            //         (book) => book.author === author.name
+            //     );
+
+            //     return {
+            //         name: author.name,
+            //         born: author.born,
+            //         bookCount: bookCount.length,
+            //     };
+            // });
+
+            // return authorList;
+
+            const authorList = await Author.find({});
+            console.log(authorList);
+            const bookList = await Book.find({}).populate("author");
+            console.log(bookList);
+
+            const authors = authorList.map((author) => {
+                const filteredBooks = bookList.filter(
+                    (book) => author.name === book.author.name
                 );
 
                 return {
                     name: author.name,
-                    born: author.born,
-                    bookCount: bookCount.length,
+                    bookCount: filteredBooks.length,
                 };
             });
 
-            return authorList;
+            return authors;
         },
     },
 
