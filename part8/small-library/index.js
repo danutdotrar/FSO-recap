@@ -1,5 +1,6 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
+const { GraphQLError } = require("graphql");
 
 const Book = require("./models/book");
 const Author = require("./models/author");
@@ -163,9 +164,8 @@ const resolvers = {
         },
         allAuthors: async () => {
             const authorList = await Author.find({});
-            console.log(authorList);
+
             const bookList = await Book.find({}).populate("author");
-            console.log(bookList);
 
             const authors = authorList.map((author) => {
                 const filteredBooks = bookList.filter(
@@ -201,7 +201,17 @@ const resolvers = {
                     name: args.author,
                 });
                 // save the new author
-                await author.save();
+                try {
+                    await author.save();
+                } catch (error) {
+                    throw new GraphQLError("Saving author failed", {
+                        extensions: {
+                            code: "BAD_USER_INPUT",
+                            invalidArgs: args.author,
+                            error,
+                        },
+                    });
+                }
             }
 
             const authorID = !isAuthor ? author._id : isAuthor._id;
