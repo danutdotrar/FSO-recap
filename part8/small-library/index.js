@@ -135,7 +135,7 @@ type Mutation {
         }
         `;
 
-// TODO next: 8.15
+// TODO next: 8.16
 // define the resolvers
 const resolvers = {
     Query: {
@@ -200,8 +200,9 @@ const resolvers = {
                 author = new Author({
                     name: args.author,
                 });
-                // save the new author
+
                 try {
+                    // save the new author
                     await author.save();
                 } catch (error) {
                     throw new GraphQLError("Saving author failed", {
@@ -244,6 +245,7 @@ const resolvers = {
             const bornYear = args.setBornTo;
 
             // find and update the author with the new bornYear
+
             const updatedAuthor = await Author.findOneAndUpdate(
                 { name: name },
                 { born: bornYear },
