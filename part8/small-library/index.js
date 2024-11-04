@@ -224,7 +224,17 @@ const resolvers = {
                 genres: args.genres,
             }).populate("author");
 
-            await book.save();
+            try {
+                await book.save();
+            } catch (error) {
+                throw new GraphQLError("Saving book failed", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                        invalidArgs: args.title,
+                        error,
+                    },
+                });
+            }
 
             return book;
         },
