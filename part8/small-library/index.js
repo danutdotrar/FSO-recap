@@ -9,8 +9,8 @@ const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
 require("dotenv").config();
 
-const { v4: uuid } = require("uuid");
 const User = require("./models/user");
+const jwt = require("jsonwebtoken");
 
 // test mongodb connection
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -306,6 +306,35 @@ const resolvers = {
 
             // return new user
             return newUser;
+        },
+
+        login: async (root, args) => {
+            // find the username in the User collection
+            const user = await User.findOne({ username: args.username });
+
+            // if no user, throw new graphql error
+            if (!user || args.password !== "secret") {
+                throw new GraphQLError("Bad credentials", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                        invalidArgs: user ? args.password : args.username,
+                    },
+                });
+            }
+
+            // if user, check for password
+            // if user and pass match, create user obj to attach to jwtoken
+            // the user obj will contain the username and user _id
+            const userForToken = {
+                username: user.username,
+                id: user._id,
+            };
+
+            // use jwt sign to create a new token
+            const token = await jwt.sign(userForToken, process.env.JWT_SECRET);
+            // return the new token based on Token gql schema {value: token}
+
+            return { value: token };
         },
     },
 };
