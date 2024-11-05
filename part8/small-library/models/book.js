@@ -1,7 +1,8 @@
 // import mongoose
 const mongoose = require("mongoose");
 
-const uniqueValidator = require("mongoose-unique-validator");
+// mongoose has native support for 'unique'
+// const uniqueValidator = require("mongoose-unique-validator");
 
 // define the schema
 const bookSchema = new mongoose.Schema({
@@ -21,7 +22,7 @@ const bookSchema = new mongoose.Schema({
     genres: [{ type: String }],
 });
 
-bookSchema.plugin(uniqueValidator);
+// bookSchema.plugin(uniqueValidator);
 
 // define the model
 const Book = mongoose.model("Book", bookSchema);
