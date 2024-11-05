@@ -10,6 +10,7 @@ mongoose.set("strictQuery", false);
 require("dotenv").config();
 
 const { v4: uuid } = require("uuid");
+const User = require("./models/user");
 
 // test mongodb connection
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -104,6 +105,16 @@ type Query {
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    me: User
+}
+
+type User {
+    username: String!
+    favoriteGenre: String!
+}
+
+type Token {
+    value: String!
 }
 
 type Book {
@@ -128,11 +139,21 @@ type Mutation {
         genres: [String!]!
         ) : Book!
         
-        editAuthor(
-            name: String
-            setBornTo: Int
-            ) : Author
-        }
+    editAuthor(
+        name: String
+        setBornTo: Int
+        ) : Author
+
+    createUser(
+        username: String!
+        favoriteGenre: String!
+        ) : User
+
+    login(
+        username: String!
+        password: String!
+        ) : Token
+    }
         `;
 
 // TODO next: 8.16
@@ -257,6 +278,34 @@ const resolvers = {
             }
 
             return updatedAuthor;
+        },
+
+        createUser: async (root, args) => {
+            // take username and favorite genre from the args
+            // check if user already created
+            const userExists = await User.findOne({ username: args.username });
+
+            // if user already exists, return graphql error
+            if (userExists) {
+                throw new GraphQLError("Username already exists", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                        invalidArgs: args.username,
+                    },
+                });
+            }
+
+            // if user doesnt exists
+            // create new user with new User model
+            const newUser = new User({
+                username: args.username,
+                favoriteGenre: args.favoriteGenre,
+            });
+
+            await newUser.save();
+
+            // return new user
+            return newUser;
         },
     },
 };
