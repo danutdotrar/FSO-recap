@@ -205,12 +205,22 @@ const resolvers = {
     },
 
     Mutation: {
-        addBook: async (root, args) => {
+        addBook: async (root, args, context) => {
             // use args to get the parameters
             // take the args.author and check if author exists in Author collection
             // if there is no author, create new Author and save it
             // create new Book and add the ID of new created author + populate it
             // return the new saved book
+
+            const currentUser = context.currentUser;
+
+            if (!currentUser) {
+                throw new GraphQLError("Wrong credentials", {
+                    extensions: {
+                        code: "BAD_USER_INPUT",
+                    },
+                });
+            }
 
             const isAuthor = await Author.findOne({ name: args.author });
 
@@ -313,6 +323,7 @@ const resolvers = {
             const user = await User.findOne({ username: args.username });
 
             // if no user, throw new graphql error
+            // all users have the same password
             if (!user || args.password !== "secret") {
                 throw new GraphQLError("Bad credentials", {
                     extensions: {
@@ -331,7 +342,7 @@ const resolvers = {
             };
 
             // use jwt sign to create a new token
-            const token = await jwt.sign(userForToken, process.env.JWT_SECRET);
+            const token = jwt.sign(userForToken, process.env.JWT_SECRET);
             // return the new token based on Token gql schema {value: token}
 
             return { value: token };
@@ -346,6 +357,33 @@ const server = new ApolloServer({
 });
 
 // start the server
-startStandaloneServer(server, { listen: { port: 4000 } }).then(({ url }) => {
+startStandaloneServer(server, {
+    listen: { port: 4000 },
+    context: async ({ req, res }) => {
+        // if there is any req, take headers.authorization
+        const auth = req ? req.headers.authorization : null;
+
+        // if auth not null and auth starts with 'Bearer '
+        if (auth && auth.startsWith("Bearer ")) {
+            // take the token
+            const token = auth.substring(7);
+
+            try {
+                // decode with jwt.verify
+                const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+                // find the current user th
+                const currentUser = await User.findById(decodedToken.id);
+
+                return { currentUser };
+            } catch (error) {
+                throw new GraphQLError("Invalid or expired token", {
+                    extensions: {
+                        code: "UNAUTHENTICATED",
+                    },
+                });
+            }
+        }
+    },
+}).then(({ url }) => {
     console.log(`Server ready at ${url}`);
 });
