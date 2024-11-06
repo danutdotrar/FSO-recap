@@ -156,7 +156,7 @@ type Mutation {
     }
         `;
 
-// TODO next: 8.16 - continue with login functionality: - Make the mutations addBook and editAuthor possible only if the request includes a valid token
+// TODO next: Start part 8d
 // define the resolvers
 const resolvers = {
     Query: {
