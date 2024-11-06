@@ -271,12 +271,21 @@ const resolvers = {
             return book;
         },
 
-        editAuthor: async (root, args) => {
+        editAuthor: async (root, args, context) => {
             const name = args.name;
             const bornYear = args.setBornTo;
 
-            // find and update the author with the new bornYear
+            const currentUser = context.currentUser;
 
+            if (!currentUser) {
+                throw new GraphQLError("Wrong credentials", {
+                    extensions: {
+                        code: "UNAUTHENTICATED",
+                    },
+                });
+            }
+
+            // find and update the author with the new bornYear
             const updatedAuthor = await Author.findOneAndUpdate(
                 { name: name },
                 { born: bornYear },
