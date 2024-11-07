@@ -15,7 +15,6 @@ function App() {
     const client = useApolloClient();
 
     // useQuery will execute the query it receives as parameter
-
     if (result.loading) {
         return <div>Loading...</div>;
     }
@@ -44,6 +43,7 @@ function App() {
         );
     }
 
+    // TODO next: part 8d - adding a token to a header
     return (
         <>
             <Notify error={errorMessage} />
