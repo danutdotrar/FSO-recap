@@ -9,6 +9,8 @@ import {
     gql,
 } from "@apollo/client";
 
+// TODO: continue part8d - Adding a token to a header
+
 // create new client obj
 const client = new ApolloClient({
     uri: "http://localhost:4000/",
