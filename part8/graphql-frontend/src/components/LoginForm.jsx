@@ -22,8 +22,10 @@ const LoginForm = ({ setToken, showError }) => {
         if (result.data) {
             const token = result.data.login.value;
 
-            // set token in App and in local stoarge
+            // set token in the App
             setToken(token);
+
+            // set token in localstorage to attach the token to headers in httplink
             localStorage.setItem("phonenumbers-user-token", token);
         }
     }, [result.data]);
