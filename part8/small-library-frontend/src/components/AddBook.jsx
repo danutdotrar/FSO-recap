@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_BOOK } from "../queries/queries";
+import { ALL_BOOKS, CREATE_BOOK } from "../queries/queries";
+import { useNavigate } from "react-router-dom";
 
 // custom hook for input field
 const useField = (type) => {
@@ -20,6 +21,7 @@ const useField = (type) => {
 
 const AddBook = () => {
     const [genreArray, setGenreArray] = useState([""]);
+    const navigate = useNavigate();
 
     const title = useField("text");
     const author = useField("text");
@@ -27,7 +29,19 @@ const AddBook = () => {
     const genre = useField("text");
 
     // define mutation for create book query
-    const [createBook] = useMutation(CREATE_BOOK);
+    const [createBook] = useMutation(CREATE_BOOK, {
+        onError: () => {},
+        // refetchQueries: [{ query: ALL_BOOKS }],
+        // handle cache update
+        // Apollo will execute the 'update' callback after the mutation
+        update: (cache, response) => {
+            cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+                return {
+                    allBooks: allBooks.concat(response.data.addBook),
+                };
+            });
+        },
+    });
 
     const handleAddGenre = () => {
         if (genre.inputProps.value) {
@@ -36,10 +50,10 @@ const AddBook = () => {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        createBook({
+        await createBook({
             variables: {
                 title: title.inputProps.value,
                 author: author.inputProps.value,
@@ -53,6 +67,8 @@ const AddBook = () => {
         title.reset();
         author.reset();
         published.reset();
+
+        navigate("/books");
     };
 
     return (
