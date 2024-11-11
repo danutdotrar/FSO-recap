@@ -2,23 +2,46 @@ import { useState } from "react";
 
 import "./App.css";
 import { Authors } from "./components/Authors";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate,
+    useNavigate,
+} from "react-router-dom";
 import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
 import Books from "./components/Books";
 import AddBook from "./components/AddBook";
+import LoginForm from "./components/LoginForm";
 
-// TODO next: Exercise 8.11
+import { useEffect } from "react";
+
 function App() {
+    const [token, setToken] = useState("");
+
+    // load token  from localStorage on render
+    useEffect(() => {
+        const storedToken = localStorage.getItem("library-user-token");
+
+        if (storedToken) {
+            setToken(storedToken);
+        }
+    }, []);
+
     return (
         <>
             <Router>
-                <Navbar />
+                <Navbar token={token} />
                 <Routes>
                     <Route path={"/"} element={<HomePage />} />
                     <Route path={"/authors"} element={<Authors />} />
                     <Route path={"/books"} element={<Books />} />
                     <Route path={"/add-book"} element={<AddBook />} />
+                    <Route
+                        path={"/login"}
+                        element={<LoginForm setToken={setToken} />}
+                    />
                 </Routes>
             </Router>
         </>
