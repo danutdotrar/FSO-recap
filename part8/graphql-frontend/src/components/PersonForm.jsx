@@ -13,12 +13,20 @@ const PersonForm = ({ showError }) => {
     // refetch the all_persons query after the mutation is done
     // pass as many queries as needed for refetch
     const [createPerson] = useMutation(CREATE_PERSON, {
-        refetchQueries: [{ query: ALL_PERSONS }],
         onError: (error) => {
             const message = error.graphQLErrors
                 .map((e) => e.message)
                 .join("\n");
             showError(message);
+        },
+        // handle the cache update
+        // after the mutation Apollo will run the 'update' callback
+        update: (cache, response) => {
+            cache.updateQuery({ query: ALL_PERSONS }, ({ allPersons }) => {
+                return {
+                    allPersons: allPersons.concat(response.data.addPerson),
+                };
+            });
         },
     });
 
