@@ -1,1 +1,1 @@
-# FSO-recap
+Full-Stack Open  - a full-stack web development course made by the University of Helsinki, with the main focus on building single page applications with ReactJS that use REST APIs built with Node.js and using MongoDB as the database. Developed practical skills through building multiple full-stack applications and mastering key concepts such as RESTful APIs, GraphQL, user authentication, and data management.
