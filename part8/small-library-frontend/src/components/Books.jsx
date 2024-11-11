@@ -21,11 +21,11 @@ const Books = () => {
                 <tbody>
                     {books.data.allBooks.map((book) => {
                         return (
-                            <tr key={book.title + book.author}>
+                            <tr key={book.title + book.author.name}>
                                 <td style={{ textAlign: "start" }}>
                                     {book.title}
                                 </td>
-                                <td>{book.author}</td>
+                                <td>{book.author.name}</td>
                                 <td>{book.published}</td>
                             </tr>
                         );
