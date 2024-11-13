@@ -52,6 +52,15 @@ const Books = () => {
     return (
         <div>
             <h1>Books</h1>
+
+            <div>
+                <p>
+                    In genre:{" "}
+                    <span>
+                        <b>{filteredGenre}</b>
+                    </span>
+                </p>
+            </div>
             <table>
                 <thead>
                     <tr>
