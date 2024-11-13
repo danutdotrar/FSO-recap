@@ -20,7 +20,7 @@ const useField = (type) => {
 };
 
 const AddBook = () => {
-    const [genreArray, setGenreArray] = useState([""]);
+    const [genreArray, setGenreArray] = useState([]);
     const navigate = useNavigate();
 
     const title = useField("text");
