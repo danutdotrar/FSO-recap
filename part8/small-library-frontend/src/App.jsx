@@ -16,6 +16,7 @@ import AddBook from "./components/AddBook";
 import LoginForm from "./components/LoginForm";
 
 import { useEffect } from "react";
+import Recommendations from "./components/Recommendations";
 
 // TODO next: part 8d ex8.19
 function App() {
@@ -33,12 +34,16 @@ function App() {
     return (
         <>
             <Router>
-                <Navbar token={token} />
+                <Navbar token={token} setToken={setToken} />
                 <Routes>
                     <Route path={"/"} element={<HomePage />} />
                     <Route path={"/authors"} element={<Authors />} />
                     <Route path={"/books"} element={<Books />} />
                     <Route path={"/add-book"} element={<AddBook />} />
+                    <Route
+                        path={"/recommendations"}
+                        element={<Recommendations />}
+                    />
                     <Route
                         path={"/login"}
                         element={<LoginForm setToken={setToken} />}
