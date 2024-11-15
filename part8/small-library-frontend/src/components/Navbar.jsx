@@ -1,9 +1,11 @@
 import { useApolloClient } from "@apollo/client";
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const Navbar = ({ token }) => {
+const Navbar = ({ token, setToken }) => {
     const client = useApolloClient();
+
+    const navigate = useNavigate();
 
     const logout = () => {
         setToken(null);
@@ -35,6 +37,9 @@ const Navbar = ({ token }) => {
                     <>
                         <li>
                             <Link to={"/add-book"}>add book</Link>
+                        </li>
+                        <li>
+                            <Link to={"/recommendations"}>recommend</Link>
                         </li>
                         <button onClick={logout}>logout</button>
                     </>
