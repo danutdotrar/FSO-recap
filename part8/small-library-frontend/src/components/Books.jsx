@@ -70,9 +70,9 @@ const Books = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {allBooks.map((book) => {
+                    {allBooks.map((book, index) => {
                         return (
-                            <tr key={book.title + book.author.name}>
+                            <tr key={index}>
                                 <td style={{ textAlign: "start" }}>
                                     {book.title}
                                 </td>
@@ -85,8 +85,12 @@ const Books = () => {
             </table>
 
             <div>
-                {uniqueGenres.map((genre) => (
-                    <button value={genre} onClick={(e) => handleButton(e)}>
+                {uniqueGenres.map((genre, index) => (
+                    <button
+                        key={index}
+                        value={genre}
+                        onClick={(e) => handleButton(e)}
+                    >
                         {genre}
                     </button>
                 ))}
