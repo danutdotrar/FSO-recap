@@ -18,7 +18,7 @@ import LoginForm from "./components/LoginForm";
 import { useEffect } from "react";
 import Recommendations from "./components/Recommendations";
 
-// TODO next: part 8d ex8.19
+// TODO next: part 8d ex8.21
 function App() {
     const [token, setToken] = useState("");
 
