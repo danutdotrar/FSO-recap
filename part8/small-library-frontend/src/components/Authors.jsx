@@ -10,7 +10,7 @@ export const Authors = () => {
     const authors = useQuery(ALL_AUTHORS);
 
     const authorsOptions = authors?.data?.allAuthors
-        .filter((author) => author.born)
+        // .filter((author) => !author.born)
         .map((author) => {
             return { ...author, label: author.name, value: author.name };
         });
@@ -72,12 +72,13 @@ export const Authors = () => {
 
             <h2>Set birthyear</h2>
             <form onSubmit={handleSubmit}>
-                <div>
+                <div style={{ maxWidth: "250px" }}>
                     <Select
                         defaultValue={selectedOption}
                         onChange={setSelectedOption}
                         options={authorsOptions}
                         styles={customStyles}
+                        isClearable
                     />
                 </div>
                 <div>
