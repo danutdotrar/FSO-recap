@@ -78,7 +78,6 @@ type Mutation {
     }
         `;
 
-// TODO next: Start part 8d
 // define the resolvers
 const resolvers = {
     Query: {
@@ -123,6 +122,20 @@ const resolvers = {
             });
 
             return authors;
+        },
+        me: async (root, args, context) => {
+            const currentUser = context.currentUser;
+            console.log("current user", currentUser);
+
+            if (!currentUser) {
+                throw new GraphQLError("Wrong credentials", {
+                    extensions: {
+                        code: "UNAUTHENTICATED",
+                    },
+                });
+            }
+
+            return currentUser;
         },
     },
 
