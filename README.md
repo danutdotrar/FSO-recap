@@ -38,6 +38,10 @@ This repository contains my solutions and projects from the **FullStackOpen** co
 | 7     | React Router, Custom Hooks, & More        | ✅ Completed |
 | 8     | GraphQL                                   | ✅ Completed |
 | 9     | TypeScript                                | 🚧 In Progress |
+| 10    | React Native                              | ❌ Not Started |
+| 11    | CI/CD and DevOps                          | ❌ Not Started |
+| 12    | Containers and Kubernetes                 | ❌ Not Started |
+| 13    | Final Testing and Best Practices          | ❌ Not Started |
 
 ---
 
