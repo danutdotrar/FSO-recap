@@ -1,6 +1,6 @@
 # Blog List App
 
-A full-stack blog management application built as part of the **FullStackOpen** course. This app provides a fully functional backend and frontend for managing blogs, featuring user authentication, CRUD operations, and comprehensive testing (link to testing: https://github.com/danutdotrar/FSO-recap/tree/main/part5/bloglist-e2e-tests).
+A full-stack blog management application built as part of the **FullStackOpen** course. This app provides a fully functional backend and frontend for managing blogs, featuring user authentication, CRUD operations, and comprehensive testing (For more details, refer to the [link to testing](https://github.com/danutdotrar/FSO-recap/tree/main/part5/bloglist-e2e-tests).)
 
 ---
 
