@@ -1,19 +1,14 @@
-Full-Stack Open  - a full-stack web development course made by the University of Helsinki, with the main focus on building single page applications with ReactJS that use REST APIs built with Node.js and using MongoDB as the database. Developed practical skills through building multiple full-stack applications and mastering key concepts such as RESTful APIs, GraphQL, user authentication, and data management.
-
 # FullStackOpen Course Repository
 
 This repository contains my solutions and projects from the **FullStackOpen** course offered by the University of Helsinki. The course focuses on modern web development, covering both front-end and back-end technologies, with an emphasis on building full-stack applications.
 
 ---
+## Technologies Used
 
-## Table of Contents
-
-1. [Course Overview](#course-overview)
-2. [Progress](#progress)
-3. [Projects](#projects)
-4. [Technologies Used](#technologies-used)
-5. [How to Use](#how-to-use)
-6. [Credits](#credits)
+- **Front-End:** React, Redux, React Router, Axios, CSS, HTML.
+- **Back-End:** Node.js, Express, MongoDB, Mongoose, GraphQL, JWT.
+- **Testing:** Jest, Supertest, Cypress.
+- **Tools:** Git, GitHub, ESLint, Prettier, Postman.
 
 ---
 
@@ -48,29 +43,26 @@ This repository contains my solutions and projects from the **FullStackOpen** co
 
 ## Projects
 
-### Phonebook App (Part 2 & 3)
-A full-stack application for managing contact information.  
-- **Technologies:** React, Node.js, Express, MongoDB.  
-- **Features:** CRUD operations, RESTful API integration, and basic validations.  
-- **[GitHub Repo Link](#)**  
+### Library App (Part 8)
+A GraphQL-based library management application.  
+- **Technologies:** React, Node.js, Apollo Client, MongoDB.  
+- **Features:** GraphQL queries and mutations, user authentication.
+- **[Backend Repo Link](https://github.com/danutdotrar/FSO-recap/tree/main/part8/small-library)**  
+- **[Frontend Repo Link](https://github.com/danutdotrar/FSO-recap/tree/main/part8/small-library-frontend)**
 
 ### Blog List App (Part 4 & 5)
 A blog management system with user authentication and testing.  
 - **Technologies:** React, Redux, Node.js, MongoDB, Jest, Supertest.  
 - **Features:** CRUD operations, JWT-based authentication, and integration testing.  
-- **[GitHub Repo Link](#)**  
+- **[Backend GitHub Repo Link](https://github.com/danutdotrar/FSO-recap/tree/main/part4/bloglist)**
+- **[Frontend GitHub Repo Link](https://github.com/danutdotrar/FSO-recap/tree/main/part5/bloglist-frontend)**
 
-### Library App (Part 8)
-A GraphQL-based library management application.  
-- **Technologies:** React, Node.js, Apollo Client, MongoDB.  
-- **Features:** GraphQL queries and mutations, user authentication.  
-- **[GitHub Repo Link](#)**  
+### Phonebook App (Part 2 & 3)
+A full-stack application for managing contact information.  
+- **Technologies:** React, Node.js, Express, MongoDB.  
+- **Features:** CRUD operations, RESTful API integration, and basic validations.  
+- **[GitHub Repo Link](https://github.com/danutdotrar/FSO-recap/tree/main/part2/phonebook)**    
 
 ---
 
-## Technologies Used
 
-- **Front-End:** React, Redux, React Router, Axios, CSS, HTML.
-- **Back-End:** Node.js, Express, MongoDB, Mongoose, GraphQL, JWT.
-- **Testing:** Jest, Supertest, Cypress.
-- **Tools:** Git, GitHub, ESLint, Prettier, Postman.
