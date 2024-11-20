@@ -6,14 +6,16 @@ const Recommendations = () => {
     // execute the 'me' query to get the details of the current user
     // filter books by that genre
     const user = useQuery(ME);
-    const books = useQuery(ALL_BOOKS);
+    const { data, loading } = useQuery(ALL_BOOKS);
 
-    const allBooks = books.data.allBooks;
+    if (loading) return <>Loading...</>;
+
+    const allBooks = data?.allBooks;
 
     const username = user?.data?.me?.username;
     const favoriteGenre = user?.data?.me?.favoriteGenre;
 
-    const filteredBooks = allBooks.filter((book) =>
+    const filteredBooks = allBooks?.filter((book) =>
         book.genres.includes(favoriteGenre)
     );
 
@@ -38,8 +40,8 @@ const Recommendations = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredBooks.map((book) => (
-                        <tr>
+                    {filteredBooks?.map((book, index) => (
+                        <tr key={index}>
                             <td>{book.title}</td>
                             <td>{book.author.name}</td>
                             <td>{book.published}</td>
