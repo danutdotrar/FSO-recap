@@ -1,23 +1,22 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { ALL_BOOKS } from "../queries/queries";
+import { ALL_BOOKS, FIND_BOOK } from "../queries/queries";
 import { useState } from "react";
 
 const Books = () => {
-    const [filteredGenre, setFilteredGenre] = useState("all genres");
+    const [filteredGenre, setFilteredGenre] = useState("");
 
     const books = useQuery(ALL_BOOKS);
 
-    if (books.loading) return <>Loading...</>;
-
-    const allBooks = books.data.allBooks.filter((book) => {
-        // keep only the books that includes the genres of filteredGenre
-        return filteredGenre === "all genres"
-            ? book
-            : book.genres.includes(filteredGenre);
+    const { data, loading, error } = useQuery(FIND_BOOK, {
+        variables: { genre: filteredGenre },
     });
 
-    const genres = books.data.allBooks.map((book) => book.genres);
+    if (loading) return <>Loading...</>;
+
+    const booksFound = data?.findBook;
+
+    const genres = books?.data?.allBooks?.map((book) => book.genres);
 
     const getUniqueGenres = (array) => {
         const obj = {};
@@ -40,8 +39,10 @@ const Books = () => {
     };
 
     const uniqueGenres = [
-        "all genres",
-        ...Object.keys(getUniqueGenres(genres)),
+        { value: "", label: "all genres" },
+        ...Object.keys(getUniqueGenres(genres)).map((genre) => {
+            return { value: genre, label: genre };
+        }),
     ];
 
     const handleButton = (e) => {
@@ -57,7 +58,7 @@ const Books = () => {
                 <p>
                     In genre:{" "}
                     <span>
-                        <b>{filteredGenre}</b>
+                        <b>{filteredGenre || "all genres"}</b>
                     </span>
                 </p>
             </div>
@@ -70,7 +71,7 @@ const Books = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {allBooks.map((book, index) => {
+                    {booksFound?.map((book, index) => {
                         return (
                             <tr key={index}>
                                 <td style={{ textAlign: "start" }}>
@@ -88,10 +89,10 @@ const Books = () => {
                 {uniqueGenres.map((genre, index) => (
                     <button
                         key={index}
-                        value={genre}
+                        value={genre.value}
                         onClick={(e) => handleButton(e)}
                     >
-                        {genre}
+                        {genre.label}
                     </button>
                 ))}
             </div>
