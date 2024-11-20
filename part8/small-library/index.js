@@ -27,6 +27,7 @@ type Query {
     authorCount: Int!
     allBooks(author: String, genre: String): [Book!]!
     allAuthors: [Author!]!
+    findBook(genre: String): [Book!]!
     me: User
 }
 
@@ -94,16 +95,34 @@ const resolvers = {
             //     return books.filter(byGenre);
             // }
 
+            // if (!args.genre) {
+            //     // return all books and populate the author field
+            //     return await Book.find({}).populate("author");
+            // }
+
+            // if (args.genre) {
+            //     const books = await Book.find({ genres: args.genre }).populate(
+            //         "author"
+            //     );
+            //     return books;
+            // }
+
+            return await Book.find({}).populate("author");
+        },
+        findBook: async (root, args) => {
             if (!args.genre) {
                 // return all books and populate the author field
                 return await Book.find({}).populate("author");
             }
 
             if (args.genre) {
-                const books = await Book.find({ genres: args.genre });
+                const books = await Book.find({ genres: args.genre }).populate(
+                    "author"
+                );
                 return books;
             }
         },
+
         allAuthors: async () => {
             const authorList = await Author.find({});
 
