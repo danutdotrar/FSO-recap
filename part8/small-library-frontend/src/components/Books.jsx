@@ -12,7 +12,7 @@ const Books = () => {
         variables: { genre: filteredGenre },
     });
 
-    if (loading) return <>Loading...</>;
+    if (loading || books.loading) return <>Loading...</>;
 
     const booksFound = data?.findBook;
 
@@ -28,7 +28,7 @@ const Books = () => {
                     obj[item] += 1;
                 }
 
-                // if the item doesnt exist, initialize with 1
+                // if the item DOES NOT exist, initialize with 1
                 if (!obj[item]) {
                     obj[item] = 1;
                 }
