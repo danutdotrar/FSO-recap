@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
-import { ALL_BOOKS, CREATE_BOOK } from "../queries/queries";
+import { ALL_BOOKS, CREATE_BOOK, FIND_BOOK } from "../queries/queries";
 import { useNavigate } from "react-router-dom";
 
 // custom hook for input field
@@ -31,8 +31,7 @@ const AddBook = () => {
     // define mutation for create book query
     const [createBook] = useMutation(CREATE_BOOK, {
         onError: () => {},
-        // refetchQueries: [{ query: ALL_BOOKS }],
-        // handle cache update
+        // handle manual cache update
         // Apollo will execute the 'update' callback after the mutation
         update: (cache, response) => {
             cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
@@ -41,6 +40,21 @@ const AddBook = () => {
                 };
             });
         },
+        update: (cache, response) => {
+            cache.updateQuery(
+                { query: FIND_BOOK, variables: { genre: "" } },
+                ({ findBook }) => {
+                    return {
+                        findBook: findBook.concat(response.data.addBook),
+                    };
+                }
+            );
+        },
+
+        // refetchQueries: [
+        //     { query: ALL_BOOKS },
+        //     { query: FIND_BOOK, variables: { genre: "" } },
+        // ],
     });
 
     const handleAddGenre = () => {
@@ -60,15 +74,15 @@ const AddBook = () => {
                 published: Number(published.inputProps.value),
                 genres: genreArray,
             },
+        }).then(() => {
+            setGenreArray([""]);
+
+            title.reset();
+            author.reset();
+            published.reset();
+
+            navigate("/books");
         });
-
-        setGenreArray([""]);
-
-        title.reset();
-        author.reset();
-        published.reset();
-
-        navigate("/books");
     };
 
     return (
