@@ -31,6 +31,7 @@ export const updateCache = (cache, query, addedPerson) => {
     });
 };
 
+// TODO next: n+1 problem and recap of part8
 function App() {
     const [errorMessage, setErrorMessage] = useState(null);
     const [token, setToken] = useState(null);
