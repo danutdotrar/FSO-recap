@@ -84,7 +84,6 @@ function App() {
         );
     }
 
-    // TODO next: part 8d - adding a token to a header
     return (
         <>
             <Notify error={errorMessage} />
