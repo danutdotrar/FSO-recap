@@ -1,3 +1,4 @@
+// schema has only 3 main entry points: query, mutation, subscription
 const typeDefs = `
     type Subscription {
         personAdded: Person!
@@ -12,6 +13,7 @@ const typeDefs = `
         name: String!
         phone: String
         address: Address!
+        friendOf: [User!]!
         id: ID!
     }
 

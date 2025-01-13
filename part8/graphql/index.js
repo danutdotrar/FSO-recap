@@ -44,6 +44,9 @@ mongoose
         console.log("error conencting to MongoDB: ", error.message)
     );
 
+// mongoose debugging
+// mongoose.set("debug", true);
+
 // start new Apollo server with the schema and resolvers as params
 // the schema & resolvers define how GraphQL queries are respondend to
 const start = async () => {
