@@ -38,6 +38,16 @@ const resolvers = {
         address: (root) => {
             return { city: root.city, street: root.street };
         },
+        friendOf: async (root) => {
+            // return list of users
+            // find the users that have the root._id in their friends list
+            const friends = await User.find({
+                friends: {
+                    $in: [root._id],
+                },
+            });
+            return friends;
+        },
     },
 
     Subscription: {
