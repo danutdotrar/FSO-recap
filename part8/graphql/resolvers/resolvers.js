@@ -7,6 +7,9 @@ const jwt = require("jsonwebtoken");
 const Person = require("../models/person");
 const User = require("../models/user");
 
+// TODO next: when adding a new person, add the currentUser to the 'friendOf' field of person
+// after this, test the populate method to fix the n + 1 problem
+
 // define the resolvers
 // the resolvers correspond to the queries described in the schema
 const resolvers = {
@@ -20,11 +23,17 @@ const resolvers = {
 
             // return persons.filter(byPhone);
 
+            // fix the n+1 problem with 'populate'
+            // 'join' user's id with Person
             if (!args.phone) {
-                return Person.find({});
+                const persons = Person.find({}).populate("friendOf");
+
+                return persons;
             }
 
-            return Person.find({ phone: { $exists: args.phone === "YES" } });
+            return Person.find({
+                phone: { $exists: args.phone === "YES" },
+            }).populate("friendOf");
         },
         findPerson: async (root, args) => {
             return Person.findOne({ name: args.name });
@@ -46,6 +55,7 @@ const resolvers = {
                     $in: [root._id],
                 },
             });
+
             return friends;
         },
     },
