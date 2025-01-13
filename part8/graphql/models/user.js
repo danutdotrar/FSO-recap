@@ -9,7 +9,7 @@ const schema = new mongoose.Schema({
     },
     friends: [
         {
-            type: mongoose.Schema.Types.ObjectID,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Person",
         },
     ],
