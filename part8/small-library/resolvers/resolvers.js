@@ -1,5 +1,6 @@
 const { PubSub } = require("graphql-subscriptions");
 // with subscriptions, the communication happens using the 'publish-subscribe' principle
+// new version of GraphQL is using asyncIterableIterator instead of asyncIterator
 const pubsub = new PubSub();
 
 const { GraphQLError, subscribe } = require("graphql");
@@ -8,6 +9,8 @@ const Book = require("../models/book");
 const Author = require("../models/author");
 
 const User = require("../models/user");
+
+const jwt = require("jsonwebtoken");
 
 // define the resolvers
 const resolvers = {
@@ -250,7 +253,7 @@ const resolvers = {
         // the resolver for bookAdded subscriptions registers and saves info about all the clients that do the subscription
         bookAdded: {
             // the clients that subscribed are saved to "BOOK_ADDED" iterator object
-            subscribe: () => pubsub.asyncIterator("BOOK_ADDED"),
+            subscribe: () => pubsub.asyncIterableIterator("BOOK_ADDED"),
         },
     },
 };
