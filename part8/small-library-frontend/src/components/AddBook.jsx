@@ -39,8 +39,7 @@ const AddBook = () => {
                     allBooks: allBooks.concat(response.data.addBook),
                 };
             });
-        },
-        update: (cache, response) => {
+
             cache.updateQuery(
                 { query: FIND_BOOK, variables: { genre: "" } },
                 ({ findBook }) => {
