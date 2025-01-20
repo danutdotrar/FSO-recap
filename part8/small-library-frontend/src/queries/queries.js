@@ -38,6 +38,15 @@ const BOOK_DETAILS = gql`
     }
 `;
 
+export const BOOK_ADDED = gql`
+    subscription {
+        bookAdded {
+            ...BookDetails
+        }
+    }
+    ${BOOK_DETAILS}
+`;
+
 export const FIND_BOOK = gql`
     query findBookByGenre($genre: String) {
         findBook(genre: $genre) {
