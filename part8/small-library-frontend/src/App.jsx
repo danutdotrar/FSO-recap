@@ -9,6 +9,9 @@ import {
     Navigate,
     useNavigate,
 } from "react-router-dom";
+
+import { useQuery, useMutation, useSubscription } from "@apollo/client";
+
 import HomePage from "./components/HomePage";
 import Navbar from "./components/Navbar";
 import Books from "./components/Books";
@@ -17,6 +20,7 @@ import LoginForm from "./components/LoginForm";
 
 import { useEffect } from "react";
 import Recommendations from "./components/Recommendations";
+import { BOOK_ADDED } from "./queries/queries";
 
 function App() {
     const [token, setToken] = useState("");
@@ -29,6 +33,15 @@ function App() {
             setToken(storedToken);
         }
     }, []);
+
+    // TODO next: continue with 8.24
+    useSubscription(BOOK_ADDED, {
+        onData: ({ data }) => {
+            const addedBook = data.data.bookAdded;
+            console.log(data);
+            window.alert(`${addedBook.title} added`);
+        },
+    });
 
     return (
         <>
