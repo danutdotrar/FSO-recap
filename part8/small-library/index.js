@@ -14,7 +14,7 @@ const cors = require("cors");
 const http = require("http");
 
 const mongoose = require("mongoose");
-mongoose.set("strictQuery", false);
+// mongoose.set("strictQuery", false);
 require("dotenv").config();
 
 const jwt = require("jsonwebtoken");
@@ -44,9 +44,9 @@ const start = async () => {
     const schema = makeExecutableSchema({ typeDefs, resolvers });
     const serverCleanup = useServer({ schema }, wsServer);
 
-    // define server
     const server = new ApolloServer({
-        schema: makeExecutableSchema({ typeDefs, resolvers }),
+        schema,
+        // introspection: true,
         plugins: [
             ApolloServerPluginDrainHttpServer({ httpServer }),
             {
@@ -61,29 +61,26 @@ const start = async () => {
         ],
     });
 
-    // start the server
     await server.start();
 
     app.use(
         "/",
         cors(),
-        // parse JSON req bodies to JS object and access them with req.body
+        // use express.json to parse JSON into js objects and use them from req.body
         express.json(),
         expressMiddleware(server, {
             context: async ({ req }) => {
                 const auth = req ? req.headers.authorization : null;
 
                 if (auth && auth.startsWith("Bearer ")) {
-                    const token = auth.substring(7);
-
                     const decodedToken = jwt.verify(
-                        token,
+                        auth.substring(7),
                         process.env.JWT_SECRET
                     );
 
                     const currentUser = await User.findById(
                         decodedToken.id
-                    ).populate("friends");
+                    ).populate("favoriteGenre");
 
                     return { currentUser };
                 }
@@ -93,18 +90,12 @@ const start = async () => {
 
     const PORT = 4000;
 
-    httpServer.listen(PORT, () => {
-        console.log(`Server is now running on http://localhost:${PORT}`);
-    });
+    httpServer.listen(PORT, () =>
+        console.log(`Server is now running on http://localhost:${PORT}`)
+    );
 };
 
 start();
-
-// // define the Apollo server
-// const server = new ApolloServer({
-//     typeDefs,
-//     resolvers,
-// });
 
 // // start the server
 // startStandaloneServer(server, {
