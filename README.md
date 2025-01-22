@@ -49,8 +49,8 @@ This repository contains my solutions and projects from the **FullStackOpen** co
 
 ### Library App (Part 8)
 A GraphQL-based library management application.  
-- **Technologies:** React, Node.js, Apollo Client, MongoDB.  
-- **Features:** GraphQL queries and mutations, user authentication.
+- **Technologies:** React, Node.js, Apollo Client, MongoDB, WebSockets.  
+- **Features:** GraphQL queries and mutations, user authentication, real-time notifications using WebSockets and Subscriptions, manual cache updates for data synchronization.
 - **[Backend Repo Link](https://github.com/danutdotrar/FSO-recap/tree/main/part8/small-library)**  
 - **[Frontend Repo Link](https://github.com/danutdotrar/FSO-recap/tree/main/part8/small-library-frontend)**
 
