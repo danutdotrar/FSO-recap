@@ -40,8 +40,8 @@ This repository contains my solutions and projects from the **FullStackOpen** co
 | 9     | TypeScript                                | 🚧 In Progress |
 | 10    | React Native                              | ❌ Not Started Yet |
 | 11    | CI/CD and DevOps                          | ❌ Not Started Yet |
-| 12    | Containers and Kubernetes                 | ❌ Not Started Yet |
-| 13    | Final Testing and Best Practices          | ❌ Not Started Yet |
+| 12    | Containers                                | ❌ Not Started Yet |
+| 13    | Relational databases                      | ❌ Not Started Yet |
 
 ---
 
