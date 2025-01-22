@@ -77,7 +77,6 @@ const resolvers = {
         },
         me: async (root, args, context) => {
             const currentUser = context.currentUser;
-            console.log("current user", currentUser);
 
             if (!currentUser) {
                 throw new GraphQLError("Wrong credentials", {
@@ -190,7 +189,6 @@ const resolvers = {
         },
 
         createUser: async (root, args) => {
-            // take username and favorite genre from the args
             // check if user already created
             const userExists = await User.findOne({ username: args.username });
 
@@ -204,7 +202,7 @@ const resolvers = {
                 });
             }
 
-            // if user doesnt exists
+            // if user does not exists
             // create new user with new User model
             const newUser = new User({
                 username: args.username,
@@ -222,7 +220,7 @@ const resolvers = {
             const user = await User.findOne({ username: args.username });
 
             // if no user, throw new graphql error
-            // all users have the same password
+            // all users have the same password (secret)
             if (!user || args.password !== "secret") {
                 throw new GraphQLError("Bad credentials", {
                     extensions: {
@@ -232,9 +230,7 @@ const resolvers = {
                 });
             }
 
-            // if user, check for password
-            // if user and pass match, create user obj to attach to jwtoken
-            // the user obj will contain the username and user _id
+            // if user and pass match, create user obj to attach to json web token
             const userForToken = {
                 username: user.username,
                 id: user._id,

@@ -66,7 +66,6 @@ const start = async () => {
     app.use(
         "/",
         cors(),
-        // use express.json to parse JSON into js objects and use them from req.body
         express.json(),
         expressMiddleware(server, {
             context: async ({ req }) => {
