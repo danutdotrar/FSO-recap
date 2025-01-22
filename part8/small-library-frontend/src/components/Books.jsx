@@ -1,6 +1,6 @@
 import React from "react";
-import { useQuery } from "@apollo/client";
-import { ALL_BOOKS, FIND_BOOK } from "../queries/queries";
+import { useQuery, useSubscription } from "@apollo/client";
+import { ALL_BOOKS, FIND_BOOK, BOOK_ADDED } from "../queries/queries";
 import { useState } from "react";
 
 const Books = () => {
@@ -10,6 +10,27 @@ const Books = () => {
 
     const { data, loading, error } = useQuery(FIND_BOOK, {
         variables: { genre: filteredGenre },
+    });
+
+    // listen to 'book_added' subscription and update the cache manually
+    useSubscription(BOOK_ADDED, {
+        onData: ({ client, data }) => {
+            const addedBook = data.data.bookAdded;
+
+            // update the cache manually
+            client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => ({
+                allBooks: allBooks.concat(addedBook),
+            }));
+
+            client.cache.updateQuery(
+                { query: FIND_BOOK, variables: { genre: "" } },
+                ({ findBook }) => ({
+                    findBook: findBook.concat(addedBook),
+                })
+            );
+
+            window.alert(`${addedBook.title} added`);
+        },
     });
 
     if (loading || books.loading) return <>Loading...</>;
