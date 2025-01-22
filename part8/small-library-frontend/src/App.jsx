@@ -34,15 +34,6 @@ function App() {
         }
     }, []);
 
-    // TODO next: continue with 8.24
-    useSubscription(BOOK_ADDED, {
-        onData: ({ data }) => {
-            const addedBook = data.data.bookAdded;
-            console.log(data);
-            window.alert(`${addedBook.title} added`);
-        },
-    });
-
     return (
         <>
             <Router>
