@@ -1,5 +1,14 @@
+// TypeScript is a structural typed language, a superset of JavaScript (it includes all JavaScript features and its additional features as well)
+// Structural typing - two types are considered identical if they have the same structure
+// TypeScript code compiles into JavaScript code
+// TypeScript helps us with type checking, static code analysis and code level documentation.
+//
+
+// define types for operation
 type Operation = "multiply" | "add" | "divide";
 
+// returns a number
+// use 'throw new Error' to return error strings
 const calculator = (a: number, b: number, op: Operation): number => {
     switch (op) {
         case "multiply":
