@@ -30,7 +30,7 @@ try {
 } catch (error) {
     let errorMessage = "Something went wrong: ";
 
-    // error will be the type 'unknown', so we need to check it and narrow it to a more specific type
+    // error will be the type 'unknown' so no operations are permitted unless we need check it and narrow it to a more specific type
     // the 'error' is narrowed so we can refer to error.message
     // checking if error is an instance of Error class
     // if it is an instance, then we can access error.message
