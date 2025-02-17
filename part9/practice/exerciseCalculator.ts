@@ -1,1 +1,2 @@
-// TODO next - 9.2
+// TODO next - part9b - 9.2
+console.log("test");
