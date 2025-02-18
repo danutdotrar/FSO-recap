@@ -2,7 +2,8 @@
 // Structural typing - two types are considered identical if they have the same structure
 // TypeScript code compiles into JavaScript code
 // TypeScript helps us with type checking, static code analysis and code level documentation.
-//
+// Interfaces - a way to name an object type
+// Interfaces can be extended, types can be extended via intersections. We can add new fields to interfaces also.
 
 // define types for operation
 type Operation = "multiply" | "add" | "divide";
