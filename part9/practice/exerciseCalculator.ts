@@ -72,4 +72,58 @@ const calculateExercises = (week: number[], target: number): Result => {
     };
 };
 
-console.log(calculateExercises([3, 2, 2, 4.5, 0, 3, 1], 2));
+interface ArgsResult {
+    target: number;
+    daysTrained: number[];
+}
+
+// function to take in process.argv as parameter
+// first index (process.argv[2] is the target
+// rest of the array are the days - each day has a nr of hours
+// check if the arguments are numbers
+// throw new error if a day isn't a number
+// return an object containing the target and the array with the hours/day
+
+const parseArguments = (args: string[]): ArgsResult => {
+    // extract and separate the target from the array
+    // use the rest of the array as the week
+    // args[2] will be the first parameter from the command line (the target)
+    // args[3] will be the start of the array of days trained
+    const target: number = Number(args[2]);
+    const daysArr: string[] = args.slice(3);
+
+    // iterate over days trained array
+    // check if all items are numbers
+    const daysTrained = daysArr.map((day) => {
+        const currentHours = Number(day);
+
+        if (isNaN(currentHours)) {
+            throw new Error("Args must be numbers");
+        }
+
+        return currentHours;
+    });
+
+    return {
+        target,
+        daysTrained,
+    };
+};
+
+// try catch block to handle errors
+// the error parameter from the catch is 'unknown' type so we need to narrow it down to Error to be able to access error.message property
+try {
+    const { target, daysTrained } = parseArguments(process.argv);
+
+    console.log(calculateExercises(daysTrained, target));
+} catch (error: unknown) {
+    let errorMessage = "Something bad happend.";
+
+    // since error is type unknown, we must narrow it down to a specific type
+    // check if error is instance of Error - to access the message property
+    if (error instanceof Error) {
+        errorMessage += ` ${errorMessage}`;
+    }
+
+    console.log(errorMessage);
+}
