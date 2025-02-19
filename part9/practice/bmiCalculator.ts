@@ -22,4 +22,39 @@ const calculateBmi = (height: number, weight: number): string => {
     }
 };
 
-console.log(calculateBmi(180, 74));
+interface ArgvValues {
+    value1: number;
+    value2: number;
+}
+
+const processArgv = (args: string[]): ArgvValues => {
+    if (args.length < 4) {
+        throw new Error("Need more args");
+    }
+
+    // check if args are numbers
+    if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+        return {
+            value1: Number(args[2]),
+            value2: Number(args[3]),
+        };
+    } else {
+        // if not numbers, throw new error
+        throw new Error("Args must be numbers");
+    }
+};
+
+try {
+    const { value1, value2 } = processArgv(process.argv);
+    console.log(calculateBmi(value1, value2));
+    // error has default type of 'unknown'
+    // we can't access error.message property unless we narrow down 'error'
+} catch (error: unknown) {
+    let errorMessage = "Something bad happend.";
+
+    // narrow/check if error is instance of Error
+    if (error instanceof Error) {
+        errorMessage += ` ${error.message}`;
+    }
+    console.log(errorMessage);
+}
