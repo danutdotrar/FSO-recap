@@ -49,7 +49,7 @@ try {
     const { value1, value2 } = processArgv(process.argv);
     console.log(calculateBmi(value1, value2));
     // error has default type of 'unknown'
-    // we can't access error.message property unless we narrow down 'error'
+    // we can't access error.message property unless we narrow down 'error', else TypeScript will throw an error, since it can't guarantee .message property exists in 'error'
 } catch (error: unknown) {
     let errorMessage = "Something bad happend.";
 
