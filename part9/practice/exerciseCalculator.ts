@@ -122,7 +122,7 @@ try {
     // since error is type unknown, we must narrow it down to a specific type
     // check if error is instance of Error - to access the message property
     if (error instanceof Error) {
-        errorMessage += ` ${errorMessage}`;
+        errorMessage += ` ${error.message}`;
     }
 
     console.log(errorMessage);
