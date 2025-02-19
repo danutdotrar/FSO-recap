@@ -27,6 +27,7 @@ interface ArgvValues {
     value2: number;
 }
 
+// catch, validate and return inputs
 const processArgv = (args: string[]): ArgvValues => {
     if (args.length < 4) {
         throw new Error("Need more args");
