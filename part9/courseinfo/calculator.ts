@@ -6,11 +6,11 @@
 // Interfaces can be extended, types can be extended via intersections. We can add new fields to interfaces also.
 
 // define types for operation
-type Operation = "multiply" | "add" | "divide";
+export type Operation = "multiply" | "add" | "divide";
 
 // returns a number
 // use 'throw new Error' to return error strings
-const calculator = (a: number, b: number, op: Operation): number => {
+export const calculator = (a: number, b: number, op: Operation): number => {
     switch (op) {
         case "multiply":
             return a * b;
