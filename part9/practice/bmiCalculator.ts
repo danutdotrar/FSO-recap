@@ -1,7 +1,7 @@
 // Calculate BMI based on height and weight (cm and kg)
 
 // height will be in cm
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
     // body mass = mass kg / height ** 2
 
     // from cm to m
@@ -20,6 +20,8 @@ const calculateBmi = (height: number, weight: number): string => {
     if (bmi >= 25) {
         return "Overweight";
     }
+
+    return "Something bad happend.";
 };
 
 interface ArgvValues {
@@ -45,17 +47,19 @@ const processArgv = (args: string[]): ArgvValues => {
     }
 };
 
-try {
-    const { value1, value2 } = processArgv(process.argv);
-    console.log(calculateBmi(value1, value2));
-    // error has default type of 'unknown'
-    // we can't access error.message property unless we narrow down 'error', else TypeScript will throw an error, since it can't guarantee .message property exists in 'error'
-} catch (error: unknown) {
-    let errorMessage = "Something bad happend.";
+if (require.main === module) {
+    try {
+        const { value1, value2 } = processArgv(process.argv);
+        console.log(calculateBmi(value1, value2));
+        // error has default type of 'unknown'
+        // we can't access error.message property unless we narrow down 'error', else TypeScript will throw an error, since it can't guarantee .message property exists in 'error'
+    } catch (error: unknown) {
+        let errorMessage = "Something bad happend.";
 
-    // narrow/check if error is instance of Error
-    if (error instanceof Error) {
-        errorMessage += ` ${error.message}`;
+        // narrow/check if error is instance of Error
+        if (error instanceof Error) {
+            errorMessage += ` ${error.message}`;
+        }
+        console.log(errorMessage);
     }
-    console.log(errorMessage);
 }
