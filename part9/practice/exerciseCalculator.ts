@@ -23,7 +23,7 @@ interface Result {
     average: number;
 }
 
-const calculateExercises = (week: number[], target: number): Result => {
+export const calculateExercises = (week: number[], target: number): Result => {
     let trainingDays: number = 0;
     let totalHours: number = 0;
     const periodLength = week.length;

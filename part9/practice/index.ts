@@ -1,8 +1,9 @@
-import express, { Request, Response } from "express";
+import express from "express";
 const app = express();
 app.use(express.json());
 
 import { calculateBmi } from "./bmiCalculator";
+import { calculateExercises } from "./exerciseCalculator";
 
 app.get("/endpoint", (_req, res) => {
     res.send("Hello Full Stack!");
@@ -42,6 +43,40 @@ app.get("/bmi", (req, res) => {
 
     const bmiResult: string = calculateBmi(height, weight);
     res.send({ height, weight, bmi: bmiResult });
+});
+
+app.post("/exercises", (req, res) => {
+    const { daily_exercises, target } = req.body;
+
+    if (!daily_exercises || !target) {
+        res.status(400).send({ error: "parameters missing" });
+    }
+
+    if (isNaN(Number(target))) {
+        res.status(400).send({ error: "malformatted parameters" });
+    }
+
+    // check if some items are not numbers
+    const hasWrongItem = daily_exercises.some((day: number) =>
+        isNaN(Number(day))
+    );
+
+    if (!Array.isArray(daily_exercises) || hasWrongItem) {
+        res.status(400).send({ error: "malformatted parameters" });
+    }
+
+    try {
+        const result = calculateExercises(daily_exercises, target);
+        res.send(result);
+    } catch (error: unknown) {
+        let errorMessage = "Something bad happend.";
+
+        if (error instanceof Error) {
+            errorMessage += ` ${error.message}`;
+        }
+
+        res.status(400).send({ error: errorMessage });
+    }
 });
 
 const PORT = 3000;
