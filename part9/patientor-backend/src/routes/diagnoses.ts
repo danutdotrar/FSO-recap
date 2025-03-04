@@ -1,7 +1,3 @@
-//import express
-// intialize router
-// define router endpoints
-// export default router
 import express, { Response } from "express";
 import { Diagnosis } from "../types";
 import diagnosisService from "../services/diagnoses";
