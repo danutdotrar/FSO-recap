@@ -1,5 +1,6 @@
 import express from "express";
 import diaryRouter from "./routes/diaries";
+
 const app = express();
 
 // parse JSON into JS object
