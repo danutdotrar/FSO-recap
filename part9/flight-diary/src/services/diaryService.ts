@@ -1,5 +1,5 @@
 import diaries from "../../data/diaryentries";
-import { DiaryEntry, NonSensitiveDiaryEntry } from "../types";
+import { DiaryEntry, NonSensitiveDiaryEntry, NewDiaryEntry } from "../types";
 
 const getEntries = (): DiaryEntry[] => {
     return diaries;
@@ -14,8 +14,24 @@ const getNonSensitiveEntries = (): NonSensitiveDiaryEntry[] => {
     }));
 };
 
-const addDiary = () => {
-    return null;
+const addDiary = (entry: NewDiaryEntry): DiaryEntry => {
+    const id = Math.max(...diaries.map((diary) => diary.id)) + 1;
+
+    const newDiaryEntry = {
+        id,
+        ...entry,
+    };
+
+    diaries.push(newDiaryEntry);
+
+    return newDiaryEntry;
 };
 
-export default { getEntries, addDiary, getNonSensitiveEntries };
+const findById = (id: number): DiaryEntry | undefined => {
+    if (isNaN(id)) throw new Error("Invalid parameter");
+
+    const entry = diaries.find((diary) => diary.id === id);
+    return entry;
+};
+
+export default { getEntries, addDiary, getNonSensitiveEntries, findById };
