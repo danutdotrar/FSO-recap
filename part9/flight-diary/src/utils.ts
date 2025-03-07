@@ -1,4 +1,4 @@
-import { NewDiaryEntry, Weather } from "./types";
+import { NewDiaryEntry, Visibility, Weather } from "./types";
 
 // type guard - used for type narrowing (type narrowing is used to give a variable a more strict/accurate type)
 // - the function returns a boolean and has a type predicate as the return type (`text is string` in our case)
@@ -32,8 +32,6 @@ const parseDate = (date: unknown): string => {
     return date;
 };
 
-console.log(parseDate("as"), parseComment("as"));
-
 // weather
 const isWeather = (param: string): param is Weather => {
     return Object.values(Weather)
@@ -49,18 +47,45 @@ const parseWeather = (weather: unknown): Weather => {
     return weather;
 };
 
+// type guard
+const isVisibility = (visibility: string): visibility is Visibility => {
+    return Object.values(Visibility)
+        .map((item) => item.toString())
+        .includes(visibility);
+};
+
+const parseVisibility = (visibility: unknown): Visibility => {
+    if (!visibility || !isString(visibility) || !isVisibility(visibility)) {
+        throw new Error("No input or input is wrong format: " + visibility);
+    }
+
+    return visibility;
+};
+
 // validate external data input
 // check if input object is matching NewDiaryEntry type
 const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
-    console.log(object);
-    const newDiaryEntry: NewDiaryEntry = {
-        date: "",
-        weather: parseWeather("sunny"),
-        visibility: "great",
-        comment: "fake - for testing",
-    };
+    if (!object || typeof object !== "object") {
+        throw new Error("Incorrect or missing data");
+    }
 
-    return newDiaryEntry;
+    if (
+        "date" in object &&
+        "weather" in object &&
+        "visibility" in object &&
+        "comment" in object
+    ) {
+        const newDiaryEntry: NewDiaryEntry = {
+            date: parseDate(object.date),
+            weather: parseWeather(object.weather),
+            visibility: parseVisibility(object.visibility),
+            comment: parseComment(object.comment),
+        };
+
+        return newDiaryEntry;
+    }
+
+    throw new Error("Incorrect data: some fields are missing");
 };
 
 export default toNewDiaryEntry;
