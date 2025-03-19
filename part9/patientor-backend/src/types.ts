@@ -10,3 +10,9 @@ export interface Patients {
 // TypeScript only checks if we have all the required fields or not, but excess fields are not prohibited
 // TypeScript doens't modify the actaul data. We need to exclude the fields ourselves
 export type NonSensitivePatients = Omit<Patients, "ssn">;
+
+export interface Diagnosis {
+    code: string;
+    name: string;
+    latin?: string;
+}
