@@ -64,6 +64,7 @@ const parseVisibility = (visibility: unknown): Visibility => {
 
 // validate external data input
 // check if input object is matching NewDiaryEntry type
+// 'unknown' type doesn't allow any operation, so accessing the fields is not possible
 const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
     if (!object || typeof object !== "object") {
         throw new Error("Incorrect or missing data");
