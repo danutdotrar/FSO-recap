@@ -35,6 +35,8 @@ const data = [
 const diaryEntries: DiaryEntry[] = data.map((obj) => {
     // use toNewDiaryEntry to validate and check if all fields correspond
     // 'as' is used for Type Assertion - tells TypeScript that an object has a specific type
+    // tells TypeScript to treat toNewDiaryEntry(obj) as a DiaryEntry type
+    // since toNewDiaryEntry(obj) has no id, we need to add it manually to the object to match the DiaryEntry type
     const object = toNewDiaryEntry(obj) as DiaryEntry;
     object.id = obj.id;
 
