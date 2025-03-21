@@ -19,4 +19,8 @@ const getNonSensitivePatients = (): NonSensitivePatients[] => {
     );
 };
 
+// we need a function that gets the object with the fields from the body of the request
+// take each field and check if it has the correct type (parse/validate/narrow each field to have the right type)
+// the return type of the function will be a new type of patients without 'id' field
+
 export default { getPatientsEntries, getNonSensitivePatients };
