@@ -1,5 +1,6 @@
 import patientsEntries from "../../data/patients";
-import { Patients, NonSensitivePatients } from "../types";
+import { Patients, NonSensitivePatients, NewPatientEntry } from "../types";
+import { v1 as uuid } from "uuid";
 
 const getPatientsEntries = (): Patients[] => {
     return patientsEntries;
@@ -19,8 +20,14 @@ const getNonSensitivePatients = (): NonSensitivePatients[] => {
     );
 };
 
-// we need a function that gets the object with the fields from the body of the request
-// take each field and check if it has the correct type (parse/validate/narrow each field to have the right type)
-// the return type of the function will be a new type of patients without 'id' field
+const addPatient = (patient: NewPatientEntry): Patients => {
+    const id = uuid();
+    const newPatient = { id, ...patient };
 
-export default { getPatientsEntries, getNonSensitivePatients };
+    // add patient to the database
+    patientsEntries.push(newPatient);
+
+    return newPatient;
+};
+
+export default { getPatientsEntries, getNonSensitivePatients, addPatient };
