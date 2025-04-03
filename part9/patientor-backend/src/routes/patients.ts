@@ -13,6 +13,9 @@ router.get("/", (_req, res: Response<NonSensitivePatients[]>) => {
 router.post("/", (req, res: Response<Patients>) => {
     const body = req.body;
 
+    // check if the fields from the req have the correct type
+    // parse all fields of the 'patient'
+
     // add the patient to the database
     res.send(patientsService.addPatient(body));
 });
