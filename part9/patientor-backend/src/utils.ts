@@ -5,7 +5,6 @@ const isString = (text: unknown): text is string => {
     return typeof text === "string" || text instanceof String;
 };
 
-// parser for name
 const parseName = (name: unknown): string => {
     if (!name || !isString(name)) {
         throw new Error("Invalid or missing data: " + name);
