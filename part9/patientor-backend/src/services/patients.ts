@@ -20,14 +20,18 @@ const getNonSensitivePatients = (): NonSensitivePatients[] => {
     );
 };
 
-const addPatient = (patient: NewPatientEntry): Patients => {
+const addNewPatientEntry = (entry: NewPatientEntry): Patients => {
     const id = uuid();
 
-    // add patient to the database
-    const newPatient = { id, ...patient };
+    const newPatient = { id, ...entry };
+
     patientsEntries.push(newPatient);
 
     return newPatient;
 };
 
-export default { getPatientsEntries, getNonSensitivePatients, addPatient };
+export default {
+    getPatientsEntries,
+    getNonSensitivePatients,
+    addNewPatientEntry,
+};
