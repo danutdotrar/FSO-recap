@@ -88,7 +88,7 @@ import { NewDiaryEntry, Visibility, Weather } from "./types";
 // };
 
 // using zod to create an object with the required fields - for zod validation and inferring the type
-const newDiaryEntrySchema = z.object({
+export const NewEntrySchema = z.object({
     weather: z.nativeEnum(Weather),
     visibility: z.nativeEnum(Visibility),
     date: z.string().date(),
@@ -96,7 +96,7 @@ const newDiaryEntrySchema = z.object({
 });
 
 const toNewDiaryEntry = (object: unknown): NewDiaryEntry => {
-    return newDiaryEntrySchema.parse(object);
+    return NewEntrySchema.parse(object);
 };
 
 export default toNewDiaryEntry;
