@@ -7,58 +7,58 @@ import { NewDiaryEntry, Visibility, Weather } from "./types";
 // when type guard returns true, TypeScript will know that the tested variable has the type that was defined in the type predicate
 
 // comment
-const isString = (text: unknown): text is string => {
-    return typeof text === "string" || text instanceof String;
-};
+// const isString = (text: unknown): text is string => {
+//     return typeof text === "string" || text instanceof String;
+// };
 
-const parseComment = (comment: unknown): string => {
-    if (!comment || !isString(comment)) {
-        throw new Error("No input or input is wrong format: " + comment);
-    }
+// const parseComment = (comment: unknown): string => {
+//     if (!comment || !isString(comment)) {
+//         throw new Error("No input or input is wrong format: " + comment);
+//     }
 
-    return comment;
-};
+//     return comment;
+// };
 
 // date
-const isDate = (date: unknown): date is string => {
-    return typeof date === "string";
-};
-const parseDate = (date: unknown): string => {
-    // type narrowing - give a variable a more strict/accurate type
-    if (!date || !isDate(date)) {
-        throw new Error("No input or input is wrong format: " + date);
-    }
+// const isDate = (date: unknown): date is string => {
+//     return typeof date === "string";
+// };
+// const parseDate = (date: unknown): string => {
+//     // type narrowing - give a variable a more strict/accurate type
+//     if (!date || !isDate(date)) {
+//         throw new Error("No input or input is wrong format: " + date);
+//     }
 
-    return date;
-};
+//     return date;
+// };
 
 // weather
-const isWeather = (param: string): param is Weather => {
-    return Object.values(Weather)
-        .map((value) => value.toString())
-        .includes(param);
-};
-const parseWeather = (weather: unknown): Weather => {
-    if (!weather || !isString(weather) || !isWeather(weather)) {
-        throw new Error("No input or input is wrong format: " + weather);
-    }
+// const isWeather = (param: string): param is Weather => {
+//     return Object.values(Weather)
+//         .map((value) => value.toString())
+//         .includes(param);
+// };
+// const parseWeather = (weather: unknown): Weather => {
+//     if (!weather || !isString(weather) || !isWeather(weather)) {
+//         throw new Error("No input or input is wrong format: " + weather);
+//     }
 
-    return weather;
-};
+//     return weather;
+// };
 
 // type guard
-const isVisibility = (visibility: string): visibility is Visibility => {
-    return Object.values(Visibility)
-        .map((item) => item.toString())
-        .includes(visibility);
-};
-const parseVisibility = (visibility: unknown): Visibility => {
-    if (!visibility || !isString(visibility) || !isVisibility(visibility)) {
-        throw new Error("No input or input is wrong format: " + visibility);
-    }
+// const isVisibility = (visibility: string): visibility is Visibility => {
+//     return Object.values(Visibility)
+//         .map((item) => item.toString())
+//         .includes(visibility);
+// };
+// const parseVisibility = (visibility: unknown): Visibility => {
+//     if (!visibility || !isString(visibility) || !isVisibility(visibility)) {
+//         throw new Error("No input or input is wrong format: " + visibility);
+//     }
 
-    return visibility;
-};
+//     return visibility;
+// };
 
 // validate external data input
 // check if input object is matching NewDiaryEntry type
