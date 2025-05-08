@@ -30,10 +30,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-    // const { date, weather, visibility, comment } = req.body;
-
     const newDiaryEntry = toNewDiaryEntry(req.body);
-
     const addedEntry = diaryService.addDiary(newDiaryEntry);
 
     res.json(addedEntry);
