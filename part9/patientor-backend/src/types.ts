@@ -1,3 +1,6 @@
+import { z } from "zod";
+import { NewPatientSchema } from "./utils";
+
 export interface Patients {
     id: string;
     name: string;
@@ -17,7 +20,7 @@ export enum Gender {
 // TypeScript doens't modify the actaul data. We need to exclude the fields ourselves
 export type NonSensitivePatients = Omit<Patients, "ssn">;
 
-export type NewPatientEntry = Omit<Patients, "id">;
+export type NewPatientEntry = z.infer<typeof NewPatientSchema>;
 
 export interface Diagnosis {
     code: string;
