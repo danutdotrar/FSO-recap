@@ -1,6 +1,15 @@
 import { z } from "zod";
 import { Gender } from "./types";
 
+// refactor to use zod object schema
+export const NewPatientSchema = z.object({
+    name: z.string(),
+    dateOfBirth: z.string().date(),
+    ssn: z.string(),
+    gender: z.nativeEnum(Gender),
+    occupation: z.string(),
+});
+
 // type guard
 // const isString = (text: unknown): text is string => {
 //     return typeof text === "string" || text instanceof String;
@@ -55,12 +64,3 @@ import { Gender } from "./types";
 
 //     return occupation;
 // };
-
-// refactor to use zod object schema
-export const NewPatientSchema = z.object({
-    name: z.string(),
-    dateOfBirth: z.string().date(),
-    ssn: z.string(),
-    gender: z.nativeEnum(Gender),
-    occupation: z.string(),
-});
