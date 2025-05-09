@@ -2,7 +2,7 @@ import express, { Response } from "express";
 const router = express.Router();
 import patientsService from "../services/patients";
 import { NonSensitivePatients } from "../types";
-import toNewPatientEntry from "../utils";
+import { NewPatientSchema } from "../utils";
 
 router.get("/", (_req, res: Response<NonSensitivePatients[]>) => {
     res.send(patientsService.getNonSensitivePatients());
@@ -14,8 +14,7 @@ router.get("/", (_req, res: Response<NonSensitivePatients[]>) => {
 router.post("/", (req, res) => {
     try {
         const body = req.body;
-
-        const newPatient = toNewPatientEntry(body);
+        const newPatient = NewPatientSchema.parse(body);
 
         res.send(patientsService.addNewPatientEntry(newPatient));
     } catch (error: unknown) {

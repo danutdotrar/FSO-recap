@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Gender, NewPatientEntry } from "./types";
+import { Gender } from "./types";
 
 // type guard
 // const isString = (text: unknown): text is string => {
@@ -57,16 +57,10 @@ import { Gender, NewPatientEntry } from "./types";
 // };
 
 // refactor to use zod object schema
-const newPatientSchema = z.object({
+export const NewPatientSchema = z.object({
     name: z.string(),
     dateOfBirth: z.string().date(),
     ssn: z.string(),
     gender: z.nativeEnum(Gender),
     occupation: z.string(),
 });
-
-const toNewPatientEntry = (entry: unknown): NewPatientEntry => {
-    return newPatientSchema.parse(entry);
-};
-
-export default toNewPatientEntry;
